@@ -43,10 +43,6 @@ class ApiGatewayHandlerDecoratorTest(unittest.TestCase):
         self.assertEqual(response['statusCode'], 200)
         self.assertEqual(response['body'], "Hello")
 
-    def test_with_validation_require_path_fail(self):
-        response = handle_validation_required_path_fail(mock_data.apigateway_event(), None)
-        self.assertEqual(response['statusCode'], 400)
-
     def test_with_validation_require_headers(self):
         response = handle_validation_required_headers(mock_data.apigateway_event(), None)
         self.assertEqual(response['statusCode'], 200)

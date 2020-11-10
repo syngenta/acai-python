@@ -30,7 +30,7 @@ class RequestClient:
         return json_helper.try_decode_json(self._event.get('body', {}))
 
     @property
-    def query_string_parameters(self):
+    def params(self):
         if self._event.get('queryStringParameters') == None:
             return {}
         return self._event.get('queryStringParameters')
@@ -46,7 +46,7 @@ class RequestClient:
             'resource': self.resource,
             'headers': self.headers,
             'authorizer': self.authorizer,
-            'query_string_parameters': self.query_string_parameters,
+            'params': self.params,
             'path_parameters': self.path_parameters,
             'body': self.body
         }

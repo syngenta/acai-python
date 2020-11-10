@@ -32,7 +32,7 @@ class ApiGatewayRequestClientTest(unittest.TestCase):
 
     def test_request_query_string_parameters(self):
         self.assertDictEqual(
-            self.RequestClient.query_string_parameters,
+            self.RequestClient.params,
             { "name": "me" }
         )
     def test_path_paramters(self):
@@ -59,7 +59,7 @@ class ApiGatewayRequestClientTest(unittest.TestCase):
                     'principalId': '9de3f415a97e410386dbef146e88744e',
                     'integrationLatency': 572
                 },
-                'query_string_parameters': {'name': 'me'},
+                'params': {'name': 'me'},
                 'path_parameters': {'proxy': 'hello'},
                 'body': {'body_key': 'body_value'}
             }

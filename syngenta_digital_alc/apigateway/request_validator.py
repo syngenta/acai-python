@@ -12,8 +12,9 @@ class RequestValidator:
         self.schema_path = schema_path
         self._required_pairings = {
             'required_headers': 'headers',
-            'required_path_parameters': 'path_parameters',
-            'required_params': 'query_string_parameters',
+            'available_headers': 'headers',
+            'required_params': 'params',
+            'available_params': 'params',
             'required_body': 'body'
         }
 
@@ -22,14 +23,22 @@ class RequestValidator:
         for required_kwarg, event_loc in self._required_pairings.items():
             if kwargs.get(required_kwarg) and event_loc == 'body' and self.schema_path:
                 self._required_body(kwargs[required_kwarg], event.get(event_loc))
-            elif kwargs.get(required_kwarg):
+            elif kwargs.get(required_kwarg) and 'required' in required_kwarg:
                 self._required_fields(kwargs[required_kwarg], event.get(event_loc), event_loc)
+            elif kwargs.get(required_kwarg) and 'available' in required_kwarg:
+                self._available_fields(kwargs[required_kwarg], event.get(event_loc), event_loc)
 
     def _required_fields(self, required=[], sent={}, list_name=''):
         missing_fields = [value for value in required if value not in sent.keys()]
         for field in missing_fields:
             self.ResponseClient.code = 400
-            self.ResponseClient.set_error(list_name, 'Please provide {}'.format(field))
+            self.ResponseClient.set_error(list_name, 'Please provide {} in '.format(field, list_name))
+
+    def _available_fields(self, available=[], sent={}, list_name=''):
+        unavailable_fields = [value for value in sent if value not in available.keys()]
+        for field in unavailable_fields:
+            self.ResponseClient.code = 400
+            self.ResponseClient.set_error(list_name, '{} is not an available {}'.format(field, list_name))
 
     def _required_body(self, schema, request_body):
         if not isinstance(request_body, dict):
