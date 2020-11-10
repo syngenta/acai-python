@@ -16,7 +16,6 @@ The alc encourages you to use small, internally routed API lambdas in a normaliz
 
 In addition, it makes this like routing and validating API requests less cumbersome and time consuming.
 
-
 ## Installation
 
 This is a [python](https://www.python.org/) module available through the
@@ -300,7 +299,6 @@ Property Name                | Description
 `object`                     | object of s3 record
 `bucket`                     | bucket of s3 record
 `s3_schema_version`            | s3 schema version of s3 record
-
 
 ## Contributing
 If you would like to contribute please make sure to follow the established patterns and unit test your code:

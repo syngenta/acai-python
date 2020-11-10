@@ -9,6 +9,7 @@ setup(
     description='DRY approach to working with AWS Lambdas',
     long_description=__doc__,
     packages=find_packages(),
+    python_requires='>=3.0',
     install_requires=[
         'simplejson',
         'jsonschema',
