@@ -1,13 +1,17 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='syngenta_digital_alc',
-    version='0.0.1',
+    version='0.0.3',
     url='https://github.com/syngenta-digital/alc-python.git',
     author='Paul Cruse III, Technical Lead, Syngenta Digital',
     author_email='paul.cruse@syngenta.com',
     description='DRY approach to working with AWS Lambdas',
-    long_description=__doc__,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=find_packages(),
     python_requires='>=3.0',
     install_requires=[
