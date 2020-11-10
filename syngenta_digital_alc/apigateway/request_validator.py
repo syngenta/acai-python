@@ -35,7 +35,7 @@ class RequestValidator:
             self.ResponseClient.set_error(list_name, 'Please provide {} in '.format(field, list_name))
 
     def _available_fields(self, available=[], sent={}, list_name=''):
-        unavailable_fields = [value for value in sent if value not in available.keys()]
+        unavailable_fields = [value for value in sent if value not in available]
         for field in unavailable_fields:
             self.ResponseClient.code = 400
             self.ResponseClient.set_error(list_name, '{} is not an available {}'.format(field, list_name))

@@ -36,6 +36,20 @@ class RequestValidatorTest(unittest.TestCase):
         validator._required_fields(['test_path'], {'test_path_fail': 'test_value'}, 'path parameters')
         self.assertTrue(response.has_errors)
 
+    def test_validate_params_pass(self):
+        request = RequestClient(mock_data.apigateway_event())
+        response = ResponseClient()
+        validator = RequestValidator(request, response, 'tests/openapi.yml')
+        validator._available_fields(['test_path', 'test_path_1'], {'test_path': 'test_value'}, 'params')
+        self.assertFalse(response.has_errors)
+
+    def test_validate_params_fail(self):
+        request = RequestClient(mock_data.apigateway_event())
+        response = ResponseClient()
+        validator = RequestValidator(request, response, 'tests/openapi.yml')
+        validator._available_fields(['test_path'], {'test_path_fail': 'test_value'}, 'params')
+        self.assertTrue(response.has_errors)
+
     def test_get_schema(self):
         request = RequestClient(mock_data.apigateway_event())
         response = ResponseClient()
