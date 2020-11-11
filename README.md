@@ -91,8 +91,6 @@ Option Name   | Required | Type   | Default | Description
 `before_all`  | false    | string | null    | before all middleware function to run before all routes (after validation occurs)
 `after_all`   | false    | string | null    | after all middleware function to run after all routes
 
-##### apigateway handler example
-
 2. Create handler file with matching methods and requirements
 
 ```python
@@ -162,8 +160,6 @@ functions:
                     Fn::GetAtt: [ ExampleQueue, 'Arn' ]
 ```
 
-##### sqs handler example
-
 1. Initialize the Event and Iterate over the Records
 
 ```python
@@ -215,8 +211,6 @@ functions:
                     Fn::GetAtt: [ DynamoDbTableExample, 'Arn' ]
 ```
 
-##### dynamodb handler example
-
 1. Initialize the Event and Iterate over the Records
 
 ```python
@@ -267,8 +261,6 @@ functions:
         events:
             - s3: photos
 ```
-
-##### s3 handler example
 
 1. Initialize the Event and Iterate over the Records
 
