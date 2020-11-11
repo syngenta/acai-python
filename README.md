@@ -36,7 +36,7 @@ $ pip install syngenta_digital_alc
 
 Use alc to normalize your interactions with common events passed to AWS Lambdas and work with the events in a more OO way.
 
-### :bridge_at_night: apigateway events :bridge_at_night:
+### apigateway events
 
 `NOTE`: This packages assumes you are using a monolithic, internally routed the lambda with [serverless framework](https://www.serverless.com/) and folder structure which put all your endpoint files in one sub directory and custom domain on apigateway.
 
@@ -88,13 +88,13 @@ Option Name   | Required | Type   | Default | Description
 `base_path`   | true     | string | n/a     | apigateway base path for the custom domain
 `handler_path`| true     | string | n/a     | project path of where the endpoint files
 `schema_path` | false    | string | null    | path where your schema file can found (accepts JSON as well)
-`before_all`   | false    | string | null    | before all middleware function to run before all routes (after validation occurs)
-`after_all`    | false    | string | null    | after all middleware function to run after all routes
+`before_all`  | false    | string | null    | before all middleware function to run before all routes (after validation occurs)
+`after_all`   | false    | string | null    | after all middleware function to run after all routes
 
+##### apigateway handler example
 
 2. Create handler file with matching methods and requirements
 
-##### handler example
 ```python
 from syngenta_digital_alc.apigateway.handler_requirements import handler_requirements
 
@@ -144,10 +144,10 @@ Property Name       | Description
 `headers`           | headers you want to send in response
 `code`              | status code of response (will default to 204 if no content && will default 400 if errors found in response)
 `authorizer`        | authorizer of apigateway event (will default to use headers if using with [serverless offline](https://www.npmjs.com/package/serverless-offline))
-`has_errors()`       | function will tell you if errors in the response
-`set_error()`        | function will set error key and message
+`has_errors()`      | function will tell you if errors in the response
+`set_error()`       | function will set error key and message
 
-### :factory: sqs :factory:
+### sqs events
 
 0. Setting Up your lambda to listen to the Queue
 
@@ -161,6 +161,8 @@ functions:
                 arn:
                     Fn::GetAtt: [ ExampleQueue, 'Arn' ]
 ```
+
+##### sqs handler example
 
 1. Initialize the Event and Iterate over the Records
 
@@ -179,7 +181,7 @@ def handle_sqs_trigger(event):
 Property Name   | Description
 :-----------    | :-------   
 `records`       | list of record objects
-`raw_records`    | jus the raw record from the original request
+`raw_records`   | jus the raw record from the original request
 
 
 **Record Properties**
@@ -197,8 +199,7 @@ Property Name       | Description
 `source_arn`        | source ARN of sqs record
 `region`            | region of sqs record
 
-
-### :factory: dynamodb :factory:
+### dynamodb events
 
 0. Setting Up your lambda to listen to the Queue
 
@@ -213,6 +214,8 @@ functions:
                 arn:
                     Fn::GetAtt: [ DynamoDbTableExample, 'Arn' ]
 ```
+
+##### dynamodb handler example
 
 1. Initialize the Event and Iterate over the Records
 
@@ -231,28 +234,28 @@ def handle_sqs_trigger(event):
 Property Name   | Description
 :-----------    | :-------   
 `records`       | list of record objects
-`raw_records`    | jus the raw record from the original request
+`raw_records`   | jus the raw record from the original request
 
 
 **Record Properties**
 
-Property Name                | Description
-:-----------                 | :-------   
-`event_id`                    | event id of dynamodb record
-`event_name`                  | event name of dynamodb record
-`event_source`                | event source  of dynamodb record
-`keys`                       | keys of dynamodb record (will convert ddb json)
-`old_image`                   | old image of dynamodb record
-`new_image`                   | new image of dynamodb record
-`raw_body`                    | raw of body of dynamodb record
+Property Name                  | Description
+:-----------                   | :-------   
+`event_id`                     | event id of dynamodb record
+`event_name`                   | event name of dynamodb record
+`event_source`                 | event source  of dynamodb record
+`keys`                         | keys of dynamodb record (will convert ddb json)
+`old_image`                    | old image of dynamodb record
+`new_image`                    | new image of dynamodb record
+`raw_body`                     | raw of body of dynamodb record
 `event_source_arn`             | event source ARN of dynamodb record
-`event_version`               | event version of dynamodb record
+`event_version`                | event version of dynamodb record
 `stream_view_type`             | stream view type version of dynamodb record
-`size_bytes`                  | size bytes of dynamodb record
+`size_bytes`                   | size bytes of dynamodb record
 `approximate_creation_datetime`| approximate creation date time of dynamodb record
 
 
-### S3 Events
+### s3 events
 
 0. Setting Up your lambda to listen to the Queue
 
@@ -264,6 +267,8 @@ functions:
         events:
             - s3: photos
 ```
+
+##### s3 handler example
 
 1. Initialize the Event and Iterate over the Records
 
@@ -282,23 +287,23 @@ def handle_sqs_trigger(event):
 Property Name   | Description
 :-----------    | :-------   
 `records`       | list of record objects
-`raw_records`    | jus the raw record from the original request
+`raw_records`   | jus the raw record from the original request
 
 
 **Record Properties**
 
-Property Name                | Description
-:-----------                 | :-------   
+Property Name                 | Description
+:-----------                  | :-------   
 `event_time`                  | event time of s3 record
 `event_name`                  | event name of s3 record
 `event_source`                | event source  of s3 record
-`region`                  | region of s3 record (will convert ddb json)
+`region`                      | region of s3 record (will convert ddb json)
 `request_parameters`          | request parameters of s3 record
 `response_elements`           | response elements of s3 record
 `configuration_id`            | configuration id of s3 record
-`object`                     | object of s3 record
-`bucket`                     | bucket of s3 record
-`s3_schema_version`            | s3 schema version of s3 record
+`object`                      | object of s3 record
+`bucket`                      | bucket of s3 record
+`s3_schema_version`           | s3 schema version of s3 record
 
 ## Contributing
 If you would like to contribute please make sure to follow the established patterns and unit test your code:
