@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='syngenta_digital_alc',
-    version='0.0.3',
+    version='0.0.4',
     url='https://github.com/syngenta-digital/alc-python.git',
     author='Paul Cruse III, Technical Lead, Syngenta Digital',
     author_email='paul.cruse@syngenta.com',
