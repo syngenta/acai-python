@@ -108,7 +108,7 @@ def post(request, response):
     response.code = 201
 ```
 
-**Endpoint Requirement Options**
+****Endpoint Requirement Options****
 
 Option Name        | Type   | Description
 :-----------       | :----- | :----------
@@ -119,7 +119,7 @@ Option Name        | Type   | Description
 `required_headers` | list   | list of required headers for that method on that endpoint
 
 
-**Request Properties**
+***Request Properties***
 
 Property Name       | Description
 :-----------        | :-------   
@@ -135,7 +135,7 @@ Property Name       | Description
 `request`           | full request broken down as an object literal
 
 
-**Response Properties**
+***Response Properties***
 
 Property Name       | Description
 :-----------        | :-------   
@@ -172,7 +172,7 @@ def handle_sqs_trigger(event):
         some_func(sqs_record)
 ```
 
-**Event Client Properties**
+***Event Client Properties***
 
 Property Name   | Description
 :-----------    | :-------   
@@ -180,7 +180,7 @@ Property Name   | Description
 `raw_records`   | jus the raw record from the original request
 
 
-**Record Properties**
+***Record Properties***
 
 Property Name       | Description
 :-----------        | :-------   
@@ -223,7 +223,7 @@ def handle_sqs_trigger(event):
         some_func(sqs_record)
 ```
 
-**Event Client Properties**
+***Event Client Properties***
 
 Property Name   | Description
 :-----------    | :-------   
@@ -231,7 +231,7 @@ Property Name   | Description
 `raw_records`   | jus the raw record from the original request
 
 
-**Record Properties**
+***Record Properties***
 
 Property Name                  | Description
 :-----------                   | :-------   
@@ -274,7 +274,7 @@ def handle_sqs_trigger(event):
         some_func(sqs_record)
 ```
 
-**Event Client Properties**
+***Event Client Properties***
 
 Property Name   | Description
 :-----------    | :-------   
@@ -282,7 +282,7 @@ Property Name   | Description
 `raw_records`   | jus the raw record from the original request
 
 
-**Record Properties**
+***Record Properties***
 
 Property Name                 | Description
 :-----------                  | :-------   
