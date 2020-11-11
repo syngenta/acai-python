@@ -108,7 +108,7 @@ def post(request, response):
     response.code = 201
 ```
 
-****Endpoint Requirement Options****
+***Endpoint Requirement Options***
 
 Option Name        | Type   | Description
 :-----------       | :----- | :----------
