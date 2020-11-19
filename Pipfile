@@ -15,3 +15,10 @@ jsonschema = "*"
 jsonref = "*"
 pyyaml = "*"
 simplejson = "*"
+
+[dev-packages]
+pylint = "*"
+pylint-report = "*"
+pytest = "*"
+pytest-html = "*"
+pytest-cov = "*"

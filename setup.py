@@ -1,3 +1,4 @@
+import os
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
@@ -5,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='syngenta_digital_alc',
-    version='0.0.5',
+    version=os.getenv('CIRCLE_TAG'),
     url='https://github.com/syngenta-digital/alc-python.git',
     author='Paul Cruse III, Technical Lead, Syngenta Digital',
     author_email='paul.cruse@syngenta.com',

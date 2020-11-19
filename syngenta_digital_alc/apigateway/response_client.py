@@ -2,7 +2,7 @@ import simplejson as json
 
 from syngenta_digital_alc.common import json_helper
 
- 
+
 class ResponseClient:
 
     def __init__(self):
@@ -18,8 +18,9 @@ class ResponseClient:
         return self._headers
 
     @headers.setter
-    def headers(self, key, value):
-        self._headers[key] = value
+    def headers(self, value):
+        key, val = value
+        self._headers[key] = val
 
     @property
     def code(self):

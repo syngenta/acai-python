@@ -1,0 +1,106 @@
+version: 2.1
+orbs:
+    aws-cli: circleci/aws-cli@1.2.1
+    slack: circleci/slack@3.4.2
+commands:
+    python-install:
+        steps:
+            - run: pip install pipenv
+            - run: pipenv install
+    python-test-install:
+        steps:
+            - restore_cache:
+                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - run: pip install pipenv
+            - run: pipenv install --dev
+            - save_cache:
+                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                paths:
+                    - ".venv"
+    python-lint:
+        steps:
+            - run: pipenv run pylint syngenta_digital_alc/* | pipenv run pylint_report.py > lint-report.html || exit 0
+            - store_artifacts:
+                path: ./lint-report.html
+    python-test:
+        steps:
+            - run: RUN_MODE=unittest pipenv run python -m unittest discover
+    python-report:
+        steps:
+            - run: RUN_MODE=unittest pipenv run pytest --junitxml=./coverage/unit-test/report.xml --html=./coverage/unit-test/index.html --self-contained-html --cov=syngenta_digital_alc tests/ --cov-report html:./coverage
+            - store_test_results:
+                path: ./coverage/unit-test
+    publish-results:
+        steps:
+            - run: mkdir ./coverage/lint
+            - run: mv lint-report.html ./coverage/lint/index.html
+            - run: aws s3 sync ./coverage s3://tools-test-reports.syndpe.com/$CIRCLE_PROJECT_REPONAME --delete
+            - run: aws cloudfront create-invalidation --distribution-id E38VEFEW0CRHJD --paths "/*"
+            - run: aws cloudfront create-invalidation --distribution-id E16KF0UFI61M08 --paths "/*"
+            - store_artifacts:
+                path: ./coverage
+    pypi-setup:
+        steps:
+            - run: echo -e "[pypi]" >> ~/.pypirc
+            - run: echo -e "username = __token__" >> ~/.pypirc
+            - run: echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
+    pypi-deploy:
+        steps:
+            - run: python3 -m pip install --user --upgrade setuptools wheel
+            - run: python3 setup.py sdist bdist_wheel
+            - run: python3 -m pip install --user --upgrade twine
+            - run: python3 -m twine upload dist/*
+    slack-status:
+        steps:
+            - slack/status:
+                mentions: '${CIRCLE_USERNAME}, version=$CIRCLE_TAG'
+    slack-error:
+        steps:
+            - slack/status:
+                fail_only: true
+                mentions: '${CIRCLE_USERNAME}'
+jobs:
+    install-build-test:
+        docker:
+            - image: cimg/python:3.7
+        steps:
+            - checkout
+            - aws-cli/setup
+            - python-test-install
+            - python-lint
+            - python-test
+            - python-report
+            - publish-results
+            - slack-error
+    install-build-deploy:
+        docker:
+            - image: cimg/python:3.7
+        steps:
+            - checkout
+            - python-install
+            - pypi-setup
+            - pypi-deploy
+            - slack-status
+workflows:
+    install-build-deploy:
+        jobs:
+            - install-build-deploy:
+                context:
+                    - tools-cicd
+                    - pypi-token
+                filters:
+                    tags:
+                        only: /.*/
+                    branches:
+                        ignore: /.*/
+    install-build-test:
+        jobs:
+            - install-build-test:
+                context:
+                    - tools-cicd
+                    - pypi-token
+                filters:
+                    tags:
+                        ignore: /.*/
+                    branches:
+                        ignore: /dependabot.*/
