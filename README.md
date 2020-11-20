@@ -1,20 +1,20 @@
 # alc-python
-Auto-loading, self-validating, minimalist python framework for Amazon Web Service Lambdas
+Auto-loading, self-validating, minimalist python framework for AWS Lambdas
 
 ## Features
 
   * Automatic routing based on folder structure
-  * Focus remove unnecessary boilerplate from your development process
+  * Remove unnecessary boilerplate from your development process
   * Ease-of-use with the [serverless framework](https://www.serverless.com/)
-  * Local Development support
+  * Local development support
 
 ## Philosophy
 
-The alc philosophy is to provide a self evident tool for use with the amazon lambdas.
+The alc philosophy is to provide a self evident tool for use with amazon lambdas.
 
 The alc encourages you to use small, internally routed API lambdas in a normalized OOP way.
 
-In addition, it makes this like routing and validating API requests less cumbersome and time consuming.
+In addition, it makes things like routing and validating API requests less cumbersome and time consuming.
 
 ## Installation
 
@@ -40,11 +40,9 @@ $ pipenv install syngenta_digital_alc
 
 ## Basic Usage
 
-Use alc to normalize your interactions with common events passed to AWS Lambdas and work with the events in a more OO way.
-
 ### apigateway events
 
-`NOTE`: This packages assumes you are using a monolithic, internally routed the lambda with [serverless framework](https://www.serverless.com/) and folder structure which put all your endpoint files in one sub directory and custom domain on apigateway.
+`NOTE`: This packages assumes you are using a monolithic, internally routed lambda with [serverless framework](https://www.serverless.com/) and you have a folder structure which puts all your endpoint files in one sub directory tied to a custom domain on apigateway.
 
 0. Setting Up the Monolithic Internally Routed Lambda
 
@@ -69,12 +67,13 @@ import os
 from syngenta_digital_alc.apigateway.router import Router
 
 # must pass current service, version of API and where handlers are located
-def _route(event, context):
+def route(event, context):
     router = Router(
         base_path='{}/{}'.format(os.environ['service'], 'v1'),
         handler_path='application.v1.controller.apigateway',
         schema_path='application/openapi.yml',
-        event=event
+        event=event,
+        context=context
     )
     return router.route()    
 
