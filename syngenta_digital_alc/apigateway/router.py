@@ -12,7 +12,7 @@ class Router:
         self.context = kwargs['context']
         self.handler_path = kwargs['handler_path']
         self.base_path = kwargs['base_path']
-        self.schema_path = kwargs['schema_path']
+        self.schema_path = kwargs.get('schema_path')
         self.router_response = ResponseClient()
 
     def route(self):
