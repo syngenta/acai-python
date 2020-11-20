@@ -27,7 +27,7 @@ def apigateway_event():
 
 def apigateway_route(fail=''):
     return {
-        'path': '/unit-tests/syngenta_digital_alc/apigateway/mock-handler{}'.format(fail),
+        'path': '/unit-tests/syngenta_digital_alc/mock-handler{}'.format(fail),
         'httpMethod': 'GET'
     }
 

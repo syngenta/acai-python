@@ -52,12 +52,23 @@ class Router:
         except Exception as error:
             self._set_error(500, 'server', 'internal server error', error)
 
+    def _clean_path(self, path):
+        if path[0] == '/':
+            path = path[1:]
+        if path[-1] == '/':
+            path = path[:-1]
+        return path
+
     def _get_import_path(self):
-        endpoint_import = self.event['path'].replace('/{}/'.format(self.base_path), '').replace('-', '_')
+        event_path = self._clean_path(self.event['path'])
+        base_path = self._clean_path(self.base_path)
+        endpoint_import = event_path.replace('{}'.format(base_path), '').replace('-', '_')
         return '{}.{}'.format(self.handler_path, endpoint_import)
 
     def _get_file_path(self):
-        endpoint_file = self.event['path'].replace('/{}/'.format(self.base_path), '').replace('-', '_')
+        event_path = self._clean_path(self.event['path'])
+        base_path = self._clean_path(self.base_path)
+        endpoint_file = event_path.replace('{}'.format(base_path), '').replace('-', '_')
         if not endpoint_file:
             endpoint_file = '__init__'
         return '{}/{}.py'.format(self.handler_path.replace('.', '/'), endpoint_file)

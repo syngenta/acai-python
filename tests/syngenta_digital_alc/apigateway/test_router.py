@@ -7,7 +7,7 @@ class ApiGatewayRouterTest(unittest.TestCase):
 
     def test_router_route(self):
         router = Router(
-            base_path='unit-tests/syngenta_digital_alc/apigateway',
+            base_path='unit-tests/syngenta_digital_alc',
             handler_path='tests.syngenta_digital_alc.apigateway',
             schema_path='tests/openapi.yml',
             event=mock_data.apigateway_route(),
@@ -18,7 +18,7 @@ class ApiGatewayRouterTest(unittest.TestCase):
 
     def test_router_route_fail(self):
         router = Router(
-            base_path='unit-tests/syngenta_digital_alc/apigateway',
+            base_path='unit-tests/syngenta_digital_alc',
             handler_path='tests.syngenta_digital_alc.apigateway',
             schema_path='tests/openapi.yml',
             event=mock_data.apigateway_route('-fail'),

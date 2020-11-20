@@ -22,3 +22,7 @@ pylint-report = "*"
 pytest = "*"
 pytest-html = "*"
 pytest-cov = "*"
+
+[scripts]
+test = "pipenv run pytest"
+lint = "pipenv run pylint syngenta_digital_alc/*"
