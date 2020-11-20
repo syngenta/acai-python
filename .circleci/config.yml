@@ -63,7 +63,7 @@ commands:
 jobs:
     install-build-test:
         docker:
-            - image: cimg/python:3.7
+            - image: cimg/python:3.8
         steps:
             - checkout
             - aws-cli/setup
@@ -75,7 +75,7 @@ jobs:
             - slack-error
     install-build-deploy:
         docker:
-            - image: cimg/python:3.7
+            - image: cimg/python:3.8
         steps:
             - checkout
             - python-install
