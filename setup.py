@@ -16,10 +16,11 @@ setup(
     packages=find_packages(),
     python_requires='>=3.0',
     install_requires=[
-        'simplejson',
+        'dynamodb_json',
         'jsonschema',
         'jsonref',
-        'dynamodb_json'
+        'pyyaml',
+        'simplejson'
     ],
     classifiers=[
         'Environment :: Web Environment',
