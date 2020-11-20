@@ -8,7 +8,7 @@ from tests.syngenta_digital_alc.sns import mock_data
 class SNSEventClientTest(unittest.TestCase):
 
     def test_sns_record_doesnt_parse(self):
-        framework = EventClient(mock_data.get_sns_event())
+        framework = EventClient(mock_data.get_sns_event(), None)
         sns_record = framework.records[0]
         self.assertDictEqual(
             sns_record._record,
@@ -42,6 +42,6 @@ class SNSEventClientTest(unittest.TestCase):
         )
 
     def test_sns_record_parses(self):
-        framework = EventClient(mock_data.get_sns_event())
+        framework = EventClient(mock_data.get_sns_event(), None)
         sns_record = framework.records[0]
         self.assertIsInstance(sns_record, RecordClient)

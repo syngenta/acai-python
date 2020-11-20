@@ -1,9 +1,10 @@
 from syngenta_digital_alc.dynamodb.event_client import EventClient
 
-def handler_requirements(**kwargs):
+
+def handler_requirements():
     def decorator_func(func):
         def wrapper(event, context):
-            client = EventClient(event)
+            client = EventClient(event, context)
             func(client)
         return wrapper
     return decorator_func

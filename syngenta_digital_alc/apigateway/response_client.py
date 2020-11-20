@@ -36,11 +36,7 @@ class ResponseClient:
 
     @property
     def body(self):
-        if (
-            isinstance(self._body, dict)
-            or isinstance(self._body, list)
-            or isinstance(self._body, tuple)
-        ):
+        if isinstance(self._body, (dict, list, tuple)):
             return json.dumps(self._body)
         return self._body
 

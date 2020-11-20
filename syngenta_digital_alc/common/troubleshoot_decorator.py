@@ -12,7 +12,7 @@ def troubleshoot(function):
         try:
             print('arguments: {}'.format(arguments))
             print('results: {}'.format(result))
-        except:
+        except Exception:
             print('something not printable')
         print('finished in {} secs'.format(round(end - start, 4)))
         return result

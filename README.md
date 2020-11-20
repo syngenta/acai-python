@@ -32,6 +32,12 @@ Installation is done using the
 $ pip install syngenta_digital_alc
 ```
 
+or
+
+```bash
+$ pipenv install syngenta_digital_alc
+```
+
 ## Basic Usage
 
 Use alc to normalize your interactions with common events passed to AWS Lambdas and work with the events in a more OO way.
@@ -68,8 +74,7 @@ def _route(event, context):
         base_path='{}/{}'.format(os.environ['service'], 'v1'),
         handler_path='application.v1.controller.apigateway',
         schema_path='application/openapi.yml',
-        event=event,
-        context=context
+        event=event
     )
     return router.route()    
 

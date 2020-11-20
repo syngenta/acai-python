@@ -27,13 +27,14 @@ commands:
             - run: RUN_MODE=unittest pipenv run python -m unittest discover
     python-report:
         steps:
-            - run: RUN_MODE=unittest pipenv run pytest --junitxml=./coverage/unit-test/report.xml --html=./coverage/unit-test/index.html --self-contained-html --cov=syngenta_digital_alc tests/ --cov-report html:./coverage
+            - run: RUN_MODE=unittest pipenv run pytest --junitxml=./coverage/unit-test/report.xml --html=./coverage/unit-test/$CIRCLE_PROJECT_REPONAME.html --self-contained-html --cov=syngenta_digital_alc tests/ --cov-report html:./coverage
             - store_test_results:
                 path: ./coverage/unit-test
     publish-results:
         steps:
             - run: mkdir ./coverage/lint
             - run: mv lint-report.html ./coverage/lint/index.html
+            - run: mv ./coverage/unit-test/$CIRCLE_PROJECT_REPONAME.html ./coverage/unit-test/index.html
             - run: aws s3 sync ./coverage s3://tools-test-reports.syndpe.com/$CIRCLE_PROJECT_REPONAME --delete
             - run: aws cloudfront create-invalidation --distribution-id E38VEFEW0CRHJD --paths "/*"
             - run: aws cloudfront create-invalidation --distribution-id E16KF0UFI61M08 --paths "/*"

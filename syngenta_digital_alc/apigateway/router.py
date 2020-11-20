@@ -25,6 +25,7 @@ class Router:
         handler_module = self._run_route()
         if handler_module:
             return self._run_method(handler_module)
+        return None
 
     def _run_route(self):
         import_path = self._get_import_path()
@@ -35,12 +36,14 @@ class Router:
             spec.loader.exec_module(handler_module)
             return handler_module
         self._set_error(404, 'url', 'path not found')
+        return None
 
     def _run_method(self, handler_module):
         method = self.event['httpMethod'].lower()
         if hasattr(handler_module, method):
             return self._run_endpoint(handler_module, method)
         self._set_error(403, 'method', 'method not allowed')
+        return None
 
     def _run_endpoint(self, handler_module, method):
         try:

@@ -6,7 +6,7 @@ from tests.syngenta_digital_alc.apigateway import mock_data
 class ApiGatewayRequestClientTest(unittest.TestCase):
 
     def setUp(self):
-        self.RequestClient = RequestClient(mock_data.apigateway_event())
+        self.RequestClient = RequestClient(mock_data.apigateway_event(), None)
 
     def test_request_http_method(self):
         self.assertEqual(self.RequestClient.method, 'GET')

@@ -3,8 +3,9 @@ from syngenta_digital_alc.common import json_helper
 
 class RequestClient:
 
-    def __init__(self, event):
+    def __init__(self, event, context):
         self._event = event
+        self.context = context
 
     @property
     def method(self):
@@ -18,8 +19,7 @@ class RequestClient:
     def authorizer(self):
         if self._event.get('isOffline'):
             return self._event.get('headers')
-        else:
-            return self._event.get('requestContext', {}).get('authorizer', self._event.get('headers'))
+        return self._event.get('requestContext', {}).get('authorizer', self._event.get('headers'))
 
     @property
     def headers(self):
@@ -31,7 +31,7 @@ class RequestClient:
 
     @property
     def params(self):
-        if self._event.get('queryStringParameters') == None:
+        if self._event.get('queryStringParameters') is None:
             return {}
         return self._event.get('queryStringParameters')
 

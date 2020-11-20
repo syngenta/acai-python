@@ -8,7 +8,7 @@ class SQSEventClientTest(unittest.TestCase):
 
     def setUp(self):
         self.raw_sqs_event = mock_data.get_sqs_event()
-        self.sqs_event = EventClient(self.raw_sqs_event)
+        self.sqs_event = EventClient(self.raw_sqs_event, None)
         self.record = self.sqs_event.records[0]
 
     def test_raw_records(self):

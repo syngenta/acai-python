@@ -3,8 +3,9 @@ from syngenta_digital_alc.s3.record_client import RecordClient
 
 class EventClient:
 
-    def __init__(self, event):
+    def __init__(self, event, context):
         self._event = event
+        self.context = context
 
     @property
     def records(self):

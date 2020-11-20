@@ -8,12 +8,12 @@ from tests.syngenta_digital_alc.s3 import mock_data
 class S3EventClientTest(unittest.TestCase):
 
     def test_s3_record_parses(self):
-        framework = EventClient(mock_data.get_s3_event())
+        framework = EventClient(mock_data.get_s3_event(), None)
         s3_record = framework.records[0]
         self.assertIsInstance(s3_record, RecordClient)
 
     def test_s3_parsed_object(self):
-        framework = EventClient(mock_data.get_s3_event())
+        framework = EventClient(mock_data.get_s3_event(), None)
         record = framework.records[0]
         self.assertDictEqual(
             record.s3_object,
@@ -34,7 +34,7 @@ class S3EventClientTest(unittest.TestCase):
         )
 
     def test_s3_record_doesnt_parse(self):
-        framework = EventClient(mock_data.get_s3_event())
+        framework = EventClient(mock_data.get_s3_event(), None)
         record = framework.records[0]
         self.assertDictEqual(
             record._record,

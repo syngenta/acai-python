@@ -5,7 +5,7 @@ from syngenta_digital_alc.apigateway.request_validator import RequestValidator
 def handler_requirements(**kwargs):
     def decorator_func(func):
         def wrapper(event, context, schema_path = ''):
-            request = RequestClient(event)
+            request = RequestClient(event, context)
             response = ResponseClient()
             validator = RequestValidator(request, response, schema_path)
             validator.validate_request(**kwargs)
