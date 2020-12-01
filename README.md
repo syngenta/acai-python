@@ -1,4 +1,4 @@
-# alc-python
+# Syngenta Digital ALC (AWS Lambda Client)
 Auto-loading, self-validating, minimalist python framework for AWS Lambdas
 
 ## Features
