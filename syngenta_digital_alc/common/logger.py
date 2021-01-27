@@ -8,7 +8,7 @@ def log(**kwargs):
     if not os.getenv('RUN_MODE') == 'unittest':
         print(json_helper.try_encode_json({
             'level': kwargs.get('level', 'INFO'),
-            'time': datetime.datetime.now(),
-            'stack': traceback.format_exc(),
+            'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'stack': traceback.format_exc().splitlines(),
             'log': kwargs.get('log', {})
         }))

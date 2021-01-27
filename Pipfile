@@ -22,6 +22,7 @@ pylint-report = "*"
 pytest = "*"
 pytest-html = "*"
 pytest-cov = "*"
+pylint-quotes = "*"
 
 [scripts]
 test = "pipenv run pytest"
