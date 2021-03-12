@@ -61,7 +61,7 @@ class ResponseClient:
         if (isinstance(self._body, dict) and 'errors' in self._body):
             self._body['errors'].append(error)
         else:
-            self._body = {"errors": [error]}
+            self._body = {'errors': [error]}
 
     def __str__(self):
         response = self.response

@@ -2,22 +2,22 @@ import simplejson as json
 
 def get_sqs_event():
     return {
-        "Records": [
+        'Records': [
             {
-                "messageId": "c80e8021-a70a-42c7-a470-796e1186f753",
-                "receiptHandle": "AQEBJQ+/u6NsnT5t8Q/VbVxgdUl4TMKZ5FqhksRdIQvLBhwNvADoBxYSOVeCBXdnS9P+",
-                "body": "{\"foo\":\"bar\"}",
-                "attributes": {
-                    "ApproximateReceiveCount": "3",
-                    "SentTimestamp": "1529104986221",
-                    "SenderId": "594035263019",
-                    "ApproximateFirstReceiveTimestamp": "1529104986230"
+                'messageId': 'c80e8021-a70a-42c7-a470-796e1186f753',
+                'receiptHandle': 'AQEBJQ+/u6NsnT5t8Q/VbVxgdUl4TMKZ5FqhksRdIQvLBhwNvADoBxYSOVeCBXdnS9P+',
+                'body': '{\'foo\':\'bar\'}',
+                'attributes': {
+                    'ApproximateReceiveCount': '3',
+                    'SentTimestamp': '1529104986221',
+                    'SenderId': '594035263019',
+                    'ApproximateFirstReceiveTimestamp': '1529104986230'
                 },
-                "messageAttributes": {'attribute': 'this is an attribute'},
-                "md5OfBody": "9bb58f26192e4ba00f01e2e7b136bbd8",
-                "eventSource": "aws:sqs",
-                "eventSourceARN": "arn:aws:sqs:us-west-2:123456789012:MyQueue",
-                "awsRegion": "us-west-2"
+                'messageAttributes': {'attribute': 'this is an attribute'},
+                'md5OfBody': '9bb58f26192e4ba00f01e2e7b136bbd8',
+                'eventSource': 'aws:sqs',
+                'eventSourceARN': 'arn:aws:sqs:us-west-2:123456789012:MyQueue',
+                'awsRegion': 'us-west-2'
             }
         ]
     }

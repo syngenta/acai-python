@@ -12,42 +12,42 @@ class SQSRecordClientTest(unittest.TestCase):
         self.record = RecordClient(self.raw_record)
 
     def test_message_id(self):
-        self.assertEqual(self.record.message_id, "c80e8021-a70a-42c7-a470-796e1186f753")
+        self.assertEqual(self.record.message_id, 'c80e8021-a70a-42c7-a470-796e1186f753')
 
     def test_receipt_handle(self):
         self.assertEqual(
             self.record.receipt_handle,
-            "AQEBJQ+/u6NsnT5t8Q/VbVxgdUl4TMKZ5FqhksRdIQvLBhwNvADoBxYSOVeCBXdnS9P+"
+            'AQEBJQ+/u6NsnT5t8Q/VbVxgdUl4TMKZ5FqhksRdIQvLBhwNvADoBxYSOVeCBXdnS9P+'
         )
 
     def tets_body(self):
-        self.assertEqual(self.record.body, json.loads("{\"foo\":\"bar\"}"))
+        self.assertEqual(self.record.body, json.loads('{\'foo\':\'bar\'}'))
 
     def test_raw_body(self):
-        self.assertEqual(self.record.raw_body, "{\"foo\":\"bar\"}")
+        self.assertEqual(self.record.raw_body, '{\'foo\':\'bar\'}')
 
     def test_attributes(self):
         self.assertEqual(
             self.record.attributes,
             {
-                "ApproximateReceiveCount": "3",
-                "SentTimestamp": "1529104986221",
-                "SenderId": "594035263019",
-                "ApproximateFirstReceiveTimestamp": "1529104986230"
+                'ApproximateReceiveCount': '3',
+                'SentTimestamp': '1529104986221',
+                'SenderId': '594035263019',
+                'ApproximateFirstReceiveTimestamp': '1529104986230'
             }
         )
 
     def test_approximate_receive_count(self):
-        self.assertEqual(self.record.approximate_receive_count, "3")
+        self.assertEqual(self.record.approximate_receive_count, '3')
 
     def test_sent_timestamp(self):
-        self.assertEqual(self.record.sent_timestamp, "1529104986221")
+        self.assertEqual(self.record.sent_timestamp, '1529104986221')
 
     def test_sender_id(self):
-        self.assertEqual(self.record.sender_id, "594035263019")
+        self.assertEqual(self.record.sender_id, '594035263019')
 
     def test_approximate_first_receive_timestamp(self):
-        self.assertEqual(self.record.approximate_first_receive_timestamp, "1529104986230")
+        self.assertEqual(self.record.approximate_first_receive_timestamp, '1529104986230')
 
     def test_message_attributes(self):
         self.assertDictEqual(self.record.message_attributes, {'attribute': 'this is an attribute'})

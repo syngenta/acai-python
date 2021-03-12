@@ -29,8 +29,10 @@ class RequestValidator:
                 self._available_fields(kwargs[required_kwarg], event.get(event_loc), event_loc)
 
     def _required_fields(self, required, sent, list_name=''):
+        sent_keys = []
         if isinstance(sent, dict) and len(sent.keys()) > 0:
-            missing_fields = [value for value in required if value not in sent.keys()]
+            sent_keys = sent.keys()
+        missing_fields = [value for value in required if value not in sent_keys]
         if len(required) > 0:
             for field in missing_fields:
                 self.response_client.code = 400
