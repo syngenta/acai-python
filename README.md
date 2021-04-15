@@ -146,8 +146,10 @@ Property Name       | Description
 `headers`           | headers you want to send in response
 `code`              | status code of response (will default to 204 if no content && will default 400 if errors found in response)
 `authorizer`        | authorizer of apigateway event (will default to use headers if using with [serverless offline](https://www.npmjs.com/package/serverless-offline))
+`base64_encoded`    | whether your body is base64Encoded [see docs](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-output-format)
 `has_errors()`      | function will tell you if errors in the response
 `set_error()`       | function will set error key and message
+
 
 ### sqs events
 

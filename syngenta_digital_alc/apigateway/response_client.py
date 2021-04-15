@@ -8,6 +8,8 @@ class ResponseClient:
     def __init__(self):
         self._body = {}
         self._code = 200
+        self._base64_encoded = False
+        self._multi_value_headers = {}
         self._headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': '*'
@@ -21,6 +23,14 @@ class ResponseClient:
     def headers(self, value):
         key, val = value
         self._headers[key] = val
+
+    @property
+    def base64_encoded(self):
+        return self._base64_encoded
+
+    @base64_encoded.setter
+    def base64_encoded(self, value):
+        self._base64_encoded = value
 
     @property
     def code(self):
@@ -47,6 +57,7 @@ class ResponseClient:
     @property
     def response(self):
         return {
+            'isBase64Encoded': self.base64_encoded,
             'headers': self.headers,
             'statusCode': self.code,
             'body': self.body
@@ -66,10 +77,11 @@ class ResponseClient:
     def __str__(self):
         response = self.response
         return str({
+            'has_errors': self.has_errors,
             'response': {
                 'headers': response.get('headers', {}),
-                'statusCode': response.get('statusCode', {}),
+                'statusCode': response.get('statusCode', 200),
+                'isBase64Encoded': response.get('isBase64Encoded', False),
                 'body': json_helper.try_decode_json(response.get('body', {}))
-            },
-            'has_errors': self.has_errors
+            }
         })
