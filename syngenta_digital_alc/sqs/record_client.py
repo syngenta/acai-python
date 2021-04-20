@@ -7,23 +7,23 @@ class RecordClient:
 
     @property
     def message_id(self):
-        return self._record['messageId']
+        return self._record.get('messageId')
 
     @property
     def receipt_handle(self):
-        return self._record['receiptHandle']
+        return self._record.get('receiptHandle')
 
     @property
     def body(self):
-        return json_helper.try_decode_json(self._record['body'])
+        return json_helper.try_decode_json(self._record.get('body'))
 
     @property
     def raw_body(self):
-        return self._record['body']
+        return self._record.get('body')
 
     @property
     def attributes(self):
-        return self._record['attributes']
+        return self._record.get('attributes')
 
     @property
     def approximate_receive_count(self):
@@ -43,19 +43,19 @@ class RecordClient:
 
     @property
     def message_attributes(self):
-        return self._record['messageAttributes']
+        return self._record.get('messageAttributes')
 
     @property
     def md5_of_body(self):
-        return self._record['md5OfBody']
+        return self._record.get('md5OfBody')
 
     @property
     def event_source_arn(self):
-        return self._record['eventSourceARN']
+        return self._record.get('eventSourceARN')
 
     @property
     def region(self):
-        return self._record['awsRegion']
+        return self._record.get('awsRegion')
 
     def __str__(self):
         return str({

@@ -9,11 +9,11 @@ class EventClient:
 
     @property
     def records(self):
-        return [RecordClient(record) for record in self._event['Records']]
+        return [RecordClient(record) for record in self._event.get('Records', [])]
 
     @property
     def raw_records(self):
-        return self._event['Records']
+        return self._event.get('Records')
 
     def __str__(self):
         return str([str(record) for record in self.records])
