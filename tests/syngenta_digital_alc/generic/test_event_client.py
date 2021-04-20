@@ -1,8 +1,8 @@
 import unittest
-import simplejson as json
+import json
 
-from syngenta_digital_alc.console.event_client import EventClient
-from tests.syngenta_digital_alc.console import mock_data
+from syngenta_digital_alc.generic.event_client import EventClient
+from tests.syngenta_digital_alc.generic import mock_data
 
 
 class ConsoleEventClientTest(unittest.TestCase):

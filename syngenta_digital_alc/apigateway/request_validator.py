@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 import jsonref
 from jsonschema import Draft7Validator
 import yaml

@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from syngenta_digital_alc.common import json_helper
 

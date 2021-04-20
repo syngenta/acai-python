@@ -1,4 +1,4 @@
-from syngenta_digital_alc.console.event_client import EventClient
+from syngenta_digital_alc.generic.event_client import EventClient
 
 
 def handler_requirements():

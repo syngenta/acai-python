@@ -203,7 +203,7 @@ Property Name       | Description
 
 ### dynamodb events
 
-0. Setting Up your lambda to listen to the Queue
+0. Setting Up your lambda to listen to the dynamodb streams
 
 ```yml
 functions:
@@ -257,7 +257,7 @@ Property Name                  | Description
 
 ### s3 events
 
-0. Setting Up your lambda to listen to the Queue
+0. Setting Up your lambda to listen to s3 bucket changes
 
 ```yml
 functions:
@@ -274,10 +274,10 @@ functions:
 from syngenta_digital_alc.s3.handler_requirements import handler_requirements
 
 @handler_requirements()
-def handle_sqs_trigger(event):
+def handle_s3_trigger(event):
     records = event.records
-    for sqs_record in records:
-        some_func(sqs_record)
+    for s3_record in records:
+        some_func(s3_record)
 ```
 
 ***Event Client Properties***
@@ -303,10 +303,43 @@ Property Name                 | Description
 `bucket`                      | bucket of s3 record
 `s3_schema_version`           | s3 schema version of s3 record
 
+### generic events
+
+0. Setting Up your lambda to listen to take in random events
+
+```yml
+functions:
+    v1-generic-handler:
+        name: v1-generic-handler
+        handler: application.v1.handler.console.handler.handle
+```
+
+1. Initialize the Event and Iterate over the Records
+
+```python
+from syngenta_digital_alc.generic.handler_requirements import handler_requirements
+
+@handler_requirements()
+def handle_generic_trigger(event):
+    some_func(event.body) # will automatically decode JSON, if it is JSON
+```
+
+***Event Client Properties***
+
+Property Name   | Description
+:-----------    | :-------   
+`body`          | body of event (decoded as JSON if possible)
+`raw_body`      | just the raw event, not decoded
+`context`       | just the original context
+
+
 ## Contributing
+
 If you would like to contribute please make sure to follow the established patterns and unit test your code:
 
 ### Unit Testing
+
 To run unit test, enter command:
 ```bash
-RUN_MODE=unittest python -m unittest discover
+pipenv run test
+```

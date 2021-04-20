@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 def try_decode_json(possible_json):
     try:

@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 def get_event():
     return json.dumps({
