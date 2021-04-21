@@ -49,8 +49,14 @@ class SQSRecordClientTest(unittest.TestCase):
     def test_approximate_first_receive_timestamp(self):
         self.assertEqual(self.record.approximate_first_receive_timestamp, '1529104986230')
 
+    def test_raw_message_attributes(self):
+        self.assertDictEqual(self.record.raw_message_attributes, {'attribute': {'StringValue': 'this is an attribute'}})
+
     def test_message_attributes(self):
-        self.assertDictEqual(self.record.message_attributes, {'attribute': 'this is an attribute'})
+        self.assertEqual(self.record.message_attributes.get('attribute'), 'this is an attribute')
+
+    def test_message_attributes_missing(self):
+        self.assertEqual(self.record.message_attributes.get('missing'), None)
 
     def test_md5_of_body(self):
         self.assertEqual(self.record.md5_of_body, '9bb58f26192e4ba00f01e2e7b136bbd8')

@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 
 def apigateway_event():

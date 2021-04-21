@@ -42,8 +42,15 @@ class RecordClient:
         return self.attributes['ApproximateFirstReceiveTimestamp']
 
     @property
-    def message_attributes(self):
+    def raw_message_attributes(self):
         return self._record.get('messageAttributes')
+
+    @property
+    def message_attributes(self):
+        attributes = {}
+        for key in self.raw_message_attributes:
+            attributes[key] = self.raw_message_attributes[key].get('StringValue', '')
+        return attributes
 
     @property
     def md5_of_body(self):
@@ -56,6 +63,10 @@ class RecordClient:
     @property
     def region(self):
         return self._record.get('awsRegion')
+
+    def get_message_attribute(self, name):
+        attribute = self._record.get('messageAttributes', {}).get(name, {})
+        return attribute.get('StringValue',  attribute.get('BinaryValue'))
 
     def __str__(self):
         return str({

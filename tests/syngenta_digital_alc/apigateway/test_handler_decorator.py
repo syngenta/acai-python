@@ -36,7 +36,7 @@ class ApiGatewayHandlerDecoratorTest(unittest.TestCase):
     def test_no_authorization(self):
         response = handle_no_validation(mock_data.apigateway_event(), None)
         self.assertEqual(response['statusCode'], 200)
-        self.assertEqual(response['body'],"Hello")
+        self.assertEqual(response['body'], "Hello")
 
     def test_with_validation_require_path(self):
         response = handle_validation_required_path(mock_data.apigateway_event(), None)
