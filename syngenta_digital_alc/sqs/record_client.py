@@ -64,10 +64,6 @@ class RecordClient:
     def region(self):
         return self._record.get('awsRegion')
 
-    def get_message_attribute(self, name):
-        attribute = self._record.get('messageAttributes', {}).get(name, {})
-        return attribute.get('StringValue',  attribute.get('BinaryValue'))
-
     def __str__(self):
         return str({
             'message_id': self.message_id,
@@ -80,6 +76,7 @@ class RecordClient:
             'sender_id': self.sender_id,
             'approximate_first_receive_timestamp': self.approximate_first_receive_timestamp,
             'message_attributes': self.message_attributes,
+            'raw_message_attributes': self.raw_message_attributes,
             'md5_of_body': self.md5_of_body,
             'event_source_arn': self.event_source_arn,
             'region': self.region
