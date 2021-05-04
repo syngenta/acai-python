@@ -223,10 +223,10 @@ functions:
 from syngenta_digital_alc.dynamodb.handler_requirements import handler_requirements
 
 @handler_requirements()
-def handle_sqs_trigger(event):
+def handle_ddb_trigger(event):
     records = event.records
-    for sqs_record in records:
-        some_func(sqs_record)
+    for ddb_record in records:
+        some_func(ddb_record)
 ```
 
 ***Event Client Properties***
