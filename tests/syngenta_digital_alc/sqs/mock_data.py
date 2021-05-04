@@ -13,7 +13,7 @@ def get_sqs_event():
                     'SenderId': '594035263019',
                     'ApproximateFirstReceiveTimestamp': '1529104986230'
                 },
-                'messageAttributes': {'attribute': {'StringValue': 'this is an attribute'}},
+                'messageAttributes': {'attribute': {'stringValue': 'this is an attribute'}},
                 'md5OfBody': '9bb58f26192e4ba00f01e2e7b136bbd8',
                 'eventSource': 'aws:sqs',
                 'eventSourceARN': 'arn:aws:sqs:us-west-2:123456789012:MyQueue',

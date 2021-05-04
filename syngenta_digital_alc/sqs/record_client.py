@@ -49,7 +49,7 @@ class RecordClient:
     def message_attributes(self):
         attributes = {}
         for key in self.raw_message_attributes:
-            attributes[key] = self.raw_message_attributes[key].get('StringValue', '')
+            attributes[key] = self.raw_message_attributes[key].get('stringValue', '')
         return attributes
 
     @property
