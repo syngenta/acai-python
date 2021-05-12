@@ -18,7 +18,7 @@ setup(
     install_requires=[
         'dynamodb_json',
         'jsonschema',
-        'jsonpickle'
+        'jsonpickle',
         'jsonref',
         'pyyaml'
     ],
