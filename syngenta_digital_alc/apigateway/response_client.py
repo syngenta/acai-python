@@ -47,7 +47,7 @@ class ResponseClient:
     @property
     def body(self):
         if isinstance(self._body, (dict, list, tuple)):
-            return json.dumps(self._body, use_decimals=True)
+            return json.dumps(self._body, use_decimal=True)
         return self._body
 
     @body.setter
