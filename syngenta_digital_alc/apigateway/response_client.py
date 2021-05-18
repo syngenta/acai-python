@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 
 from syngenta_digital_alc.common import json_helper
 
@@ -47,7 +47,7 @@ class ResponseClient:
     @property
     def body(self):
         if isinstance(self._body, (dict, list, tuple)):
-            return json.dumps(self._body)
+            return json.dumps(self._body, use_decimals=True)
         return self._body
 
     @body.setter
