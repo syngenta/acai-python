@@ -1,3 +1,6 @@
+import base64
+import gzip
+from io import BytesIO
 import json
 
 from syngenta_digital_alc.common import json_helper
@@ -6,73 +9,93 @@ from syngenta_digital_alc.common import json_helper
 class ResponseClient:
 
     def __init__(self):
-        self._body = {}
-        self._code = 200
-        self._base64_encoded = False
-        self._multi_value_headers = {}
-        self._headers = {
+        self.__body = {}
+        self.__code = 200
+        self.__base64_encoded = False
+        self.__compress = False
+        self.__headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': '*'
         }
 
     @property
     def headers(self):
-        return self._headers
+        return self.__headers
 
     @headers.setter
     def headers(self, value):
         key, val = value
-        self._headers[key] = val
+        self.__headers[key] = val
 
     @property
     def base64_encoded(self):
-        return self._base64_encoded
+        return self.__base64_encoded
 
     @base64_encoded.setter
     def base64_encoded(self, value):
-        self._base64_encoded = value
+        self.__base64_encoded = value
+
+    @property
+    def compress(self):
+        return self.__compress
+
+    @compress.setter
+    def compress(self, value):
+        self.__compress = value
 
     @property
     def code(self):
-        if isinstance(self._body, dict) and self._code == 200 and not self._body:
+        if isinstance(self.__body, dict) and self.__code == 200 and not self.__body:
             return 204
-        if isinstance(self._body, dict) and self._code == 200 and self.has_errors:
+        if isinstance(self.__body, dict) and self.__code == 200 and self.has_errors:
             return 400
-        return self._code
+        return self.__code
 
     @code.setter
     def code(self, code):
-        self._code = code
+        self.__code = code
 
     @property
     def body(self):
-        if isinstance(self._body, (dict, list, tuple)):
-            return json.dumps(self._body)
-        return self._body
+        if self.compress:
+            return self.__compress_body()
+        if isinstance(self.__body, (dict, list, tuple)):
+            return json.dumps(self.__body)
+        return self.__body
 
     @body.setter
     def body(self, body):
-        self._body = body
+        self.__body = body
 
     @property
     def response(self):
+        body = self.body
         return {
             'isBase64Encoded': self.base64_encoded,
             'headers': self.headers,
             'statusCode': self.code,
-            'body': self.body
+            'body': body
         }
 
     @property
     def has_errors(self):
-        return 'errors' in self._body
+        return 'errors' in self.__body
 
     def set_error(self, key_path, message):
         error = {'key_path': key_path, 'message': message}
-        if (isinstance(self._body, dict) and 'errors' in self._body):
-            self._body['errors'].append(error)
+        if (isinstance(self.__body, dict) and 'errors' in self.__body):
+            self.__body['errors'].append(error)
         else:
-            self._body = {'errors': [error]}
+            self.__body = {'errors': [error]}
+
+    def __compress_body(self):
+        self.headers = ('Content-Encoding', 'gzip')
+        self.base64_encoded = True
+        compressed = BytesIO()
+        body = json_helper.try_encode_json(self.__body)
+        with gzip.GzipFile(fileobj=compressed, mode='w') as file:
+            file.write(body.encode('utf-8'))
+        return base64.b64encode(compressed.getvalue()).decode('ascii')
 
     def __str__(self):
         response = self.response

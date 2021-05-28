@@ -1,3 +1,6 @@
+import base64
+import urllib.parse
+
 from syngenta_digital_alc.common import json_helper
 
 
@@ -28,6 +31,23 @@ class RequestClient:
     @property
     def body(self):
         return json_helper.try_decode_json(self._event.get('body', {}))
+
+    @property
+    def json(self):
+        return json_helper.try_decode_json(self._event.get('body', {}))
+
+    @property
+    def graphql(self):
+        try:
+            if base64.b64encode(base64.b64decode(self._event.get('body'))) == self._event.get('body'):
+                request = base64.b64decode(self._event.get('body'))
+        except Exception:
+            request = self._event.get('body')
+        return json_helper.try_decode_json(request)
+
+    @property
+    def form_encoded(self):
+        return dict(urllib.parse.parse_qsl(self._event.get('body', {})))
 
     @property
     def params(self):

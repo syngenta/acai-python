@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from syngenta_digital_alc.apigateway.request_client import RequestClient
@@ -7,6 +8,9 @@ class ApiGatewayRequestClientTest(unittest.TestCase):
 
     def setUp(self):
         self.RequestClient = RequestClient(mock_data.apigateway_event(), None)
+        self.RequestClientGraphQL = RequestClient(mock_data.apigateway_event_graphql(), None)
+        self.RequestClientGraphQLEncoded = RequestClient(mock_data.apigateway_event_graphql(True), None)
+        self.RequestClientFormEncoded = RequestClient(mock_data.apigateway_event_form_encoded(), None)
 
     def test_request_http_method(self):
         self.assertEqual(self.RequestClient.method, 'GET')
@@ -45,6 +49,35 @@ class ApiGatewayRequestClientTest(unittest.TestCase):
         self.assertDictEqual(
             self.RequestClient.body,
             {'body_key':'body_value'}
+        )
+
+    def test_json(self):
+        self.assertDictEqual(
+            self.RequestClient.json,
+            {'body_key':'body_value'}
+        )
+
+    def test_graphql(self):
+        self.assertDictEqual(
+            self.RequestClientGraphQL.graphql,
+            json.loads(mock_data.apigateway_event_graphql().get('body'))
+        )
+
+    def test_graphql_encoded(self):
+        self.assertDictEqual(
+            self.RequestClientGraphQLEncoded.graphql,
+            json.loads(mock_data.apigateway_event_graphql().get('body'))
+        )
+
+    def test_form_encoded(self):
+        self.assertDictEqual(
+            self.RequestClientFormEncoded.form_encoded,
+            {
+                'tracking_code': '4081141452',
+                'status': 'Complete',
+                'cpu_hours': '0.006002831527777777',
+                'result_url': 'https://s3.amazonaws.com/fielddata.onsiteag.com/20210506/6499361e-1d72-4fbf-86be-663edc56f840/OnsiteProcessed_20210506_201030.zip?AWSAccessKeyId=AKIA3TR2EEYUQT5E23PG&Expires=1622949031&Signature=ck8zjmWbMweHVIit0j9e%2BeGsGQw%3D'
+            }
         )
 
     def test_full_request(self):

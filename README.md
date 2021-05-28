@@ -134,9 +134,10 @@ Property Name       | Description
 `params`            | query string params of apigateway event
 `path`              | path arguments of apigateway event
 `json`              | body of apigateway event parsed as JSON
-`xml`               | body of apigateway event parsed as XML
-`body`              | body of apigateway event will be parsed based on context headers
-`request`           | full request broken down as an object literal
+`graphql`           | body of apigateway event parsed as graphl (output is a graphql standard dict {query: 'some_graph_query{}'})
+`form_encoded`      | body of apigateway event parsed from a form encoded string
+`body`              | body of apigateway event will try to parse based on request headers, use a specific property (json, graphql, etc)if you know what you know the type of the request you're getting
+`request`           | full request broken down as an dictionary
 
 
 ***Response Properties***
@@ -147,6 +148,7 @@ Property Name       | Description
 `code`              | status code of response (will default to 204 if no content && will default 400 if errors found in response)
 `authorizer`        | authorizer of apigateway event (will default to use headers if using with [serverless offline](https://www.npmjs.com/package/serverless-offline))
 `base64_encoded`    | whether your body is base64Encoded [see docs](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-output-format)
+`compress`          | if set to true, will automatically compress, json and b64 encode as well as compress the body of your response and add appropriate headers
 `has_errors()`      | function will tell you if errors in the response
 `set_error()`       | function will set error key and message
 
