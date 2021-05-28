@@ -1,7 +1,8 @@
 import base64
 import gzip
 from io import BytesIO
-import json
+
+import simplejson as json
 
 from syngenta_digital_alc.common import json_helper
 
@@ -60,7 +61,7 @@ class ResponseClient:
         if self.compress:
             return self.__compress_body()
         if isinstance(self.__body, (dict, list, tuple)):
-            return json.dumps(self.__body)
+            return json.dumps(self.__body, use_decimal=True)
         return self.__body
 
     @body.setter
