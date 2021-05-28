@@ -1,6 +1,5 @@
 version: 2.1
 orbs:
-    aws-cli: circleci/aws-cli@1.2.1
     slack: circleci/slack@3.4.2
 commands:
     python-install:
@@ -31,6 +30,8 @@ commands:
             - run: pipenv run coverage
             - store_test_results:
                 path: ./coverage/reports
+            - store_artifacts:
+                path: ./coverage
     pypi-setup:
         steps:
             - run: echo -e "[pypi]" >> ~/.pypirc
@@ -57,7 +58,6 @@ jobs:
             - image: cimg/python:3.8
         steps:
             - checkout
-            - aws-cli/setup
             - python-test-install
             - python-lint
             - python-test
@@ -77,7 +77,6 @@ workflows:
         jobs:
             - install-build-deploy:
                 context:
-                    - tools-cicd
                     - pypi-token
                 filters:
                     tags:
@@ -88,7 +87,6 @@ workflows:
         jobs:
             - install-build-test:
                 context:
-                    - tools-cicd
                     - pypi-token
                 filters:
                     tags:
