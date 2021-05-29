@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
     slack: circleci/slack@3.4.2
+    sonarcloud: sonarsource/sonarcloud@1.0.2
 commands:
     python-install:
         steps:
@@ -62,6 +63,7 @@ jobs:
             - python-lint
             - python-test
             - python-report
+            - sonarcloud/scan
             - slack-error
     install-build-deploy:
         docker:
@@ -77,7 +79,9 @@ workflows:
         jobs:
             - install-build-deploy:
                 context:
+                    - tools-cicd
                     - pypi-token
+                    - sonarcloud-token
                 filters:
                     tags:
                         only: /.*/
@@ -87,7 +91,9 @@ workflows:
         jobs:
             - install-build-test:
                 context:
+                    - tools-cicd
                     - pypi-token
+                    - sonarcloud-token
                 filters:
                     tags:
                         ignore: /.*/
