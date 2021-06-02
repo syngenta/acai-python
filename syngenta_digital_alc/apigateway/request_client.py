@@ -41,6 +41,8 @@ class RequestClient:
         try:
             if base64.b64encode(base64.b64decode(self._event.get('body'))) == self._event.get('body'):
                 request = base64.b64decode(self._event.get('body'))
+            else:
+                request = self._event.get('body')
         except Exception:
             request = self._event.get('body')
         return json_helper.try_decode_json(request)
