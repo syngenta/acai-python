@@ -8,6 +8,9 @@ import jsonpickle
 class CommonLogger:
 
     def __init__(self):
+        self.__json = jsonpickle
+        self.__json.set_encoder_options('simplejson', use_decimal=True)
+        self.__json.set_preferred_backend('simplejson')
         self.default_level = 3
         self.log_levels = {
             'INFO': 1,
@@ -22,7 +25,7 @@ class CommonLogger:
             self.__log(**kwargs)
 
     def __log_local(self, **kwargs):
-        print(jsonpickle.encode({
+        print(self.__json.encode({
             'level': kwargs.get('level', 'INFO'),
             'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'stack': traceback.format_exc().splitlines(),
@@ -30,7 +33,7 @@ class CommonLogger:
         }, indent=4))
 
     def __log(self, **kwargs):
-        print(jsonpickle.encode({
+        print(self.__json.encode({
             'level': kwargs.get('level', 'INFO'),
             'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'stack': traceback.format_exc().splitlines(),
