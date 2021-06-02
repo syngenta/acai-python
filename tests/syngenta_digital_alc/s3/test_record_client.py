@@ -53,3 +53,6 @@ class S3RecordClientTest(unittest.TestCase):
 
     def test_s3_schema_version(self):
         self.assertEqual(self.record.s3_schema_version, '1.0')
+
+    def test_s3_key(self):
+        self.assertEqual(self.record.s3_key, '123456789/3c8e97105d5f462f8896a7189910ee16-original.jpg')

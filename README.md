@@ -300,9 +300,10 @@ Property Name                 | Description
 `region`                      | region of s3 record (will convert ddb json)
 `request_parameters`          | request parameters of s3 record
 `response_elements`           | response elements of s3 record
-`configuration_id`            | configuration id of s3 record
-`object`                      | object of s3 record
-`bucket`                      | bucket of s3 record
+`s3_configuration_id`         | configuration id of s3 record
+`s3_object`                   | object of s3 record
+`s3_bucket`                   | bucket of s3 record
+`s3_key`                      | key of the object for the s3 record
 `s3_schema_version`           | s3 schema version of s3 record
 
 ### generic events

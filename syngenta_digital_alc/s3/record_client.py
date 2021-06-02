@@ -44,6 +44,10 @@ class RecordClient:
         return self._record['s3'].get('bucket')
 
     @property
+    def s3_key(self):
+        return self._record['s3'].get('object', {}).get('key')
+
+    @property
     def s3_schema_version(self):
         return self._record['s3'].get('s3SchemaVersion')
 
