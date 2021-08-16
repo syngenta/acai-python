@@ -32,7 +32,14 @@ class RequestValidator:
         sent_keys = []
         if isinstance(sent, dict) and len(sent.keys()) > 0:
             sent_keys = sent.keys()
-        missing_fields = [value for value in required if value not in sent_keys]
+
+        if isinstance(required, str):
+            missing_fields = [] if required in sent_keys else [required]
+        elif isinstance(required, (list, tuple)):
+            missing_fields = [value for value in required if value not in sent_keys]
+        else:
+            raise
+
         if len(required) > 0:
             for field in missing_fields:
                 self.response_client.code = 400
