@@ -152,7 +152,7 @@ Property Name       | Description
 `has_errors()`      | function will tell you if errors in the response
 `set_error()`       | function will set error key and message
 
-1. (OPTIONAL) Interrogate All Requests with `before_all`
+***(OPTIONAL) RUN LOGIC BEFORE EVERY REQUEST***
 
 This is a feature which allows you to interrogate all requests before they hit your endpoint. Here are some things to remember:
 
