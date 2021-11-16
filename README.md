@@ -152,6 +152,49 @@ Property Name       | Description
 `has_errors()`      | function will tell you if errors in the response
 `set_error()`       | function will set error key and message
 
+1. (OPTIONAL) Interrogate All Requests with `before_all`
+
+This is a feature which allows you to interrogate all requests before they hit your endpoint. Here are some things to remember:
+
+* your function will run only after a valid route and method have been determined
+* runs before any validation
+* requires you use the `BeforeAllException` class to stop processing or route will continue
+* must be a pure function that is passed in context
+
+#### Example configuration
+```python
+import os
+
+from syngenta_digital_alc.apigateway.router import Router
+
+from example.function.to.import import example_before_all
+
+
+def route(event, context):
+    router = Router(
+        base_path='{}/{}'.format(os.environ['service'], 'v1'),
+        handler_path='application.v1.controller.apigateway',
+        schema_path='application/openapi.yml',
+        event=event,
+        context=context,
+        before_all=example_before_all.run # this is the important part
+    )
+    return router.route()   
+```
+
+#### Example before all function
+
+```python
+from syngenta_digital_alc.apigateway.custom_exceptions import BeforeAllException
+from syngenta_digital_alc.apigateway.handler_requirements import handler_requirements
+
+
+@handler_requirements()
+def run(request, response):
+    if not request.headers.get('x-api-key') == 'some-secret-key':
+        raise BeforeAllException(code=401, key_path='headers:x-api-key', message='you need an api key')
+
+```
 
 ### sqs events
 
