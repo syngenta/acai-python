@@ -24,7 +24,8 @@ class Router:
             self.router_response.code = b_error.code
             self.router_response.set_error(b_error.key_path, b_error.message)
             return self.router_response.response
-        except:
+        except Exception as error:
+            logger.log(level='ERROR', log=error, trace=True)
             return self.router_response.response
 
     def _route_request(self):
