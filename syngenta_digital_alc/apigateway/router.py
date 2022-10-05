@@ -23,8 +23,10 @@ class Router:
         except BeforeAllException as b_error:
             self.router_response.code = b_error.code
             self.router_response.set_error(b_error.key_path, b_error.message)
+            logger.log(level='ERROR', log=b_error.message)
             return self.router_response.response
-        except:
+        except Exception as error:
+            logger.log(level='ERROR', log=error.message)
             return self.router_response.response
 
     def _route_request(self):
