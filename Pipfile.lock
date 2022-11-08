@@ -74,11 +74,11 @@
         },
         "jsonref": {
             "hashes": [
-                "sha256:b1e82fa0b62e2c2796a13e5401fe51790b248f6d9bf9d7212a3e31a3501b291f",
-                "sha256:f3c45b121cf6257eafabdc3a8008763aed1cd7da06dbabc59a9e4d2a5e4e6697"
+                "sha256:010ca2752546309d8646cd743c64819c3e37bf710c07929bf9c1b409ee9ec6dd",
+                "sha256:51d3e18b83ca7170ff51286a0e1a6719d8b7fcc7abdb16b189395a8536996b97"
             ],
             "index": "pypi",
-            "version": "==0.2"
+            "version": "==1.0.1"
         },
         "jsonschema": {
             "hashes": [
