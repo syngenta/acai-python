@@ -7,8 +7,8 @@ with open('README.md', 'r') as fh:
 setup(
     name='syngenta_digital_alc',
     version=os.getenv('CIRCLE_TAG'),
-    url='https://github.com/syngenta-digital/alc-python.git',
-    author='Paul Cruse III, Technical Lead, Syngenta Digital',
+    url='https://github.com/syngenta-digital/package-python-alc.git',
+    author='Paul Cruse III, Engineering Lead, Syngenta Digital',
     author_email='paul.cruse@syngenta.com',
     description='DRY approach to working with AWS Lambdas',
     long_description=long_description,
