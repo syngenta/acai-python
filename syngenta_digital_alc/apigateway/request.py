@@ -118,7 +118,7 @@ class Request:
         return self.__event
 
     @property
-    def request(self):
+    def complete(self):
         return {
             'method': self.method,
             'resource': self.resource,
@@ -133,4 +133,4 @@ class Request:
         self.__path_params = {}
 
     def __str__(self):
-        return JsonHelper.encode(self.request)
+        return JsonHelper.encode(self.complete)
