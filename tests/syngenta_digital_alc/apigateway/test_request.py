@@ -188,4 +188,4 @@ class RequestTest(unittest.TestCase):
 
     def test_str(self):
         request = Request(self.basic_request)
-        self.assertEqual(str(request.request), "{'method': 'get', 'resource': '/{proxy+}', 'headers': {'x-api-key': 'SOME-KEY', 'content-type': 'application/json'}, 'authorizer': {'x-authorizer-key': 'SOME KEY', 'principalId': '9de3f415a97e410386dbef146e88744e', 'integrationLatency': 572}, 'params': {'query': {'name': 'me'}, 'path': {'proxy': 'hello'}}, 'body': {'body_key': 'body_value'}, 'context': {}}")
+        self.assertEqual(str(request), '{"method": "get", "resource": "/{proxy+}", "headers": {"x-api-key": "SOME-KEY", "content-type": "application/json"}, "authorizer": {"x-authorizer-key": "SOME KEY", "principalId": "9de3f415a97e410386dbef146e88744e", "integrationLatency": 572}, "params": {"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, "context": {}}')
