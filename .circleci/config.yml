@@ -18,7 +18,7 @@ commands:
                     - ".venv"
     setup-artifacts:
         steps:
-            - run: mkdir coverage && mkdir coverage/reports || exit 0
+            - run: mkdir coverage && mkdir coverage/unit-tests || exit 0
     python-lint:
         steps:
             - run: pipenv run lint
@@ -31,7 +31,7 @@ commands:
         steps:
             - run: pipenv run coverage
             - store_test_results:
-                path: ./coverage/reports
+                path: ./coverage/unit-tests
             - store_artifacts:
                 path: ./coverage
     pypi-setup:

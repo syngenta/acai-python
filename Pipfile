@@ -27,5 +27,5 @@ pylint-quotes = "*"
 
 [scripts]
 test = "python -m unittest discover"
-coverage = "coverage run --source syngenta_digital_alc/ -m pytest tests/syngenta_digital_alc --cov=syngenta_digital_alc --junitxml ./coverage/reports/xunit.xml --cov-report xml:./coverage/reports/coverage.xml --html=./coverage/unit-test/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true"
-lint = "pylint syngenta_digital_alc --recursive=y --load-plugins pylint_quotes --fail-under 10 --output-format=text:coverage/lint.txt,json:coverage/lint.json,parseable,colorized"
+coverage = "coverage run --source syngenta_digital_alc/ -m pytest tests/syngenta_digital_alc --cov=syngenta_digital_alc --junitxml ./coverage/unit-tests/xunit.xml --cov-report xml:./coverage/unit-tests/coverage.xml --html=./coverage/unit-test/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true"
+lint = "pylint syngenta_digital_alc --recursive=y --load-plugins pylint_quotes --fail-under 10 --output-format=text:coverage/lint/report.txt,json:coverage/lint/report.json,parseable,colorized"
