@@ -120,7 +120,7 @@ def get_basic_graphql():
         'queryStringParameters': {
             'name': 'me'
         },
-        'body': """{players{name}}"""
+        'body': '{players{name}}'
     }
 
 def basic_graphql_variables():
