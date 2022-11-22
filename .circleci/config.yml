@@ -55,7 +55,7 @@ commands:
 jobs:
     install-build-test:
         docker:
-            - image: cimg/python:3.8.9
+            - image: cimg/python:3.8.6
         steps:
             - checkout
             - python-test-install
@@ -65,7 +65,7 @@ jobs:
             - sonarcloud/scan
     install-build-deploy:
         docker:
-            - image: cimg/python:3.8.9
+            - image: cimg/python:3.8.6
         steps:
             - checkout
             - python-install
