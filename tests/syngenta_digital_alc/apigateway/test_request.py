@@ -9,7 +9,7 @@ from syngenta_digital_alc.apigateway.request import Request
 from tests.mocks.apigateway import mock_request
 
 
-class ApiGatewayRequestTest(unittest.TestCase):
+class RequestTest(unittest.TestCase):
 
     def setUp(self):
         self.basic_request = mock_request.get_basic()
