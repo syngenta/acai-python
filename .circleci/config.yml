@@ -18,7 +18,7 @@ commands:
                     - ".venv"
     setup-artifacts:
         steps:
-            - run: mkdir coverage && mkdir coverage/unit-tests || exit 0
+            - run: mkdir coverage && mkdir coverage/unit-tests && mkdir coverage/lint || exit 0
     python-lint:
         steps:
             - run: pipenv run lint
