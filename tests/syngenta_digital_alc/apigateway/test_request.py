@@ -96,9 +96,15 @@ class RequestTest(unittest.TestCase):
 
     def test_graphql_base64(self):
         base64_graphql = self.basic_graphql.copy()
-        base64_graphql['body'] = base64.b64encode(base64_graphql['body'].encode('utf-8'))
+        base64_graphql['body'] = 'e3BsYXllcnN7bmFtZX19' # used online tool to generate this
         request = Request(base64_graphql)
         self.assertEqual(request.graphql, self.basic_graphql['body'])
+
+    def test_graphql_bad_base64(self):
+        bad_base64_graphql = self.basic_graphql.copy()
+        bad_base64_graphql['body'] = 1234
+        request = Request(bad_base64_graphql)
+        self.assertEqual(request.graphql, bad_base64_graphql['body'])
 
     def test_graphql_with_vairables(self):
         request = Request(self.basic_graphql_variables)

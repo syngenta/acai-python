@@ -79,10 +79,7 @@ class Request:
     @property
     def graphql(self):
         try:
-            if base64.b64encode(base64.b64decode(self.__event_body)) == self.__event_body:
-                request = base64.b64decode(self.__event_body).decode('utf-8')
-            else:
-                request = self.__event_body
+            request = base64.b64decode(self.__event_body).decode('utf-8')
         except Exception:
             request = self.__event_body
         return JsonHelper.decode(request)
@@ -97,9 +94,7 @@ class Request:
 
     @property
     def query_params(self):
-        if self.__event.get('queryStringParameters') is None:
-            return {}
-        return self.__event.get('queryStringParameters')
+        return self.__event.get('queryStringParameters', {})
 
     @property
     def path_params(self):
