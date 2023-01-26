@@ -11,10 +11,10 @@ allow_prereleases = true
 
 [packages]
 dynamodb_json = "*"
-jsonschema = "*"
-jsonref = "*"
-pyyaml = "*"
 jsonpickle = "*"
+jsonref = "*"
+jsonschema = "*"
+pyyaml = "*"
 xmltodict = "*"
 
 [dev-packages]

@@ -123,8 +123,10 @@ dmypy.json
 cover
 coverage
 lint-*
+requirements.txt
 
 # IDE
 .idea
 .vscode
+
 
