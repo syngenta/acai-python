@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true
 
 [packages]
-dynamodb_json ="*"
+dynamodb_json = "*"
 jsonschema = "*"
 jsonref = "*"
 pyyaml = "*"
