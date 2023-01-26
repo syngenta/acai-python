@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from syngenta_digital_alc.common.json_helper import JsonHelper
+from acai.common.json_helper import JsonHelper
 
 
 class JsonHelperTest(unittest.TestCase):

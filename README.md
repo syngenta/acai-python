@@ -29,13 +29,13 @@ Installation is done using the
 [`pip install`](https://packaging.python.org/tutorials/installing-packages/) command:
 
 ```bash
-$ pip install syngenta_digital_alc
+$ pip install acai
 ```
 
 or
 
 ```bash
-$ pipenv install syngenta_digital_alc
+$ pipenv install acai
 ```
 
 ## Basic Usage
@@ -64,7 +64,8 @@ functions:
 ```python
 import os
 
-from syngenta_digital_alc.apigateway.router import Router
+from acai.apigateway.router import Router
+
 
 # must pass current service, version of API and where handlers are located
 def route(event, context):
@@ -75,7 +76,7 @@ def route(event, context):
         event=event,
         context=context
     )
-    return router.route()    
+    return router.route()
 
 # examples of how router routes (called route -> will import):
 # api.url.com/service/v1 -> application.v1.handler.apigateway.__init__.py
@@ -98,7 +99,8 @@ Option Name   | Required | Type   | Default | Description
 2. Create handler file with matching methods and requirements
 
 ```python
-from syngenta_digital_alc.apigateway.handler_requirements import handler_requirements
+from acai.apigateway.handler_requirements import handler_requirements
+
 
 @handler_requirements(
     required_headers=['x-login-token', 'x-permission-token'],
@@ -162,12 +164,14 @@ This is a feature which allows you to interrogate all requests before they hit y
 * must be a pure function that is passed in context
 
 #### Example configuration
+
 ```python
 import os
 
-from syngenta_digital_alc.apigateway.router import Router
+from acai.apigateway.router import Router
 
-from example.function.to.import import example_before_all
+from example.function.to. import
+import example_before_all
 
 
 def route(event, context):
@@ -177,7 +181,7 @@ def route(event, context):
         schema_path='application/openapi.yml',
         event=event,
         context=context,
-        before_all=example_before_all.run # this is the important part
+        before_all=example_before_all.run  # this is the important part
     )
     return router.route()   
 ```
@@ -185,8 +189,8 @@ def route(event, context):
 #### Example before all function
 
 ```python
-from syngenta_digital_alc.apigateway.custom_exceptions import BeforeAllException
-from syngenta_digital_alc.apigateway.handler_requirements import handler_requirements
+from acai.apigateway.custom_exceptions import BeforeAllException
+from acai.apigateway.handler_requirements import handler_requirements
 
 
 @handler_requirements()
@@ -214,7 +218,8 @@ functions:
 1. Initialize the Event and Iterate over the Records
 
 ```python
-from syngenta_digital_alc.sqs.handler_requirements import handler_requirements
+from acai.sqs.handler_requirements import handler_requirements
+
 
 @handler_requirements()
 def handle_sqs_trigger(event):
@@ -265,7 +270,8 @@ functions:
 1. Initialize the Event and Iterate over the Records
 
 ```python
-from syngenta_digital_alc.dynamodb.handler_requirements import handler_requirements
+from acai.dynamodb.handler_requirements import handler_requirements
+
 
 @handler_requirements()
 def handle_ddb_trigger(event):
@@ -316,7 +322,8 @@ functions:
 1. Initialize the Event and Iterate over the Records
 
 ```python
-from syngenta_digital_alc.s3.handler_requirements import handler_requirements
+from acai.s3.handler_requirements import handler_requirements
+
 
 @handler_requirements()
 def handle_s3_trigger(event):
@@ -363,11 +370,12 @@ functions:
 1. Initialize the Event and Iterate over the Records
 
 ```python
-from syngenta_digital_alc.generic.handler_requirements import handler_requirements
+from acai.generic.handler_requirements import handler_requirements
+
 
 @handler_requirements()
 def handle_generic_trigger(event):
-    some_func(event.body) # will automatically decode JSON, if it is JSON
+    some_func(event.body)  # will automatically decode JSON, if it is JSON
 ```
 
 ***Event Client Properties***

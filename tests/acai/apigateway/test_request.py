@@ -5,7 +5,7 @@ import urllib
 
 import xmltodict
 
-from syngenta_digital_alc.apigateway.request import Request
+from acai.apigateway.request import Request
 from tests.mocks.apigateway import mock_request
 
 
