@@ -61,7 +61,8 @@ class Request:
             content_type = self.headers['content-type'].split(';')[0]
             parser = self.__parsers.get(content_type, 'raw')
             return getattr(self, parser)
-        except Exception:
+        except Exception as error:
+            print(repr(error))
             return self.__event_body
 
     @property
@@ -80,7 +81,8 @@ class Request:
     def graphql(self):
         try:
             request = base64.b64decode(self.__event_body).decode('utf-8')
-        except Exception:
+        except Exception as error:
+            print(error)
             request = self.__event_body
         return JsonHelper.decode(request)
 

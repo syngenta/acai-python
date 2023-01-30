@@ -1,4 +1,3 @@
-import base64
 import json
 import unittest
 import urllib
@@ -96,7 +95,7 @@ class RequestTest(unittest.TestCase):
 
     def test_graphql_base64(self):
         base64_graphql = self.basic_graphql.copy()
-        base64_graphql['body'] = 'e3BsYXllcnN7bmFtZX19' # used online tool to generate this
+        base64_graphql['body'] = 'e3BsYXllcnN7bmFtZX19'  # used online tool to generate this
         request = Request(base64_graphql)
         self.assertEqual(request.graphql, self.basic_graphql['body'])
 
@@ -106,7 +105,7 @@ class RequestTest(unittest.TestCase):
         request = Request(bad_base64_graphql)
         self.assertEqual(request.graphql, bad_base64_graphql['body'])
 
-    def test_graphql_with_vairables(self):
+    def test_graphql_with_variables(self):
         request = Request(self.basic_graphql_variables)
         self.assertDictEqual(request.graphql, json.loads(self.basic_graphql_variables['body']))
 
@@ -122,7 +121,7 @@ class RequestTest(unittest.TestCase):
         request = Request(self.basic_request)
         request.clear_path_params()
         request.path_params = ('hello', 'world')
-        self.assertDictEqual(request.path_params, {'hello':'world'})
+        self.assertDictEqual(request.path_params, {'hello': 'world'})
 
     def test_path_params_clear(self):
         request = Request(self.basic_request)
@@ -188,4 +187,9 @@ class RequestTest(unittest.TestCase):
 
     def test_str(self):
         request = Request(self.basic_request)
-        self.assertEqual(str(request), '{"method": "get", "resource": "/{proxy+}", "headers": {"x-api-key": "SOME-KEY", "content-type": "application/json"}, "authorizer": {"x-authorizer-key": "SOME KEY", "principalId": "9de3f415a97e410386dbef146e88744e", "integrationLatency": 572}, "params": {"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, "context": {}}')
+        self.assertEqual(str(request),
+                         '{"method": "get", "resource": "/{proxy+}", "headers": {"x-api-key": "SOME-KEY", '
+                         '"content-type": "application/json"}, "authorizer": {"x-authorizer-key": "SOME KEY", '
+                         '"principalId": "9de3f415a97e410386dbef146e88744e", "integrationLatency": 572}, "params": {'
+                         '"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, '
+                         '"context": {}}')
