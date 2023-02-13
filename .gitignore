@@ -124,6 +124,7 @@ cover
 coverage
 lint-*
 requirements.txt
+Dockerfile
 
 # IDE
 .idea
