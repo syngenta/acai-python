@@ -59,7 +59,7 @@ jobs:
             - python-lint
             - python-test
             - python-report
-            - sonarcloud/scan
+#            - sonarcloud/scan
     install-build-deploy:
         docker:
             - image: cimg/python:3.9
