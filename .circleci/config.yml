@@ -1,14 +1,14 @@
 version: 2.1
-orbs:
-    sonarcloud: sonarsource/sonarcloud@1.0.2
+#orbs:
+#    sonarcloud: sonarsource/sonarcloud@1.0.2
 commands:
     python-install:
         steps:
-            - run: ln -s requirements local/requirements.txt
+            - run: ln -s local/requirements.txt requirements.txt
             - run: pip install -r requirements.txt
     python-test-install:
         steps:
-            - run: ln -s requirements local/requirements_dev.txt
+            - run: ln -s local/requirements_dev.txt requirements.txt
             - run: pip install -r requirements.txt
     setup-artifacts:
         steps:
