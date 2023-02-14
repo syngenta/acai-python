@@ -9,15 +9,13 @@ from tests.mocks.apigateway import mock_request
 
 
 class RequestTest(unittest.TestCase):
-
-    def setUp(self):
-        self.basic_request = mock_request.get_basic()
-        self.basic_offline = mock_request.get_basic_offline()
-        self.basic_form = mock_request.get_basic_form()
-        self.basic_xml = mock_request.get_basic_xml()
-        self.basic_raw = mock_request.get_basic_raw()
-        self.basic_graphql = mock_request.get_basic_graphql()
-        self.basic_graphql_variables = mock_request.basic_graphql_variables()
+    basic_request = mock_request.get_basic()
+    basic_offline = mock_request.get_basic_offline()
+    basic_form = mock_request.get_basic_form()
+    basic_xml = mock_request.get_basic_xml()
+    basic_raw = mock_request.get_basic_raw()
+    basic_graphql = mock_request.get_basic_graphql()
+    basic_graphql_variables = mock_request.basic_graphql_variables()
 
     def test_method(self):
         request = Request(self.basic_request)
