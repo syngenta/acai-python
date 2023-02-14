@@ -4,32 +4,26 @@ orbs:
 commands:
     python-install:
         steps:
-            - run: pip install pipenv
-            - run: pipenv install
+            - run: ln -s requirements local/requirements.txt
+            - run: pip install -r requirements.txt
     python-test-install:
         steps:
-            - restore_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - run: pip install pipenv
-            - run: pipenv install --dev
-            - save_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-                paths:
-                    - ".venv"
+            - run: ln -s requirements local/requirements_dev.txt
+            - run: pip install -r requirements.txt
     setup-artifacts:
         steps:
             - run: mkdir coverage && mkdir coverage/unit-tests && mkdir coverage/lint || exit 0
     python-lint:
         steps:
-            - run: pipenv run lint
+            - run: pylint acai
             - store_artifacts:
                 path: ./coverage
     python-test:
         steps:
-            - run: pipenv run test
+            - run: python -m unittest discover
     python-report:
         steps:
-            - run: pipenv run coverage
+            - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./coverage/reports/xunit.xml --cov-report xml:./coverage/reports/coverage.xml --html=./coverage/unit-test/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true
             - store_test_results:
                 path: ./coverage/unit-tests
             - store_artifacts:
