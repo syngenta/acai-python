@@ -1,6 +1,4 @@
 version: 2.1
-#orbs:
-#    sonarcloud: sonarsource/sonarcloud@1.0.2
 commands:
     python-install:
         steps:
@@ -39,15 +37,6 @@ commands:
             - run: python3 setup.py sdist bdist_wheel
             - run: python3 -m pip install --user --upgrade twine
             - run: python3 -m twine upload dist/*
-    slack-status:
-        steps:
-            - slack/status:
-                mentions: '${CIRCLE_USERNAME}, version=$CIRCLE_TAG'
-    slack-error:
-        steps:
-            - slack/status:
-                fail_only: true
-                mentions: '${CIRCLE_USERNAME}'
 jobs:
     install-build-test:
         docker:
@@ -59,7 +48,6 @@ jobs:
             - python-lint
             - python-test
             - python-report
-#            - sonarcloud/scan
     install-build-deploy:
         docker:
             - image: cimg/python:3.9
@@ -72,9 +60,6 @@ workflows:
     install-build-deploy:
         jobs:
             - install-build-deploy:
-                context:
-                    - pypi-token
-                    - sonarcloud-token
                 filters:
                     tags:
                         only: /.*/
@@ -83,11 +68,6 @@ workflows:
     install-build-test:
         jobs:
             - install-build-test:
-                context:
-                    - shared-pypi-token
-                    - shared-sonarcloud-token
                 filters:
                     tags:
                         ignore: /.*/
-                    branches:
-                        ignore: /dependabot.*/
