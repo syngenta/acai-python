@@ -166,7 +166,7 @@ class RequestTest(unittest.TestCase):
 
     def test_request(self):
         request = Request(self.basic_request)
-        self.assertDictEqual(request.complete, {
+        self.assertDictEqual(request.full, {
             'method': 'get',
             'resource': '/{proxy+}',
             'headers': {
