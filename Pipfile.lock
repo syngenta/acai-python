@@ -66,11 +66,11 @@
         },
         "jsonpickle": {
             "hashes": [
-                "sha256:7b272918b0554182e53dc340ddd62d9b7f902fec7e7b05620c04f3ccef479a0e",
-                "sha256:de7f2613818aa4f234138ca11243d6359ff83ae528b2185efdd474f62bcf9ae1"
+                "sha256:032538804795e73b94ead410800ac387fdb6de98f8882ac957fcd247e3a85200",
+                "sha256:130d8b293ea0add3845de311aaba55e6d706d0bb17bc123bd2c8baf8a39ac77c"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==3.0.1"
         },
         "jsonref": {
             "hashes": [
