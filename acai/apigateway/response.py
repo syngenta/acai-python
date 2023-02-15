@@ -116,9 +116,9 @@ class Response:
         return str({
             'hasErrors': self.has_errors,
             'response': {
-                'headers': self.response['headers'],
-                'statusCode': self.response['statusCode'],
-                'isBase64Encoded': self.response['isBase64Encoded'],
-                'body': JsonHelper.decode(self.response['body'])
+                'headers': self.full['headers'],
+                'statusCode': self.full['statusCode'],
+                'isBase64Encoded': self.full['isBase64Encoded'],
+                'body': JsonHelper.decode(self.full['body'])
             }
         })
