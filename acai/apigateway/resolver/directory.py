@@ -3,7 +3,7 @@ from acai.apigateway.importer import Importer
 
 class Directory:
 
-    def __init__(self, **kwargs):  # pylint: disable=unused-private-member
+    def __init__(self, **kwargs):  # pylint: disable=W0238
         self.__base_path = Importer.clean_path(kwargs['base_path'])
         self.__importer = Importer(handlers=kwargs['handler_path'], mode='directory')
 
