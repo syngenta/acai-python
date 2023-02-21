@@ -143,51 +143,57 @@ class RequestTest(unittest.TestCase):
 
     def test_event(self):
         request = Request(self.basic_request)
-        self.assertDictEqual(request.event, {
-            'headers': {
-                'x-api-key': 'SOME-KEY',
-                'content-type': 'application/json'
-            },
-            'requestContext': {
-                'resourceId': 't89kib',
+        self.assertDictEqual(
+            request.event, {
+                'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'content-type': 'application/json'
+                },
+                'requestContext': {
+                    'resourceId': 't89kib',
+                    'authorizer': {
+                        'x-authorizer-key': 'SOME KEY',
+                        'principalId': '9de3f415a97e410386dbef146e88744e',
+                        'integrationLatency': 572
+                    }
+                },
+                'path': 'unit-test/v1/basic',
+                'pathParameters': {'proxy': 'hello'},
+                'resource': '/{proxy+}',
+                'httpMethod': 'GET',
+                'queryStringParameters': {'name': 'me'},
+                'body': '{"body_key": "body_value"}'
+            }
+        )
+
+    def test_request(self):
+        request = Request(self.basic_request)
+        self.assertDictEqual(
+            request.full, {
+                'method': 'get',
+                'resource': '/{proxy+}',
+                'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'content-type': 'application/json'
+                },
                 'authorizer': {
                     'x-authorizer-key': 'SOME KEY',
                     'principalId': '9de3f415a97e410386dbef146e88744e',
                     'integrationLatency': 572
-                }
-            },
-            'path': 'unit-test/v1/basic',
-            'pathParameters': {'proxy': 'hello'},
-            'resource': '/{proxy+}',
-            'httpMethod': 'GET',
-            'queryStringParameters': {'name': 'me'},
-            'body': '{"body_key": "body_value"}'
-        })
-
-    def test_request(self):
-        request = Request(self.basic_request)
-        self.assertDictEqual(request.full, {
-            'method': 'get',
-            'resource': '/{proxy+}',
-            'headers': {
-                'x-api-key': 'SOME-KEY',
-                'content-type': 'application/json'
-            },
-            'authorizer': {
-                'x-authorizer-key': 'SOME KEY',
-                'principalId': '9de3f415a97e410386dbef146e88744e',
-                'integrationLatency': 572
-            },
-            'params': {'query': {'name': 'me'}, 'path': {'proxy': 'hello'}},
-            'body': {'body_key': 'body_value'},
-            'context': {}
-        })
+                },
+                'params': {'query': {'name': 'me'}, 'path': {'proxy': 'hello'}},
+                'body': {'body_key': 'body_value'},
+                'context': {}
+            }
+        )
 
     def test_str(self):
         request = Request(self.basic_request)
-        self.assertEqual(str(request),
-                         '{"method": "get", "resource": "/{proxy+}", "headers": {"x-api-key": "SOME-KEY", '
-                         '"content-type": "application/json"}, "authorizer": {"x-authorizer-key": "SOME KEY", '
-                         '"principalId": "9de3f415a97e410386dbef146e88744e", "integrationLatency": 572}, "params": {'
-                         '"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, '
-                         '"context": {}}')
+        self.assertEqual(
+            str(request),
+            '{"method": "get", "resource": "/{proxy+}", "headers": {"x-api-key": "SOME-KEY", '
+            '"content-type": "application/json"}, "authorizer": {"x-authorizer-key": "SOME KEY", '
+            '"principalId": "9de3f415a97e410386dbef146e88744e", "integrationLatency": 572}, "params": {'
+            '"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, '
+            '"context": {}}'
+        )

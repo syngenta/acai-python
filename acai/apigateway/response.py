@@ -113,12 +113,14 @@ class Response:
         self.__headers['Access-Control-Allow-Headers'] = '*'
 
     def __str__(self):
-        return str({
-            'hasErrors': self.has_errors,
-            'response': {
-                'headers': self.full['headers'],
-                'statusCode': self.full['statusCode'],
-                'isBase64Encoded': self.full['isBase64Encoded'],
-                'body': JsonHelper.decode(self.full['body'])
+        return str(
+            {
+                'hasErrors': self.has_errors,
+                'response': {
+                    'headers': self.full['headers'],
+                    'statusCode': self.full['statusCode'],
+                    'isBase64Encoded': self.full['isBase64Encoded'],
+                    'body': JsonHelper.decode(self.full['body'])
+                }
             }
-        })
+        )

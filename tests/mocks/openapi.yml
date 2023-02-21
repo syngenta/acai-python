@@ -27,18 +27,18 @@ components:
                     type: string
         v1-test-request:
             allOf:
-            - $ref: "#/components/schemas/test_ref_model"
-            - required:
-                - test_id
-                - object_key
-                - array_number
-                - array_objects
+                -   $ref: "#/components/schemas/test_ref_model"
+                -   required:
+                        - test_id
+                        - object_key
+                        - array_number
+                        - array_objects
         v1-test-fail-request:
             allOf:
-            - $ref: "#/components/schemas/test_ref_model"
-            - required:
-                - test_id
-                - object_key
-                - array_number
-                - array_objects
-                - fail_id
+                -   $ref: "#/components/schemas/test_ref_model"
+                -   required:
+                        - test_id
+                        - object_key
+                        - array_number
+                        - array_objects
+                        - fail_id

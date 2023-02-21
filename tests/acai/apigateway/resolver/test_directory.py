@@ -1,23 +1,21 @@
 import unittest
 
-from acai.apigateway.resolver.directory import Directory
 from acai.apigateway.request import Request
+from acai.apigateway.resolver.directory import Directory
 from acai.apigateway.response import Response
-
 from tests.mocks.apigateway import mock_request
 
 
 class DirectoryTest(unittest.TestCase):
-	basic_request = mock_request.get_basic()
-	base_path = 'unit-test/v1'
-	handler_path = 'tests/mocks/apigateway/directory-handlers'
+    basic_request = mock_request.get_basic()
+    base_path = 'unit-test/v1'
+    handler_path = 'tests/mocks/apigateway/directory-handlers'
 
-	def setUp(self):
-		self.directory_resolver = Directory(base_path=self.base_path, handler_path=self.handler_path)
-		self.request = Request(self.basic_request)
-		self.response = Response()
+    def setUp(self):
+        self.directory_resolver = Directory(base_path=self.base_path, handler_path=self.handler_path)
+        self.request = Request(self.basic_request)
+        self.response = Response()
 
-	def test_should_find_route(self):
-		results = self.directory_resolver.resolve(self.request)
-		print(results)
-
+    def test_should_find_route(self):
+        results = self.directory_resolver.resolve(self.request)
+        print(results)

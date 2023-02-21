@@ -14,23 +14,25 @@ class ResponseTest(unittest.TestCase):
     def test_defaults(self):
         self.assertEqual(False, self.response.has_errors)
         self.assertDictEqual(
-                self.response.full,
-                {
-                        'headers': {
-                                'Access-Control-Allow-Origin': '*',
-                                'Access-Control-Allow-Headers': '*'
-                        },
-                        'statusCode': 204,
-                        'isBase64Encoded': False,
-                        'body': '{}'
-                }
+            self.response.full,
+            {
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': '*'
+                },
+                'statusCode': 204,
+                'isBase64Encoded': False,
+                'body': '{}'
+            }
         )
 
     def test_default_headers(self):
-        self.assertDictEqual(self.response.headers, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*'
-        })
+        self.assertDictEqual(
+            self.response.headers, {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
+            }
+        )
 
     def test_closed_cors_headers(self):
         self.response.open_cors = False
@@ -38,11 +40,13 @@ class ResponseTest(unittest.TestCase):
 
     def test_header_assignment(self):
         self.response.headers = ('some-key', 'some-value')
-        self.assertDictEqual(self.response.headers, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*',
-            'some-key': 'some-value'
-        })
+        self.assertDictEqual(
+            self.response.headers, {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+                'some-key': 'some-value'
+            }
+        )
 
     def test_compress(self):
         self.response.body = {'unit-test': True}
@@ -75,7 +79,9 @@ class ResponseTest(unittest.TestCase):
 
     def test_set_error(self):
         self.response.set_error('some-error-key', 'some-error-value')
-        self.assertEqual(self.response.body, '{"errors": [{"key_path": "some-error-key", "message": "some-error-value"}]}')
+        self.assertEqual(
+            self.response.body, '{"errors": [{"key_path": "some-error-key", "message": "some-error-value"}]}'
+        )
 
     def test_has_error(self):
         self.response.set_error('some-error-key', 'some-error-value')

@@ -1,4 +1,3 @@
-import json
 import unittest
 
 from acai.common.json_helper import JsonHelper
@@ -8,9 +7,9 @@ class JsonHelperTest(unittest.TestCase):
 
     def setUp(self):
         self.valid_json = '{"key": "value"}'
-        self.valid_dict = {'key':'value'}
+        self.valid_dict = {'key': 'value'}
         self.invalid_json = '{"key": "value"}{'
-        self.invalid_dict = {'key','value'}
+        self.invalid_dict = {'key', 'value'}
 
     def test_decode(self):
         valid_dict = JsonHelper.decode(self.valid_json)
