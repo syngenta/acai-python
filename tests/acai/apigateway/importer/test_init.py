@@ -37,11 +37,13 @@ class ImporterTest(unittest.TestCase):
     def test_list_files_in_handler_directory(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
         files = importer.list_files_in_handler_path()
+        print('files', files)
         self.assertTrue(len(files) >= 1)
 
     def test_list_files_by_handler_pattern(self):
         importer = Importer(handlers=self.handler_pattern, mode='pattern')
         files = importer.list_files_in_handler_path()
+        print('files', files)
         self.assertTrue(len(files) >= 1)
 
     # def test_get_file_tree(self):
