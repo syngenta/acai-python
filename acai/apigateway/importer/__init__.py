@@ -25,6 +25,7 @@ class Importer:
             return abs_path + os.sep + '**' + os.sep + '*.py'
         if self.__mode == 'pattern':
             return abs_path
+        return None
 
     def list_files_in_handler_path(self):
         glob_pattern = self.get_glob_pattern()
@@ -46,7 +47,7 @@ class Importer:
             self.__recurse_section(file_leaf, sections, index + 1)
         if section not in file_leaf:
             file_leaf[section] = {} if index + 1 < len(sections) else '*'
-        if type(file_leaf[section]) is dict and '__has_init' not in file_leaf[section]:
+        if isinstance(file_leaf[section], dict) and '__has_init' not in file_leaf[section]:
             file_leaf[section]['__has_init'] = False
             file_leaf[section]['__dynamic_file_count'] = set()
         self.__recurse_section(file_leaf[section], sections, index + 1)
