@@ -10,7 +10,7 @@ commands:
             - run: pip install -r requirements.txt
     setup-artifacts:
         steps:
-            - run: mkdir coverage && mkdir coverage/unit-tests && mkdir coverage/lint || exit 0
+            - run: mkdir coverage && mkdir coverage/unit-tests && mkdir coverage/lint && mkdir coverage/reports || exit 0
     python-lint:
         steps:
             - run: pylint acai

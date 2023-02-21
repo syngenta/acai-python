@@ -3,145 +3,152 @@ import json
 
 def get_basic():
     return {
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'content-type': 'application/json'
-        },
-        'requestContext': {
-            'resourceId':'t89kib',
-            'authorizer':{
-                'x-authorizer-key': 'SOME KEY',
-                'principalId': '9de3f415a97e410386dbef146e88744e',
-                'integrationLatency': 572,
-            }
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': json.dumps({'body_key':'body_value'})
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'content-type': 'application/json'
+            },
+            'requestContext': {
+                    'resourceId': 't89kib',
+                    'authorizer': {
+                            'x-authorizer-key': 'SOME KEY',
+                            'principalId': '9de3f415a97e410386dbef146e88744e',
+                            'integrationLatency': 572,
+                    }
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': json.dumps({'body_key': 'body_value'})
     }
+
 
 def get_basic_offline():
     return {
-        'isOffline': True,
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'x-authorizer-key': 'SOME KEY',
-            'content-type': 'application/json'
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': json.dumps({'body_key':'body_value'})
+            'isOffline': True,
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'x-authorizer-key': 'SOME KEY',
+                    'content-type': 'application/json'
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': json.dumps({'body_key': 'body_value'})
     }
 
 
 def get_basic_form():
     return {
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'x-authorizer-key': 'SOME KEY',
-            'content-type': 'application/x-www-form-urlencoded'
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': 'param1=data1&param2=data2&param3=data3'
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'x-authorizer-key': 'SOME KEY',
+                    'content-type': 'application/x-www-form-urlencoded'
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': 'param1=data1&param2=data2&param3=data3'
     }
+
 
 def get_basic_xml():
     return {
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'x-authorizer-key': 'SOME KEY',
-            'content-type': 'application/xml'
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': '<root xmlns="http://defaultns.com/" xmlns:a="http://a.com/" xmlns:b="http://b.com/"><x>1</x><a:y>2</a:y><b:z>3</b:z></root>'
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'x-authorizer-key': 'SOME KEY',
+                    'content-type': 'application/xml'
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': '<root xmlns="http://defaultns.com/" xmlns:a="http://a.com/" xmlns:b="http://b.com/"><x>1</x><a:y>2</a:y><b:z>3</b:z></root>'
     }
+
 
 def get_basic_raw():
     return {
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'x-authorizer-key': 'SOME KEY'
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': 'unit-test'
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'x-authorizer-key': 'SOME KEY'
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': 'unit-test'
     }
+
 
 def get_basic_graphql():
     return {
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'x-authorizer-key': 'SOME KEY',
-            'content-type': 'application/graphql'
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': '{players{name}}'
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'x-authorizer-key': 'SOME KEY',
+                    'content-type': 'application/graphql'
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': '{players{name}}'
     }
+
 
 def basic_graphql_variables():
     return {
-        'headers': {
-            'x-api-key': 'SOME-KEY',
-            'x-authorizer-key': 'SOME KEY',
-            'content-type': 'application/graphql'
-        },
-        'path': 'unit-test/v1/basic',
-        'pathParameters': {
-            'proxy': 'hello'
-        },
-        'resource': '/{proxy+}',
-        'httpMethod': 'GET',
-        'queryStringParameters': {
-            'name': 'me'
-        },
-        'body': json.dumps({
-            'query': 'query GreetingQuery ($arg1: String) { hello (name: $arg1) { value } }',
-            'operationName': 'GreetingQuery',
-            'variables': {'arg1': 'Timothy'}
-        })
+            'headers': {
+                    'x-api-key': 'SOME-KEY',
+                    'x-authorizer-key': 'SOME KEY',
+                    'content-type': 'application/graphql'
+            },
+            'path': 'unit-test/v1/basic',
+            'pathParameters': {
+                    'proxy': 'hello'
+            },
+            'resource': '/{proxy+}',
+            'httpMethod': 'GET',
+            'queryStringParameters': {
+                    'name': 'me'
+            },
+            'body': json.dumps(
+                    {
+                            'query': 'query GreetingQuery ($arg1: String) { hello (name: $arg1) { value } }',
+                            'operationName': 'GreetingQuery',
+                            'variables': {'arg1': 'Timothy'}
+                    }
+            )
     }
