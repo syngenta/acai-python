@@ -55,8 +55,7 @@ class Importer:
     def __get_glob_pattern(self):
         if self.__mode == self.PATTERN_MODE:
             return os.sep + self.project_root + os.sep + self.handlers
-        else:
-            return self.handlers_path_abs + os.sep + '**' + os.sep + '*.py'
+        return self.handlers_path_abs + os.sep + '**' + os.sep + '*.py'
 
     def __recurse_section(self, file_leaf, sections, index):
         if index >= len(sections):
