@@ -3,7 +3,7 @@ import unittest
 from acai.apigateway.request import Request
 from acai.apigateway.resolver.directory import Directory
 from acai.apigateway.response import Response
-from tests.mocks.apigateway import mock_request
+from tests.mocks import mock_request
 
 
 class DirectoryTest(unittest.TestCase):
@@ -15,7 +15,3 @@ class DirectoryTest(unittest.TestCase):
         self.directory_resolver = Directory(base_path=self.base_path, handler_path=self.handler_path)
         self.request = Request(self.basic_request)
         self.response = Response()
-
-    def test_should_find_route(self):
-        results = self.directory_resolver.resolve(self.request)
-        print(results)
