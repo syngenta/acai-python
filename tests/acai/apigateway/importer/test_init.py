@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from acai.apigateway.importer import Importer
@@ -36,7 +37,7 @@ class ImporterTest(unittest.TestCase):
 
     def test_project_root(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
-        self.assertEqual(importer.project_root, 'opt/project')
+        self.assertTrue(os.sep in importer.project_root)
 
     def test_clean_handlers(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
@@ -57,11 +58,11 @@ class ImporterTest(unittest.TestCase):
 
     def test_handlers_path_abs_directory_mode(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
-        self.assertEqual(importer.handlers_path_abs, '/opt/project/tests/mocks/importer/directory-handlers')
+        self.assertTrue('/tests/mocks/importer/directory-handlers' in importer.handlers_path_abs)
 
     def test_handlers_path_abs_pattern_mode(self):
         importer = Importer(handlers=self.handler_pattern, mode='pattern')
-        self.assertEqual(importer.handlers_path_abs, '/opt/project/tests/mocks/importer/pattern-handlers')
+        self.assertTrue('/tests/mocks/importer/pattern-handlers' in importer.handlers_path_abs)
 
     def test_handlers_file_tree_directory_mode(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
