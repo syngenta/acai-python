@@ -65,6 +65,8 @@ class Importer:
             self.__recurse_section(file_leaf, sections, index + 1)
         if section not in file_leaf:
             file_leaf[section] = {} if index + 1 < len(sections) else '*'
-        if isinstance(file_leaf, dict) and '__dynamic_file_count' not in file_leaf[section]:
-            file_leaf['__dynamic_file_count'] = set()
+        if isinstance(file_leaf, dict) and '__dynamic_files' not in file_leaf:
+            file_leaf['__dynamic_files'] = set()
+        if section.startswith('_') and section != '__init__.py':
+            file_leaf['__dynamic_files'].add(section)
         self.__recurse_section(file_leaf[section], sections, index + 1)

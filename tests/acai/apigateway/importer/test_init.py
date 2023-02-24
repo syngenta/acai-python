@@ -9,25 +9,34 @@ class ImporterTest(unittest.TestCase):
     handler_path = 'tests/mocks/importer/directory-handlers'
     handler_pattern = 'tests/mocks/importer/pattern-handlers/**/*_controller.py'
     expected_directory_file_tree = {
-        "__dynamic_file_count": set(),
-        "__init__.py": "*",
-        "basic.py": "*",
-        "nested-1": {
-            "__dynamic_file_count": set(),
-            "nested-2": {
-                "__dynamic_file_count": set(),
-                "basic.py": "*"
+        '__dynamic_files': {'_dynamic'},
+        'basic.py': '*',
+        '_dynamic': {
+            '__dynamic_files': set(),
+            '__init__.py': '*'
+        },
+        'nested-1': {
+            '__dynamic_files': set(),
+            'nested-2': {
+                '__dynamic_files': {'_id.py'},
+                'basic.py': '*',
+                '_id.py': '*'
             }
         }
     }
     expected_pattern_file_tree = {
-        "__dynamic_file_count": set(),
-        "basic_controller.py": "*",
-        "nested-1": {
-            "__dynamic_file_count": set(),
-            "nested-2": {
-                "__dynamic_file_count": set(),
-                "basic_controller.py": "*"
+        '__dynamic_files': {'_dynamic'},
+        'basic_controller.py': '*',
+        '_dynamic': {
+            '__dynamic_files': set(),
+            'dynamic_controller.py': '*'
+        },
+        'nested-1': {
+            '__dynamic_files': set(),
+            'nested-2': {
+                '__dynamic_files': {'_id_controller.py'},
+                'basic_controller.py': '*',
+                '_id_controller.py': '*'
             }
         }
     }
