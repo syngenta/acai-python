@@ -42,7 +42,8 @@ class ImporterTest(unittest.TestCase):
     }
 
     def test_clean_path(self):
-        self.assertEqual(Importer.clean_path('/dirty/path/'), 'dirty/path')
+        importer = Importer(handlers=self.handler_path, mode='directory')
+        self.assertEqual(importer.clean_path('/dirty/path/'), 'dirty/path')
 
     def test_project_root(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
