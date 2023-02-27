@@ -40,5 +40,3 @@ class Directory:  # pylint: disable=unused-private-member
                 import_path.append(part)
                 self.__climb_file_tree(split_path, split_index+1, file_tree[possible_file], import_path)
         return import_path
-
-
