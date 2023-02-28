@@ -206,3 +206,55 @@ def get_basic_init():
         },
         'body': json.dumps({'body_key': 'body_value'})
     }
+
+def get_dynamic():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/dynamic/1',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'GET',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }
+
+def get_bad_route():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/bad/route',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'GET',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }
