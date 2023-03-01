@@ -79,7 +79,7 @@ class Importer:
         self.__recurse_section(file_leaf[section], sections, index + 1)
 
     def __handle_multiple_dynamic_files(self, file_leaf, sections):
-        files = ', '.join(list(file_leaf["__dynamic_files"]))
+        files = ', '.join(list(file_leaf['__dynamic_files']))
         sections.pop()
         location = f'{self.file_separator}'.join(sections)
         raise ImporterException(message=f'Can not have two dynamic files in the same directory. Files: {files}, Location: {location}')
