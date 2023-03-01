@@ -92,4 +92,4 @@ class ImporterTest(unittest.TestCase):
         except ImporterException as importer_error:
             self.assertTrue(isinstance(importer_error, ImporterException))
             self.assertTrue('Can not have two dynamic files in the same directory.' in importer_error.message)
-            
+
