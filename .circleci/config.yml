@@ -23,7 +23,7 @@ commands:
         steps:
             - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./coverage/reports/xunit.xml --cov-report xml:./coverage/reports/coverage.xml --html=./coverage/unit-test/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true
             - store_test_results:
-                path: ./coverage/unit-tests
+                path: ./coverage/reports
             - store_artifacts:
                 path: ./coverage
     pypi-setup:
