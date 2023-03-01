@@ -2,12 +2,15 @@ import os
 import unittest
 
 from acai.apigateway.importer import Importer
+from acai.apigateway.importer.exception import ImporterException
 
 
 class ImporterTest(unittest.TestCase):
     maxDiff = None
     handler_path = 'tests/mocks/importer/directory-handlers'
     handler_pattern = 'tests/mocks/importer/pattern-handlers/**/*_controller.py'
+    handler_bad_multi_dynamic = 'tests/mocks/importer/bad-handlers/multi-dynamic'
+    handler_bad_same_name = 'tests/mocks/importer/bad-handlers/same-name'
     expected_directory_file_tree = {
         '__dynamic_files': {'_dynamic'},
         'basic.py': '*',
@@ -15,9 +18,9 @@ class ImporterTest(unittest.TestCase):
             '__dynamic_files': set(),
             '__init__.py': '*'
         },
-        'nested-1': {
+        'nested_1': {
             '__dynamic_files': set(),
-            'nested-2': {
+            'nested_2': {
                 '__dynamic_files': {'_id.py'},
                 'basic.py': '*',
                 '_id.py': '*'
@@ -31,9 +34,9 @@ class ImporterTest(unittest.TestCase):
             '__dynamic_files': set(),
             'dynamic_controller.py': '*'
         },
-        'nested-1': {
+        'nested_1': {
             '__dynamic_files': set(),
-            'nested-2': {
+            'nested_2': {
                 '__dynamic_files': {'_id_controller.py'},
                 'basic_controller.py': '*',
                 '_id_controller.py': '*'
@@ -81,3 +84,12 @@ class ImporterTest(unittest.TestCase):
     def test_handlers_file_tree_pattern_mode(self):
         importer = Importer(handlers=self.handler_pattern, mode='pattern')
         self.assertDictEqual(self.expected_pattern_file_tree, importer.handlers_file_tree)
+
+    def test_handlers_file_throw_exception_on_two_dynamic_files(self):
+        importer = Importer(handlers=self.handler_bad_multi_dynamic, mode='directory')
+        try:
+            print(importer.handlers_file_tree)
+        except ImporterException as importer_error:
+            self.assertTrue(isinstance(importer_error, ImporterException))
+            self.assertTrue('Can not have two dynamic files in the same directory.' in importer_error.message)
+            
