@@ -1,7 +1,7 @@
 import unittest
 
 from acai.apigateway.request import Request
-from acai.apigateway.router.exception import RouteException
+from acai.apigateway.exception import RouteException
 from acai.apigateway.resolver.directory import Directory
 from tests.mocks import mock_request
 

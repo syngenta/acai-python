@@ -1,5 +1,5 @@
 from acai.apigateway.importer import Importer
-from acai.apigateway.router.exception import RouteException
+from acai.apigateway.exception import RouteException
 
 
 class Directory:
