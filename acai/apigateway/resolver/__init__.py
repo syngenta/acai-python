@@ -1,4 +1,4 @@
-from .directory import Directory
+from acai.apigateway.resolver.directory import Directory
 
 
 class Resolver:
