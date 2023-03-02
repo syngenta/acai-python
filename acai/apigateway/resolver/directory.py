@@ -10,12 +10,12 @@ class Directory:
         self.__base_path = self.__importer.clean_path(kwargs['base_path'])
 
     def resolve(self, request):
-        split_path = self.__get_split_request_path(request.path)
+        split_path = self.__get_request_path_as_list(request.path)
         relative_path = self.__get_relative_path(split_path)
         file_path = self.__handler_path + self.__importer.file_separator + relative_path
         return file_path
 
-    def __get_split_request_path(self, request_path):
+    def __get_request_path_as_list(self, request_path):
         base_path = request_path.replace(self.__base_path, '')
         clean_base = self.__importer.clean_path(base_path)
         return clean_base.split('/')
