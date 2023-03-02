@@ -10,11 +10,11 @@ class Directory:
         self.__base_path = self.__importer.clean_path(kwargs['base_path'])
 
     def get_endpoint_module(self, request):
-        file_path, import_path = self.__get_file_and_import_path(request.path)
+        file_path, import_path = self._get_file_and_import_path(request.path)
         endpoint_module = self.__importer.import_module_from_file(file_path, import_path)
         return endpoint_module
 
-    def __get_file_and_import_path(self, request_path):
+    def _get_file_and_import_path(self, request_path):
         split_path = self.__get_request_path_as_list(request_path)
         relative_path = self.__get_relative_path(split_path)
         file_path = self.__handler_path + self.__importer.file_separator + relative_path
