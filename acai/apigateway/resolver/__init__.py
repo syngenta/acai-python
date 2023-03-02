@@ -1,7 +1,7 @@
 from acai.apigateway.resolver.directory import Directory
 
 
-class Resolver:
+class Resolver:  # pylint: disable=unused-private-member
 
     def __init__(self, **kwargs):
         self.__mode = kwargs['routing_mode']
