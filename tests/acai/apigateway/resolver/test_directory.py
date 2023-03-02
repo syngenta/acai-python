@@ -1,6 +1,7 @@
 import unittest
 
 from acai.apigateway.request import Request
+from acai.apigateway.response import Response
 from acai.apigateway.resolver.directory import Directory
 from acai.apigateway.resolver.exception import ResolveException
 from tests.mocks import mock_request
@@ -14,35 +15,57 @@ class DirectoryResolverTest(unittest.TestCase):
     bad_route_request = mock_request.get_bad_route()
     base_path = 'unit-test/v1'
     handler_path = 'tests/mocks/resolver/directory_handlers'
+    expected_endpoint_return = {
+        'hasErrors': False,
+        'response': {
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            'statusCode': 200,
+            'isBase64Encoded': False,
+            'body': {
+                'directory_basic': True
+            }
+        }
+    }
 
     def setUp(self):
         self.directory_resolver = Directory(base_path=self.base_path, handler_path=self.handler_path)
 
-    def test_basic_routing(self):
+    def test_get_endpoint_module(self):
+        request = Request(self.basic_request)
+        response = Response()
+        endpoint_module = self.directory_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        enpoint_returns = endpoint_module.post(request, response)
+        self.assertEqual(str(self.expected_endpoint_return), str(enpoint_returns))
+
+    def test_basic_get_file_and_import_path(self):
         request = Request(self.basic_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
-        self.assertEqual('tests/mocks/resolver/directory_handlers/basic.py', file_path)
+        self.assertTrue('tests/mocks/resolver/directory_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.resolver.directory_handlers.basic', import_path)
 
-    def test_nested_routing(self):
+    def test_nested_get_file_and_import_path(self):
         request = Request(self.nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
-        self.assertEqual('tests/mocks/resolver/directory_handlers/nested_1/nested_2/basic.py', file_path)
+        self.assertTrue('tests/mocks/resolver/directory_handlers/nested_1/nested_2/basic.py' in file_path)
         self.assertEqual('tests.mocks.resolver.directory_handlers.nested_1.nested_2.basic', import_path)
 
-    def test_default_init_routing(self):
+    def test_default_init_get_file_and_import_path(self):
         request = Request(self.init_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
-        self.assertEqual('tests/mocks/resolver/directory_handlers/home/__init__.py', file_path)
+        self.assertTrue('tests/mocks/resolver/directory_handlers/home/__init__.py' in file_path)
         self.assertEqual('tests.mocks.resolver.directory_handlers.home.__init__', import_path)
 
-    def test_dynamic_routing(self):
+    def test_dynamic_get_file_and_import_path(self):
         request = Request(self.dynamic_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
-        self.assertEqual('tests/mocks/resolver/directory_handlers/dynamic/_id_.py', file_path)
+        self.assertTrue('tests/mocks/resolver/directory_handlers/dynamic/_id_.py' in file_path)
         self.assertEqual('tests.mocks.resolver.directory_handlers.dynamic._id_', import_path)
 
-    def test_route_not_found_raises_resolver_exception(self):
+    def test_file_and_import_path_not_found_raises_resolver_exception(self):
         try:
             request = Request(self.bad_route_request)
             self.directory_resolver._get_file_and_import_path(request.path)

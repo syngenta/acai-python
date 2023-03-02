@@ -113,3 +113,9 @@ class ImporterTest(unittest.TestCase):
     def test_handlers_file_should_allow_directory_and_file_share_name_on_different_levels(self):
         importer = Importer(handlers=self.handler_should_pass, mode='directory')
         self.assertDictEqual(self.expected_passing_shared_name_diff_levels, importer.handlers_file_tree)
+
+    def test_import_module_from_file(self):
+        file_path = '/opt/project/tests/mocks/importer/directory_handlers/basic.py'
+        import_path = 'tests.mocks.importer.directory_handlers.basic'
+        handler_module = Importer.import_module_from_file(file_path, import_path)
+        self.assertTrue(hasattr(handler_module, 'post'))

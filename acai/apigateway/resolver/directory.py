@@ -17,8 +17,9 @@ class Directory:
     def _get_file_and_import_path(self, request_path):
         split_path = self.__get_request_path_as_list(request_path)
         relative_path = self.__get_relative_path(split_path)
-        file_path = self.__handler_path + self.__importer.file_separator + relative_path
-        import_path = file_path.replace(self.__importer.file_separator, '.').replace('.py', '')
+        relative_file_path = self.__handler_path + self.__importer.file_separator + relative_path
+        file_path = self.__importer.file_separator + self.__importer.project_root + self.__importer.file_separator + relative_file_path
+        import_path = relative_file_path.replace(self.__importer.file_separator, '.').replace('.py', '')
         return file_path, import_path
 
     def __get_request_path_as_list(self, request_path):
