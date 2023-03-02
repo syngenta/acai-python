@@ -1,4 +1,4 @@
-from acai.apigateway.resolver.directory import Directory
+from .directory import Directory
 
 
 class Resolver:  # pylint: disable=unused-private-member
