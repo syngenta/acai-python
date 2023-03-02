@@ -1,3 +1,3 @@
 def post(request, response):
-    response.body = {'nested-2': True}
+    response.body = {'directory_nested_2': True}
     return response

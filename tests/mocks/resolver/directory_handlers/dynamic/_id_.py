@@ -1,3 +1,3 @@
 def post(request, response):
-    response.body = {'dynamic': 1}
+    response.body = {'directory_dynamic': True}
     return response

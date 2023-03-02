@@ -1,3 +1,3 @@
 def post(request, response):
-    response.body = {'basic-directory': True}
+    response.body = {'directory_basic': True}
     return response
