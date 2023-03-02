@@ -1,3 +1,4 @@
+import importlib.util
 import glob
 import os
 
@@ -14,6 +15,13 @@ class Importer:
         self.__handlers_root = None
         self.__handlers_tree = {}
         self.__project_root = None
+
+    @staticmethod
+    def import_module_from_file(file_path, import_path):
+        spec = importlib.util.spec_from_file_location(import_path, file_path)
+        handler_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(handler_module)
+        return handler_module
 
     def clean_path(self, dirty_path):
         return dirty_path.strip(self.file_separator)

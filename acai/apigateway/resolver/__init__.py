@@ -1,14 +1,14 @@
 from .directory import Directory
 
 
-class Resolver:  # pylint: disable=unused-private-member
+class Resolver:
+    __available_resolvers = {
+        'directory': Directory
+    }
 
     def __init__(self, **kwargs):
-        self.__mode = kwargs['routing_mode']
-        self.__available_resolvers = {
-            'directory': Directory
-        }
-        self.__resolver_type = self.__available_resolvers[self.__mode](**kwargs)
+        self.__resolver_type = self.__available_resolvers[kwargs['routing_mode']](**kwargs)
 
-    def resolve_endpoint(self, request, response):
-        pass
+    def get_endpoint(self, request):
+        endpoint = self.__resolver_type.get_endpoint_module(request)
+        print(endpoint)
