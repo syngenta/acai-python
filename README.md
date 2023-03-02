@@ -64,7 +64,7 @@ functions:
 ```python
 import os
 
-from acai.apigateway.router import Router
+from acai.apigateway.router.router import Router
 
 
 # must pass current service, version of API and where handlers are located
@@ -168,7 +168,7 @@ This is a feature which allows you to interrogate all requests before they hit y
 ```python
 import os
 
-from acai.apigateway.router import Router
+from acai.apigateway.router.router import Router
 
 from example.function.to. import
 import example_before_all

@@ -1,4 +1,4 @@
-class ResolverException(Exception):
+class RouteException(Exception):
 
     def __init__(self, **kwargs):
         self.code = kwargs.get('code', 404)
