@@ -11,6 +11,7 @@ class ImporterTest(unittest.TestCase):
     handler_pattern = 'tests/mocks/importer/pattern-handlers/**/*_controller.py'
     handler_bad_multi_dynamic = 'tests/mocks/importer/bad-handlers/multi-dynamic'
     handler_bad_same_name = 'tests/mocks/importer/bad-handlers/same-name'
+    handler_should_pass = 'tests/mocks/importer/bad-handlers/should-pass'
     expected_directory_file_tree = {
         '__dynamic_files': {'_dynamic'},
         'basic.py': '*',
@@ -41,6 +42,14 @@ class ImporterTest(unittest.TestCase):
                 'basic_controller.py': '*',
                 '_id_controller.py': '*'
             }
+        }
+    }
+    expected_passing_shared_name_diff_levels = {
+        'good_file.py': '*',
+        '__dynamic_files': set(),
+        'good_directory': {
+            'good_file.py': '*',
+            '__dynamic_files': set()
         }
     }
 
@@ -93,3 +102,14 @@ class ImporterTest(unittest.TestCase):
             self.assertTrue(isinstance(importer_error, ImporterException))
             self.assertTrue('Can not have two dynamic files in the same directory.' in importer_error.message)
 
+    def test_handlers_file_throw_exception_on_directory_and_file_share_name(self):
+        importer = Importer(handlers=self.handler_bad_same_name, mode='directory')
+        try:
+            print(importer.handlers_file_tree)
+        except ImporterException as importer_error:
+            self.assertTrue(isinstance(importer_error, ImporterException))
+            self.assertTrue('Can not have file and directory share same name.' in importer_error.message)
+
+    def test_handlers_file_should_allow_directory_and_file_share_name_on_different_levels(self):
+        importer = Importer(handlers=self.handler_should_pass, mode='directory')
+        self.assertDictEqual(self.expected_passing_shared_name_diff_levels, importer.handlers_file_tree)
