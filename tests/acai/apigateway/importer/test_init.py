@@ -115,7 +115,8 @@ class ImporterTest(unittest.TestCase):
         self.assertDictEqual(self.expected_passing_shared_name_diff_levels, importer.handlers_file_tree)
 
     def test_import_module_from_file(self):
-        file_path = '/opt/project/tests/mocks/importer/directory_handlers/basic.py'
+        importer = Importer(handlers=self.handler_path, mode='directory')
+        file_path = f'/{importer.handlers_path_abs}/basic.py'
         import_path = 'tests.mocks.importer.directory_handlers.basic'
-        handler_module = Importer.import_module_from_file(file_path, import_path)
+        handler_module = importer.import_module_from_file(file_path, import_path)
         self.assertTrue(hasattr(handler_module, 'post'))
