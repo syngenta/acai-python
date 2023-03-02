@@ -13,35 +13,39 @@ class DirectoryTest(unittest.TestCase):
     dynamic_request = mock_request.get_dynamic()
     bad_route_request = mock_request.get_bad_route()
     base_path = 'unit-test/v1'
-    handler_path = 'tests/mocks/resolver/directory-handlers'
+    handler_path = 'tests/mocks/resolver/directory_handlers'
 
     def setUp(self):
         self.directory_resolver = Directory(base_path=self.base_path, handler_path=self.handler_path)
 
     def test_basic_routing(self):
         request = Request(self.basic_request)
-        resolved_path = self.directory_resolver.resolve(request)
-        self.assertEqual('tests/mocks/resolver/directory-handlers/basic.py', resolved_path)
+        file_path, import_path = self.directory_resolver.get_file_and_import_path(request)
+        self.assertEqual('tests/mocks/resolver/directory_handlers/basic.py', file_path)
+        print(import_path)
 
     def test_nested_routing(self):
         request = Request(self.nested_request)
-        resolved_path = self.directory_resolver.resolve(request)
-        self.assertEqual('tests/mocks/resolver/directory-handlers/nested_1/nested_2/basic.py', resolved_path)
+        file_path, import_path = self.directory_resolver.get_file_and_import_path(request)
+        self.assertEqual('tests/mocks/resolver/directory_handlers/nested_1/nested_2/basic.py', file_path)
+        print(import_path)
 
     def test_default_init_routing(self):
         request = Request(self.init_request)
-        resolved_path = self.directory_resolver.resolve(request)
-        self.assertEqual('tests/mocks/resolver/directory-handlers/home/__init__.py', resolved_path)
+        file_path, import_path = self.directory_resolver.get_file_and_import_path(request)
+        self.assertEqual('tests/mocks/resolver/directory_handlers/home/__init__.py', file_path)
+        print(import_path)
 
     def test_dynamic_routing(self):
         request = Request(self.dynamic_request)
-        resolved_path = self.directory_resolver.resolve(request)
-        self.assertEqual('tests/mocks/resolver/directory-handlers/dynamic/_id_.py', resolved_path)
+        file_path, import_path = self.directory_resolver.get_file_and_import_path(request)
+        self.assertEqual('tests/mocks/resolver/directory_handlers/dynamic/_id_.py', file_path)
+        print(import_path)
 
     def test_route_not_found_raises_resolver_exception(self):
         try:
             request = Request(self.bad_route_request)
-            self.directory_resolver.resolve(request)
+            self.directory_resolver.get_file_and_import_path(request)
             self.assertTrue(False)
         except ResolverException as resolver_error:
             self.assertTrue(isinstance(resolver_error, ResolverException))

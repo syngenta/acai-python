@@ -9,11 +9,12 @@ class Directory:
         self.__handler_path = self.__importer.clean_path(kwargs['handler_path'])
         self.__base_path = self.__importer.clean_path(kwargs['base_path'])
 
-    def resolve(self, request):
+    def get_file_and_import_path(self, request):
         split_path = self.__get_request_path_as_list(request.path)
         relative_path = self.__get_relative_path(split_path)
         file_path = self.__handler_path + self.__importer.file_separator + relative_path
-        return file_path
+        import_path = file_path.replace(self.__importer.file_separator, '.').replace('.py', '').replace('-', '_')
+        return file_path, import_path
 
     def __get_request_path_as_list(self, request_path):
         base_path = request_path.replace(self.__base_path, '')

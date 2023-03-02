@@ -7,11 +7,11 @@ from acai.apigateway.importer.exception import ImporterException
 
 class ImporterTest(unittest.TestCase):
     maxDiff = None
-    handler_path = 'tests/mocks/importer/directory-handlers'
-    handler_pattern = 'tests/mocks/importer/pattern-handlers/**/*_controller.py'
-    handler_bad_multi_dynamic = 'tests/mocks/importer/bad-handlers/multi-dynamic'
-    handler_bad_same_name = 'tests/mocks/importer/bad-handlers/same-name'
-    handler_should_pass = 'tests/mocks/importer/bad-handlers/should-pass'
+    handler_path = 'tests/mocks/importer/directory_handlers'
+    handler_pattern = 'tests/mocks/importer/pattern_handlers/**/*_controller.py'
+    handler_bad_multi_dynamic = 'tests/mocks/importer/bad_handlers/multi-dynamic'
+    handler_bad_same_name = 'tests/mocks/importer/bad_handlers/same-name'
+    handler_should_pass = 'tests/mocks/importer/bad_handlers/should-pass'
     expected_directory_file_tree = {
         '__dynamic_files': {'_dynamic'},
         'basic.py': '*',
@@ -66,25 +66,25 @@ class ImporterTest(unittest.TestCase):
         self.assertEqual(importer.handlers, self.handler_path)
 
     def test_dirty_handlers(self):
-        dirty_path = '/tests/mocks/importer/directory-handlers/'
+        dirty_path = '/tests/mocks/importer/directory_handlers/'
         importer = Importer(handlers=dirty_path, mode='directory')
         self.assertEqual(importer.handlers, self.handler_path)
 
     def test_handlers_root_directory_handlers(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
-        self.assertEqual(importer.handlers_root, 'tests/mocks/importer/directory-handlers')
+        self.assertEqual(importer.handlers_root, 'tests/mocks/importer/directory_handlers')
 
     def test_handlers_root_pattern_handlers(self):
         importer = Importer(handlers=self.handler_pattern, mode='pattern')
-        self.assertEqual(importer.handlers_root, 'tests/mocks/importer/pattern-handlers')
+        self.assertEqual(importer.handlers_root, 'tests/mocks/importer/pattern_handlers')
 
     def test_handlers_path_abs_directory_mode(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
-        self.assertTrue('/tests/mocks/importer/directory-handlers' in importer.handlers_path_abs)
+        self.assertTrue('/tests/mocks/importer/directory_handlers' in importer.handlers_path_abs)
 
     def test_handlers_path_abs_pattern_mode(self):
         importer = Importer(handlers=self.handler_pattern, mode='pattern')
-        self.assertTrue('/tests/mocks/importer/pattern-handlers' in importer.handlers_path_abs)
+        self.assertTrue('/tests/mocks/importer/pattern_handlers' in importer.handlers_path_abs)
 
     def test_handlers_file_tree_directory_mode(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
