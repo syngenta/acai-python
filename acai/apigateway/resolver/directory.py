@@ -1,5 +1,5 @@
 from acai.apigateway.importer import Importer
-from acai.apigateway.exception import RouteException
+from acai.apigateway.resolver.exception import ResolveException
 
 
 class Directory:
@@ -38,7 +38,7 @@ class Directory:
             elif file_tree.get('__dynamic_files') and file_tree['__dynamic_files']:
                 self.__handle_dynamic_path_part(import_path, split_path, split_index, file_tree)
             else:
-                raise RouteException(code=404, key_path='/'.join(split_path), message='route not found')
+                raise ResolveException(code=404, message='route not found')
         return import_path
 
     def __handle_directory_path_part(self, import_path, possible_directory, split_path, split_index, file_tree):

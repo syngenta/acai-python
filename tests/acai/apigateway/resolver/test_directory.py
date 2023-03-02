@@ -1,8 +1,8 @@
 import unittest
 
 from acai.apigateway.request import Request
-from acai.apigateway.exception import RouteException
 from acai.apigateway.resolver.directory import Directory
+from acai.apigateway.resolver.exception import ResolveException
 from tests.mocks import mock_request
 
 
@@ -47,8 +47,7 @@ class DirectoryResolverTest(unittest.TestCase):
             request = Request(self.bad_route_request)
             self.directory_resolver.get_file_and_import_path(request)
             self.assertTrue(False)
-        except RouteException as resolver_error:
-            self.assertTrue(isinstance(resolver_error, RouteException))
+        except ResolveException as resolver_error:
+            self.assertTrue(isinstance(resolver_error, ResolveException))
             self.assertEqual(resolver_error.code, 404)
-            self.assertEqual(resolver_error.key_path, 'bad/route')
             self.assertEqual(resolver_error.message, 'route not found')
