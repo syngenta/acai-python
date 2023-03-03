@@ -8,6 +8,16 @@ class Directory:
         self.__importer = Importer(handlers=kwargs['handler_path'], mode='directory')
         self.__handler_path = self.__importer.clean_path(kwargs['handler_path'])
         self.__base_path = self.__importer.clean_path(kwargs['base_path'])
+        self.__has_dynamic_route = False
+        self.__dynamic_parts = {}
+
+    @property
+    def has_dynamic_route(self):
+        return self.__has_dynamic_route
+
+    @property
+    def dynamic_parts(self):
+        return self.__dynamic_parts
 
     def get_endpoint_module(self, request):
         file_path, import_path = self._get_file_and_import_path(request.path)
@@ -61,4 +71,6 @@ class Directory:
     def __handle_dynamic_path_part(self, import_path, split_path, split_index, file_tree):
         file_part = list(file_tree['__dynamic_files'])[0]
         import_path.append(file_part)
+        self.__has_dynamic_route = True
+        self.__dynamic_parts[split_index] = split_path[split_index]
         self.__get_import_path_file_tree(split_path, split_index+1, file_tree[file_part], import_path)
