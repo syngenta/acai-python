@@ -18,5 +18,3 @@ class Endpoint:
 
     def run(self, request, response):
         return self.__endpoint_method(request, response)
-
-
