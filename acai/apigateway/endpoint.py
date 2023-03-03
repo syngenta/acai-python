@@ -14,7 +14,7 @@ class Endpoint:
 
     @property
     def requires_auth(self):
-        return self.__requirements.get('auth_required')
+        return self.__requirements.get('auth_required', False)
 
     def run(self, request, response):
         return self.__endpoint_method(request, response)
