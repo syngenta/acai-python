@@ -2,7 +2,7 @@ import importlib.util
 import glob
 import os
 
-from acai.apigateway.importer.exception import ImporterException
+from acai.apigateway.exception import ApiException
 
 
 class Importer:
@@ -91,10 +91,10 @@ class Importer:
             files = ', '.join(list(file_leaf['__dynamic_files']))
             sections.pop()
             location = f'{self.file_separator}'.join(sections)
-            raise ImporterException(message=f'Can not have two dynamic files in the same directory. Files: {files}, Location: {location}')
+            raise ApiException(message=f'Can not have two dynamic files in the same directory. Files: {files}, Location: {location}')
 
     def __check_file_and_directory_share_name(self, file_leaf, section, sections):
         opposite_type = section.replace('.py', '') if '.py' in section else f'{section}.py'
         if opposite_type in file_leaf:
             location = f'{self.file_separator}'.join(sections)
-            raise ImporterException(message=f'Can not have file and directory share same name. Files: {section}, Location: {location}')
+            raise ApiException(message=f'Can not have file and directory share same name. Files: {section}, Location: {location}')

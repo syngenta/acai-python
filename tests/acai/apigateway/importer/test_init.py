@@ -2,7 +2,7 @@ import os
 import unittest
 
 from acai.apigateway.importer import Importer
-from acai.apigateway.importer.exception import ImporterException
+from acai.apigateway.exception import ApiException
 
 
 class ImporterTest(unittest.TestCase):
@@ -98,16 +98,16 @@ class ImporterTest(unittest.TestCase):
         importer = Importer(handlers=self.handler_bad_multi_dynamic, mode='directory')
         try:
             print(importer.handlers_file_tree)
-        except ImporterException as importer_error:
-            self.assertTrue(isinstance(importer_error, ImporterException))
+        except ApiException as importer_error:
+            self.assertTrue(isinstance(importer_error, ApiException))
             self.assertTrue('Can not have two dynamic files in the same directory.' in importer_error.message)
 
     def test_handlers_file_throw_exception_on_directory_and_file_share_name(self):
         importer = Importer(handlers=self.handler_bad_same_name, mode='directory')
         try:
             print(importer.handlers_file_tree)
-        except ImporterException as importer_error:
-            self.assertTrue(isinstance(importer_error, ImporterException))
+        except ApiException as importer_error:
+            self.assertTrue(isinstance(importer_error, ApiException))
             self.assertTrue('Can not have file and directory share same name.' in importer_error.message)
 
     def test_handlers_file_should_allow_directory_and_file_share_name_on_different_levels(self):
