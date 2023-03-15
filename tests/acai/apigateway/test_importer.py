@@ -100,7 +100,7 @@ class ImporterTest(unittest.TestCase):
             print(importer.handlers_file_tree)
         except ApiException as importer_error:
             self.assertTrue(isinstance(importer_error, ApiException))
-            self.assertTrue('Can not have two dynamic files in the same directory.' in importer_error.message)
+            self.assertTrue('Cannot have two dynamic files in the same directory.' in importer_error.message)
 
     def test_handlers_file_throw_exception_on_directory_and_file_share_name(self):
         importer = Importer(handlers=self.handler_bad_same_name, mode='directory')
@@ -108,7 +108,7 @@ class ImporterTest(unittest.TestCase):
             print(importer.handlers_file_tree)
         except ApiException as importer_error:
             self.assertTrue(isinstance(importer_error, ApiException))
-            self.assertTrue('Can not have file and directory share same name.' in importer_error.message)
+            self.assertTrue('Cannot have file and directory share same name.' in importer_error.message)
 
     def test_handlers_file_should_allow_directory_and_file_share_name_on_different_levels(self):
         importer = Importer(handlers=self.handler_should_pass, mode='directory')
