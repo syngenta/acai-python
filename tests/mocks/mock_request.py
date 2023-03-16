@@ -360,3 +360,57 @@ def get_no_dynamic_post():
         },
         'body': json.dumps({'body_key': 'body_value'})
     }
+
+
+def get_raised_exception_post():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/raise-exception',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }
+
+
+def get_unhandled_exception_post():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/unhandled-exception',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }

@@ -21,7 +21,9 @@ class Resolver:
         if not hasattr(endpoint_module, request.method):
             raise ApiException(code=403, message='method not allowed')
         endpoint = Endpoint(endpoint_module, request.method)
-        self.__check_and_apply_dynamic_route(request, endpoint)
+        if self.__resolver.has_dynamic_route and not endpoint.has_required_route:
+            raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does have required_route configured')
+        self.__apply_dynamic_route_params(request, endpoint)
         return endpoint
 
     @staticmethod
@@ -39,9 +41,7 @@ class Resolver:
         if params['routing_mode'] == 'mapping' and not params.get('handler_mapping'):
             raise ApiException(code=500, message='`mapping` routing_mode must use handler_mapping kwarg')
 
-    def __check_and_apply_dynamic_route(self, request, endpoint):
-        if self.__resolver.has_dynamic_route and not endpoint.has_required_route:
-            raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does have required_route configured')
+    def __apply_dynamic_route_params(self, request, endpoint):
         dynamic_parts = self.__resolver.dynamic_parts
         required_route_parts = [part for part in endpoint.required_route.split('/') if part]
         for part in list(dynamic_parts.keys()):
