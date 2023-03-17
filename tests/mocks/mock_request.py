@@ -414,3 +414,28 @@ def get_unhandled_exception_post():
         },
         'body': json.dumps({'body_key': 'body_value'})
     }
+
+
+def get_basic_for_validation():
+    return {
+        'headers': {
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/basic',
+        'pathParameters': {
+            'proxy': 'basic'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'GET',
+        'queryStringParameters': {
+            'email': 'some-email'
+        },
+        'body': json.dumps({})
+    }
