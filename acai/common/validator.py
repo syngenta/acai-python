@@ -24,7 +24,7 @@ class Validator:
         if len(required) > 0:
             for field in missing_fields:
                 response.code = 400
-                response.set_error(list_name, 'Please provide {} in {}'.format(field, list_name))
+                response.set_error(list_name, f'Please provide {field} in {list_name}')
 
     @staticmethod
     def available_fields(response, available, sent, list_name=''):
@@ -32,4 +32,4 @@ class Validator:
             unavailable_fields = [value for value in sent if value not in available]
             for field in unavailable_fields:
                 response.code = 400
-                response.set_error(list_name, '{} is not an available {}'.format(field, list_name))
+                response.set_error(list_name, f'{field} is not an available {list_name}')
