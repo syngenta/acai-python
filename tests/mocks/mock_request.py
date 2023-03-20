@@ -439,3 +439,64 @@ def get_basic_for_validation():
         },
         'body': json.dumps({})
     }
+
+def get_basic_passing_for_required_body_validation():
+    return {
+        'headers': {
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/basic',
+        'pathParameters': {
+            'proxy': 'basic'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'GET',
+        'queryStringParameters': {},
+        'body': json.dumps({
+            'id': 3,
+            'email': 'some@email.com',
+            'active': True,
+            'favorites': ['anime', 'video games', 'basketball'],
+            'notification_config': {
+                'marketing': False,
+                'transactions': True
+            }
+        })
+    }
+
+def get_basic_failing_for_required_body_validation():
+    return {
+        'headers': {
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/basic',
+        'pathParameters': {
+            'proxy': 'basic'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'GET',
+        'queryStringParameters': {},
+        'body': json.dumps({
+            'email': 'some@email.com',
+            'active': True,
+            'favorites': ['anime', 'video games', 'basketball'],
+            'notification_config': {
+                'marketing': False,
+                'transactions': True
+            }
+        })
+    }

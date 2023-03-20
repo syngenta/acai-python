@@ -4,7 +4,7 @@ from acai.apigateway.resolver import Resolver
 from acai.apigateway.response import Response
 
 
-class Router:  # pylint: disable=unused-private-member
+class Router:
 
     def __init__(self, **kwargs):
         self.__before_all = kwargs.get('before_all')
@@ -21,11 +21,11 @@ class Router:  # pylint: disable=unused-private-member
         except ApiException as api_error:
             response.code = api_error.code
             response.set_error(key_path=api_error.key_path, message=api_error.message)
-            self.__handle_error(request, response, api_error.message)
         except Exception as error:
             response.code = 500
             response.set_error(key_path='unknown', message=str(error))
-            self.__handle_error(request, response, str(error))
+        if response.has_errors:
+            self.__handle_error(request, response)
         return response.full
 
     def __run_route(self, request, response):
@@ -40,6 +40,9 @@ class Router:  # pylint: disable=unused-private-member
             self.__after_all(request, response, endpoint.requirements)
         return response
 
-    def __handle_error(self, request, response, error_message):
-        if self.__on_error and callable(self.__on_error):
-            self.__on_error(request, response, error_message)
+    def __handle_error(self, request, response):
+        try:
+            if self.__on_error and callable(self.__on_error):
+                self.__on_error(request, response)
+        except Exception as error:
+            print(error)

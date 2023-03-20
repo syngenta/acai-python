@@ -8,9 +8,10 @@ from tests.mocks import mock_request
 
 
 class ValidatorTest(unittest.TestCase):
+    schema_path = 'tests/mocks/openapi.yml'
 
     def setUp(self):
-        self.validator = Validator()
+        self.validator = Validator(schema=self.schema_path)
 
     def test_empty_validation(self):
         request = Request(mock_request.get_basic_for_validation())
@@ -95,3 +96,21 @@ class ValidatorTest(unittest.TestCase):
         self.assertTrue(response.has_errors)
         self.assertEqual('{"errors": [{"key_path": "query_params", "message": "email is not an available query_params"}]}', response.full['body'])
 
+    def test_required_body_pass(self):
+        request = Request(mock_request.get_basic_passing_for_required_body_validation())
+        response = Response()
+        requirements = {
+            'required_body': 'v1-required-body-test'
+        }
+        self.validator.validate_request(request, response, requirements)
+        self.assertFalse(response.has_errors)
+
+    def test_required_body_fail(self):
+        request = Request(mock_request.get_basic_failing_for_required_body_validation())
+        response = Response()
+        requirements = {
+            'required_body': 'v1-required-body-test'
+        }
+        self.validator.validate_request(request, response, requirements)
+        self.assertTrue(response.has_errors)
+        self.assertEqual('{"errors": [{"key_path": "root", "message": "\'id\' is a required property"}]}', response.body)
