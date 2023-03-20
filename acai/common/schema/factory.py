@@ -1,6 +1,6 @@
+import os
 import json
 import jsonref
-import os
 import yaml
 
 
@@ -31,7 +31,7 @@ class SchemaFactory:
 
     def __get_schema_dict_from_file(self):
         abs_schema_path = self.__get_abs_schema_path()
-        with open(abs_schema_path) as schema_file:
+        with open(abs_schema_path, encoding='utf-8') as schema_file:
             return yaml.load(schema_file, Loader=yaml.FullLoader)
 
     def __get_abs_schema_path(self):
