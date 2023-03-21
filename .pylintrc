@@ -12,6 +12,7 @@ enable=W0603,global-statement
 [REPORTS]
 reports=yes
 evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+output-format=json
 
 [BASIC]
 good-names=i,j,k,ex,Run,_

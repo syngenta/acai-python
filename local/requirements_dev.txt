@@ -6,6 +6,7 @@ pyyaml
 xmltodict
 autopep8
 pylint
+pylint-json2html
 pytest
 pytest-html
 pytest-cov

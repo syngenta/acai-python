@@ -13,7 +13,7 @@ commands:
             - run: mkdir reports && mkdir reports/unit-tests && mkdir reports/lint && mkdir reports/tests || exit 0
     python-lint:
         steps:
-            - run: pylint acai --output-format=json,parseable,colorized
+            - run: pylint acai | pylint-json2html -o ./reports/lint/index.html
             - store_artifacts:
                 path: ./reports
     python-test:
