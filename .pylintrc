@@ -2,7 +2,7 @@
 ignore=tests,openapi.yml
 ignore-patterns=test.*?py
 persistent=no
-load-plugins=pylint_quotes,pylint_report
+load-plugins=pylint_quotes
 unsafe-load-any-extension=no
 
 [MESSAGES CONTROL]
@@ -12,7 +12,7 @@ enable=W0603,global-statement
 [REPORTS]
 reports=yes
 evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
-output-format=pylint_report.CustomJsonReporter
+output-format=json
 
 [BASIC]
 good-names=i,j,k,ex,Run,_
