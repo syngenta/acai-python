@@ -9,6 +9,7 @@ from tests.mocks import mock_request, mock_middleware
 class RouterTest(unittest.TestCase):
     base_path = 'unit-test/v1'
     handler_path = 'tests/mocks/router/directory_handlers'
+    schema_path = 'tests/mocks/openapi.yml'
     basic_event = mock_request.get_basic_post()
     raise_exception_event = mock_request.get_raised_exception_post()
     unhandled_exception_event = mock_request.get_unhandled_exception_post()
@@ -21,7 +22,8 @@ class RouterTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handler_path=self.handler_path,
+            schema=self.schema_path
         )
         result = router.route(self.basic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -34,7 +36,8 @@ class RouterTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handler_path=self.handler_path,
+            schema=self.schema_path
         )
         result = router.route(self.raise_exception_event, None)
         json_dict_response = json.loads(result['body'])
@@ -47,7 +50,8 @@ class RouterTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handler_path=self.handler_path,
+            schema=self.schema_path
         )
         result = router.route(self.unhandled_exception_event, None)
         json_dict_response = json.loads(result['body'])
@@ -61,7 +65,8 @@ class RouterTest(unittest.TestCase):
             routing_mode='directory',
             base_path=self.base_path,
             handler_path=self.handler_path,
-            before_all=mock_middleware.mock_before_all
+            before_all=mock_middleware.mock_before_all,
+            schema=self.schema_path
         )
         router.route(self.basic_event, None)
         self.assertTrue(mock_middleware.mock_before_all.has_been_called)
@@ -71,7 +76,8 @@ class RouterTest(unittest.TestCase):
             routing_mode='directory',
             base_path=self.base_path,
             handler_path=self.handler_path,
-            after_all=mock_middleware.mock_after_all
+            after_all=mock_middleware.mock_after_all,
+            schema=self.schema_path
         )
         router.route(self.basic_event, None)
         self.assertTrue(mock_middleware.mock_after_all.has_been_called)
@@ -81,7 +87,8 @@ class RouterTest(unittest.TestCase):
             routing_mode='directory',
             base_path=self.base_path,
             handler_path=self.handler_path,
-            with_auth=mock_middleware.mock_with_auth
+            with_auth=mock_middleware.mock_with_auth,
+            schema=self.schema_path
         )
         router.route(self.basic_event, None)
         self.assertTrue(mock_middleware.mock_with_auth.has_been_called)
@@ -91,7 +98,8 @@ class RouterTest(unittest.TestCase):
             routing_mode='directory',
             base_path=self.base_path,
             handler_path=self.handler_path,
-            on_error=mock_middleware.mock_on_error
+            on_error=mock_middleware.mock_on_error,
+            schema=self.schema_path
         )
         router.route(self.raise_exception_event, None)
         self.assertTrue(mock_middleware.mock_on_error.has_been_called)
