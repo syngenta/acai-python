@@ -13,7 +13,7 @@ commands:
             - run: mkdir reports && mkdir reports/unit-tests && mkdir reports/lint && mkdir reports/tests || exit 0
     python-lint:
         steps:
-            - run: pylint acai | pylint_report.py > ./reports/lint/index.html
+            - run: pylint acai | pylint_report > ./reports/lint/index.html
             - store_artifacts:
                 path: ./reports
     python-test:
