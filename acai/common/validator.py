@@ -6,7 +6,7 @@ from acai.common.schema import Schema
 class Validator:
 
     def __init__(self, **kwargs):
-        self.__schema_factory = Schema(**kwargs)
+        self.__schema = Schema(**kwargs)
         self.__pairings = {
             'required_headers': 'headers',
             'available_headers': 'headers',
@@ -18,7 +18,7 @@ class Validator:
     def validate_request(self, request, response, requirements):
         for required, source in self.__pairings.items():
             if requirements.get(required) and required == 'required_body':
-                Validator.check_required_body(response, self.__schema_factory.get_schema(requirements[required]), getattr(request, source))
+                Validator.check_required_body(response, self.__schema.get_schema(requirements[required]), getattr(request, source))
             elif requirements.get(required) and 'required' in required:
                 Validator.check_required_fields(response, requirements[required], getattr(request, source), source)
             elif requirements.get(required) and 'available' in required:

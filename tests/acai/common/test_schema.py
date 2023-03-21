@@ -3,7 +3,7 @@ import unittest
 from acai.common.schema import Schema
 
 
-class SchemaFactoryTest(unittest.TestCase):
+class SchemaTest(unittest.TestCase):
     schema_path = 'tests/mocks/openapi.yml'
     schema_dict = {
         'type': 'object',
