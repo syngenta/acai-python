@@ -2,6 +2,7 @@ from acai.apigateway.exception import ApiException
 from acai.apigateway.request import Request
 from acai.apigateway.resolver import Resolver
 from acai.apigateway.response import Response
+from acai.common.validator import Validator
 
 
 class Router:
@@ -12,6 +13,7 @@ class Router:
         self.__with_auth = kwargs.get('with_auth')
         self.__on_error = kwargs.get('on_error')
         self.__resolver = Resolver(**kwargs)
+        self.__validator = Validator(**kwargs)
 
     def route(self, event, context):
         request = Request(event, context)
@@ -34,6 +36,8 @@ class Router:
             self.__before_all(request, response, endpoint.requirements)
         if not response.has_errors and endpoint.requires_auth and self.__with_auth and callable(self.__with_auth):
             self.__with_auth(request, response, endpoint.requirements)
+        if not response.has_errors and endpoint.has_requirements:
+            self.__validator.validate_request(request, response, endpoint.requirements)
         if not response.has_errors:
             endpoint.run(request, response)
         if not response.has_errors and self.__after_all and callable(self.__after_all):

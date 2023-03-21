@@ -18,7 +18,7 @@ class Validator:
     def validate_request(self, request, response, requirements):
         for required, source in self.__pairings.items():
             if requirements.get(required) and required == 'required_body':
-                Validator.check_body(response, self.__schema_factory.get_schema(requirements[required]), getattr(request, source))
+                Validator.check_required_body(response, self.__schema_factory.get_schema(requirements[required]), getattr(request, source))
             elif requirements.get(required) and 'required' in required:
                 Validator.check_required_fields(response, requirements[required], getattr(request, source), source)
             elif requirements.get(required) and 'available' in required:
@@ -44,7 +44,7 @@ class Validator:
                 response.set_error(list_name, f'{field} is not an available {list_name}')
 
     @staticmethod
-    def check_body(response, schema, request_body):
+    def check_required_body(response, schema, request_body):
         schema_validator = Draft7Validator(schema)
         for schema_error in sorted(schema_validator.iter_errors(request_body), key=str):
             error_path = '.'.join(str(path) for path in schema_error.path)
