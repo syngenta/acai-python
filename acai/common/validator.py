@@ -45,8 +45,9 @@ class Validator:
 
     @staticmethod
     def check_required_body(response, schema, request_body):
-        schema_validator = Draft7Validator(schema)
-        for schema_error in sorted(schema_validator.iter_errors(request_body), key=str):
-            error_path = '.'.join(str(path) for path in schema_error.path)
-            error_key = error_path if error_path else 'root'
-            response.set_error(key_path=error_key, message=schema_error.message)
+        if schema:
+            schema_validator = Draft7Validator(schema)
+            for schema_error in sorted(schema_validator.iter_errors(request_body), key=str):
+                error_path = '.'.join(str(path) for path in schema_error.path)
+                error_key = error_path if error_path else 'root'
+                response.set_error(key_path=error_key, message=schema_error.message)
