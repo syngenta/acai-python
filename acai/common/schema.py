@@ -4,7 +4,7 @@ import jsonref
 import yaml
 
 
-class SchemaFactory:
+class Schema:
 
     def __init__(self, **kwargs):
         self.__schema = kwargs.get('schema')

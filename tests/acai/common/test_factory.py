@@ -1,6 +1,6 @@
 import unittest
 
-from acai.common.schema.factory import SchemaFactory
+from acai.common.schema import Schema
 
 
 class SchemaFactoryTest(unittest.TestCase):
@@ -55,12 +55,12 @@ class SchemaFactoryTest(unittest.TestCase):
     }
 
     def test_get_schema_from_file(self):
-        schema_factory = SchemaFactory(schema=self.schema_path)
+        schema_factory = Schema(schema=self.schema_path)
         schema = schema_factory.get_schema('v1-schema-factory-test')
         self.assertDictEqual(self.expect_dict_from_path, schema)
 
     def test_get_schema_from_dict(self):
-        schema_factory = SchemaFactory(schema=self.schema_dict)
+        schema_factory = Schema(schema=self.schema_dict)
         schema = schema_factory.get_schema()
         self.assertDictEqual(self.expect_dict_from_dict, schema)
 

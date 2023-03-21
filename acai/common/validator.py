@@ -1,12 +1,12 @@
 from jsonschema import Draft7Validator
 
-from acai.common.schema.factory import SchemaFactory
+from acai.common.schema import Schema
 
 
 class Validator:
 
     def __init__(self, **kwargs):
-        self.__schema_factory = SchemaFactory(**kwargs)
+        self.__schema_factory = Schema(**kwargs)
         self.__pairings = {
             'required_headers': 'headers',
             'available_headers': 'headers',
