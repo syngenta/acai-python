@@ -1,6 +1,7 @@
 import os
 import json
 import jsonref
+from openapi_core import Spec
 import yaml
 
 
@@ -10,6 +11,7 @@ class Schema:
         self.__schema = kwargs.get('schema')
         self.__config = kwargs.get('schema_config', {})
         self.__schema_dict = {}
+        self.__spec = None
 
     def get_schema(self, required_body=None):
         if self.__schema and isinstance(self.__schema, dict):
@@ -17,6 +19,12 @@ class Schema:
         if not self.__schema_dict:
             self.__schema_dict = self.__get_combined_schema_from_file(required_body)
         return self.__schema_dict
+
+    def get_spec(self):
+        if not self.__spec:
+            abs_schema_path = self.__get_abs_schema_path()
+            self.__spec = Spec.from_file_path(abs_schema_path)
+        return self.__spec
 
     def __get_combined_schema_from_file(self, required_body=None):
         combined_schema = {}

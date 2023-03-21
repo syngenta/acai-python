@@ -53,7 +53,7 @@ paths:
         patch:
             tags:
                 - unit-test
-            operationId: PostSchema
+            operationId: PatchSchema
             deprecated: false
             parameters:
                 -   in: header

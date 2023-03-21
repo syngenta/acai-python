@@ -1,5 +1,7 @@
 import unittest
 
+from openapi_core import Spec
+
 from acai.common.schema import Schema
 
 
@@ -64,5 +66,7 @@ class SchemaTest(unittest.TestCase):
         schema = schema_factory.get_schema()
         self.assertDictEqual(self.expect_dict_from_dict, schema)
 
-
-
+    def test_get_spec(self):
+        schema_factory = Schema(schema=self.schema_path)
+        spec = schema_factory.get_spec()
+        self.assertTrue(isinstance(spec, Spec))

@@ -15,6 +15,9 @@ class Validator:
             'required_body': 'body'
         }
 
+    def validate_request_with_openapi(self, request, response):
+        pass
+
     def validate_request(self, request, response, requirements):
         for required, source in self.__pairings.items():
             if requirements.get(required) and required == 'required_body':
