@@ -4,7 +4,7 @@ from acai.apigateway.requirements import requirements
     required_body='v1-post-request-test'
 )
 def post(request, response):
-    response.body = {'router_directory_basic': request.body}
+    response.body = {'router_nested_directory_basic': request.body}
     return response
 
 
@@ -13,7 +13,7 @@ def post(request, response):
     available_query=['email', 'name']
 )
 def get(request, response):
-    response.body = {'router_directory_basic': request.body}
+    response.body = {'router_nested_directory_basic': request.body}
     return response
 
 
@@ -22,5 +22,5 @@ def get(request, response):
     available_headers=['correlation-id']
 )
 def delete(request, response):
-    response.body = {'router_directory_basic': request.body}
+    response.body = {'router_nested_directory_basic': request.body}
     return response

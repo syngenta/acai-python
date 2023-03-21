@@ -6,7 +6,7 @@ from acai.apigateway.router import Router
 from tests.mocks import mock_request, mock_middleware
 
 
-class RouterTest(unittest.TestCase):
+class RouterDirectoryTest(unittest.TestCase):
     base_path = 'unit-test/v1'
     handler_path = 'tests/mocks/router/directory_handlers'
     schema_path = 'tests/mocks/openapi.yml'
@@ -254,4 +254,58 @@ class RouterTest(unittest.TestCase):
         result = router.route(dynamic_event, None)
         json_dict_response = json.loads(result['body'])
         self.assertEqual(400, result['statusCode'])
-        self.assertDictEqual({'errors': [{'key_path': 'headers', 'message': 'Please provide content-type in headers'}, {'key_path': 'headers', 'message': 'unknown-id is not an available headers'}]}, json_dict_response)
+        self.assertDictEqual(
+            {
+                'errors': [{'key_path': 'headers', 'message': 'Please provide content-type in headers'},
+                           {'key_path': 'headers', 'message': 'unknown-id is not an available headers'}]
+            }, json_dict_response
+        )
+
+    def test_requirements_decorator_works_and_passes_proper_dynamic_route_request(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/abc-123',
+            proxy='nested/abc-123',
+            method='patch',
+            body={
+                'test_id': 'unit-test',
+                'email': 'unit@email.com'
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(
+            {
+                'router_nested_directory_dynamic': {'test_id': 'unit-test', 'email': 'unit@email.com'},
+                'path_params': {'proxy': 'nested/abc-123', 'nested_id': 'abc_123'}
+            },
+            json_dict_response
+        )
+
+    def test_requirements_decorator_works_and_fails_improper_dynamic_route_request(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/abc-123',
+            proxy='nested/abc-123',
+            method='patch',
+            body={
+                'email': 'unit@email.com'
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual({'errors': [{'key_path': 'root', 'message': "'test_id' is a required property"}]}, json_dict_response)
