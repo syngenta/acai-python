@@ -500,3 +500,24 @@ def get_basic_failing_for_required_body_validation():
             }
         })
     }
+
+
+def get_dynamic_event(**kwargs):
+    return {
+        'headers': kwargs.get('headers', {}),
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': kwargs.get('path', 'unit-test/v1/basic'),
+        'pathParameters': {
+            'proxy': kwargs.get('proxy', 'basic')
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': kwargs.get('method', 'GET').upper(),
+        'queryStringParameters': kwargs.get('query', {}),
+        'body': json.dumps(kwargs.get('body', {}))
+    }

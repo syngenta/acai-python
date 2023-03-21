@@ -22,7 +22,8 @@ class Validator:
             elif requirements.get(required) and 'required' in required:
                 Validator.check_required_fields(response, requirements[required], getattr(request, source), source)
             elif requirements.get(required) and 'available' in required:
-                Validator.check_available_fields(response, requirements[required], getattr(request, source), source)
+                full_list = Validator.combine_available_with_required(requirements, required)
+                Validator.check_available_fields(response, full_list, getattr(request, source), source)
         if response.has_errors:
             response.code = 400
 
@@ -42,6 +43,15 @@ class Validator:
             unavailable_fields = [value for value in sent if value not in available]
             for field in unavailable_fields:
                 response.set_error(list_name, f'{field} is not an available {list_name}')
+
+    @staticmethod
+    def combine_available_with_required(requirements, required):
+        avail_list = requirements[required]
+        if required == 'available_query' and requirements.get('required_query'):
+            avail_list += requirements['required_query']
+        elif required == 'available_headers' and requirements.get('required_headers'):
+            avail_list += requirements['required_headers']
+        return avail_list
 
     @staticmethod
     def check_required_body(response, schema, request_body):

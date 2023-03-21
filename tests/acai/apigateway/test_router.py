@@ -12,6 +12,7 @@ class RouterTest(unittest.TestCase):
     schema_path = 'tests/mocks/openapi.yml'
     basic_event = mock_request.get_basic_post()
     raise_exception_event = mock_request.get_raised_exception_post()
+    mock_request = mock_request
     unhandled_exception_event = mock_request.get_unhandled_exception_post()
     expected_open_headers = {
         'Access-Control-Allow-Origin': '*',
@@ -116,3 +117,141 @@ class RouterTest(unittest.TestCase):
         )
         router.route(self.raise_exception_event, None)
         self.assertTrue(mock_middleware.mock_on_error.has_been_called)
+
+    def test_requirements_decorator_works_and_passes_proper_body_request(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='post',
+            body={
+                'name': 'unit-test',
+                'email': 'unit@email.com',
+                'phone': 1234567890,
+                'active': True
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        self.assertEqual(200, result['statusCode'])
+
+    def test_requirements_decorator_works_and_fails_improper_body_request(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='post',
+            body={
+                'name': 'unit-test',
+                'email': 'unit@email.com',
+                'phone': '1234567890',
+                'active': True
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        self.assertEqual(400, result['statusCode'])
+        json_dict_response = json.loads(result['body'])
+        self.assertDictEqual({'errors': [{'key_path': 'phone', 'message': "'1234567890' is not of type 'number'"}]}, json_dict_response)
+
+    def test_requirements_decorator_works_and_passes_proper_query_request(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='get',
+            query={
+                'auth_id': 'some-id',
+                'email': 'some@email.com',
+                'name': 'unit-test'
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+
+    def test_requirements_decorator_works_and_fails_improper_query_request_missing_required(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='get',
+            query={
+                'email': 'some@email.com',
+                'name': 'unit-test'
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        self.assertEqual(400, result['statusCode'])
+        json_dict_response = json.loads(result['body'])
+        self.assertDictEqual({'errors': [{'key_path': 'query_params', 'message': 'Please provide auth_id in query_params'}]}, json_dict_response)
+
+    def test_requirements_decorator_works_and_passes_proper_headers(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json', 'correlation-id': 'abc-123'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='delete'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        self.assertEqual(200, result['statusCode'])
+
+    def test_requirements_decorator_works_and_fails_improper_headers_missing_required(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'correlation-id': 'abc-123'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='delete'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual({'errors': [{'key_path': 'headers', 'message': 'Please provide content-type in headers'}]}, json_dict_response)
+
+    def test_requirements_decorator_works_and_fails_improper_headers_unknown_header(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'unknown-id': 'abc-123'},
+            path='unit-test/v1/nested/reqs',
+            proxy='nested/reqs',
+            method='delete'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual({'errors': [{'key_path': 'headers', 'message': 'Please provide content-type in headers'}, {'key_path': 'headers', 'message': 'unknown-id is not an available headers'}]}, json_dict_response)
