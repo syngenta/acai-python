@@ -21,7 +21,7 @@ commands:
             - run: python -m unittest discover
     python-report:
         steps:
-            - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./reports/tests/xunit.xml --cov-report xml:./reports/tests/cov.xml --html=./reports/unit-test/index.html --self-contained-html --cov-report html:./reports -p no:warnings -o log_cli=true
+            - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./reports/tests/xunit.xml --html=./reports/unit-test/index.html --self-contained-html --cov-report html:./reports -p no:warnings -o log_cli=true
             - store_test_results:
                 path: ./reports/tests
             - store_artifacts:
