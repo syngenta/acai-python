@@ -9,10 +9,13 @@ from acai.common.json_helper import JsonHelper
 class Request:
 
     def __init__(self, event, lambda_context=None):
+        self.lambda_context = lambda_context
         self.__event = event
-        self.__event_body = event.get('body', {})
+        self.__body = event.get('body', {})
         self.__route = event.get('path', '')
         self.__path_params = event.get('pathParameters', '')
+        self.__request_context = event.get('requestContext', {})
+        self.__host_url = event.get('requestContext', {}).get('domainName', '')
         self.__context = {}
         self.__parsers = {
             'application/json': 'json',
@@ -23,7 +26,26 @@ class Request:
             'text/xml': 'xml',
             'raw': 'raw'
         }
-        self.lambda_context = lambda_context
+
+    @property
+    def cookies(self):
+        if self.__event.get('headers', {}).get('cookie'):
+            cookies = self.__event.get('headers', {}).get('cookie')
+        else:
+            cookies = self.__event.get('cookies', '')
+        return cookies
+
+    @property
+    def protocol(self):
+        if self.__request_context.get('protocol'):
+            protocol = self.__request_context.get('protocol', 'http')
+        else:
+            protocol = self.__request_context.get('http', {}).get('protocol', 'http')
+        return 'https' if 'https' in protocol.lower() else 'http'
+
+    @property
+    def host_url(self):
+        return f'{self.protocol}://{self.__host_url}'
 
     @property
     def method(self):
@@ -49,7 +71,7 @@ class Request:
     def authorizer(self):
         if self.__event.get('isOffline'):
             return self.headers
-        return self.__event.get('requestContext', {}).get('authorizer', self.headers)
+        return self.__request_context.get('authorizer', self.headers)
 
     @property
     def headers(self):
@@ -63,32 +85,32 @@ class Request:
             return getattr(self, parser)
         except Exception as error:
             print(repr(error))
-            return self.__event_body
+            return self.__body
 
     @property
     def json(self):
-        return JsonHelper.decode(self.__event_body, True)
+        return JsonHelper.decode(self.__body, True)
 
     @property
     def form(self):
-        return dict(urllib.parse.parse_qsl(self.__event_body))
+        return dict(urllib.parse.parse_qsl(self.__body))
 
     @property
     def xml(self):
-        return xmltodict.parse(self.__event_body)
+        return xmltodict.parse(self.__body)
 
     @property
     def graphql(self):
         try:
-            request = base64.b64decode(self.__event_body).decode('utf-8')
+            request = base64.b64decode(self.__body).decode('utf-8')
         except Exception as error:
             print(error)
-            request = self.__event_body
+            request = self.__body
         return JsonHelper.decode(request)
 
     @property
     def raw(self):
-        return self.__event_body
+        return self.__body
 
     @property
     def params(self):

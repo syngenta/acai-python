@@ -9,6 +9,7 @@ from tests.mocks import mock_request
 
 
 class RequestTest(unittest.TestCase):
+    aws_example = mock_request.get_aws_example()
     basic_request = mock_request.get_basic()
     basic_offline = mock_request.get_basic_offline()
     basic_form = mock_request.get_basic_form()
@@ -20,6 +21,18 @@ class RequestTest(unittest.TestCase):
     def test_method(self):
         request = Request(self.basic_request)
         self.assertEqual(request.method, self.basic_request['httpMethod'].lower())
+
+    def test_cookies(self):
+        request = Request(self.aws_example)
+        self.assertEqual(request.cookies, self.aws_example['headers']['cookie'])
+
+    def test_protocol(self):
+        request = Request(self.aws_example)
+        self.assertEqual(request.protocol, 'http')
+
+    def test_host_url(self):
+        request = Request(self.aws_example)
+        self.assertEqual(request.host_url, 'http://70ixmpl4fl.execute-api.us-east-2.amazonaws.com')
 
     def test_resource(self):
         request = Request(self.basic_request)
