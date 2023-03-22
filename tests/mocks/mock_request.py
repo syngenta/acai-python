@@ -99,7 +99,7 @@ def get_aws_example():
             'domainName': '70ixmpl4fl.execute-api.us-east-2.amazonaws.com',
             'apiId': '70ixmpl4fl'
         },
-        'body': None,
+        'body': json.dumps({'body_key': 'body_value'}),
         'isBase64Encoded': False
     }
 

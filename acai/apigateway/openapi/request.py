@@ -1,6 +1,6 @@
 from openapi_core.datatypes import RequestParameters
 
-class AcaiOpenAPIRequest:
+class OpenAPIRequest:
 
     def __init__(self, request):
         self.request = request
@@ -13,11 +13,13 @@ class AcaiOpenAPIRequest:
 
     @property
     def host_url(self):
-        return self.request.url
+        return self.request.host_url
 
     @property
     def path(self):
-        return self.request.path
+        if self.request.path[0] == '/':
+            return self.request.path
+        return f'/{self.request.path}'
 
     @property
     def method(self):
