@@ -21,7 +21,7 @@ class Validator:
     def validate_request(self, request, response, requirements):
         for required, source in self.__pairings.items():
             if requirements.get(required) and required == 'required_body':
-                Validator.check_required_body(response, self.__schema.get_schema(requirements[required]), getattr(request, source))
+                Validator.check_required_body(response, self.__schema.get_body_spec(requirements[required]), getattr(request, source))
             elif requirements.get(required) and 'required' in required:
                 Validator.check_required_fields(response, requirements[required], getattr(request, source), source)
             elif requirements.get(required) and 'available' in required:

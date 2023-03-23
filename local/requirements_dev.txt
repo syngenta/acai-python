@@ -2,7 +2,6 @@ dynamodb_json
 jsonpickle
 jsonref
 jsonschema
-openapi-core
 pyyaml
 xmltodict
 autopep8

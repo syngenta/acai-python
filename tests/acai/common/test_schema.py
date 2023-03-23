@@ -56,17 +56,17 @@ class SchemaTest(unittest.TestCase):
         }
     }
 
-    def test_get_schema_from_file(self):
+    def test_get_openapi_spec(self):
         schema_factory = Schema(schema=self.schema_path)
-        schema = schema_factory.get_schema('v1-schema-factory-test')
+        spec = schema_factory.get_openapi_spec()
+        self.assertTrue(isinstance(spec, Spec))
+
+    def test_get_body_spec_from_file(self):
+        schema_factory = Schema(schema=self.schema_path)
+        schema = schema_factory.get_body_spec('v1-schema-factory-test')
         self.assertDictEqual(self.expect_dict_from_path, schema)
 
-    def test_get_schema_from_dict(self):
+    def test_get_body_spec_from_dict(self):
         schema_factory = Schema(schema=self.schema_dict)
-        schema = schema_factory.get_schema()
+        schema = schema_factory.get_body_spec()
         self.assertDictEqual(self.expect_dict_from_dict, schema)
-
-    def test_get_spec(self):
-        schema_factory = Schema(schema=self.schema_path)
-        spec = schema_factory.get_spec()
-        self.assertTrue(isinstance(spec, Spec))

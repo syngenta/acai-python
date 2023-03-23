@@ -114,3 +114,8 @@ class ValidatorTest(unittest.TestCase):
         self.validator.validate_request(request, response, requirements)
         self.assertTrue(response.has_errors)
         self.assertEqual('{"errors": [{"key_path": "root", "message": "\'id\' is a required property"}]}', response.body)
+
+    def test_validate_request_with_openapi_passes(self):
+        request = Request(mock_request.get_auto_validated_data())
+        response = Response()
+        self.validator.validate_request_with_openapi(request, response)

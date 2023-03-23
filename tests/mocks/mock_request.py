@@ -623,3 +623,80 @@ def get_dynamic_event(**kwargs):
         'queryStringParameters': kwargs.get('query', {}),
         'body': json.dumps(kwargs.get('body', {}))
     }
+
+def get_auto_validated_data():
+    return {
+        'headers': {
+            'x-api-key': 'some-key',
+            'cookie': 's_fid=7AAB6XMPLAFD9BBF-0643XMPL09956DE2; regStatus=pre-register',
+            'Host': 'localhost:3000',
+            'Content-Type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'domainName': 'localhost:3000',
+            'protocol': 'HTTP/1.1',
+            'authorizer': {
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': '/unit-test/v1/auto',
+        'pathParameters': {
+            'proxy': 'auto'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {},
+        'body': json.dumps({
+            'test_id': 'abc123',
+            'object_key': {
+                'key': 'value'
+            },
+            'array_number': [1, 2, 3],
+            'array_objects': [
+                {
+                    'array_string_key': 'string_value',
+                    'array_number_key': 0
+                }
+            ]
+        })
+    }
+
+def get_auto_validated_data_fails():
+    return {
+        'headers': {
+            'x-api-key': 'some-key',
+            'cookie': 's_fid=7AAB6XMPLAFD9BBF-0643XMPL09956DE2; regStatus=pre-register',
+            'Host': 'localhost:3000',
+            'Content-Type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'domainName': 'localhost:3000',
+            'protocol': 'HTTP/1.1',
+            'authorizer': {
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': '/unit-test/v1/auto',
+        'pathParameters': {
+            'proxy': 'auto'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {},
+        'body': json.dumps({
+            'object_key': {
+                'key': 'value'
+            },
+            'array_number': [1, 2, 3],
+            'array_objects': [
+                {
+                    'array_string_key': 'string_value',
+                    'array_number_key': 0
+                }
+            ]
+        })
+    }
