@@ -75,7 +75,8 @@ class Request:
 
     @property
     def headers(self):
-        return self.__event.get('headers', {})
+        headers = {k.lower(): v for k, v in self.__event.get('headers', {}).items()}
+        return headers
 
     @property
     def body(self):
