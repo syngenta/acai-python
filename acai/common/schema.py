@@ -13,34 +13,27 @@ class Schema:
         self.__config = kwargs.get('schema_config', {})
         self.__spec = {}
 
-    def get_openapi_spec(self):
-        if not self.__spec:
-            self.__spec = self.__get_full_spec()
+    @property
+    def spec(self):
         return self.__spec
+
+    def get_openapi_spec(self):
+        return self.__get_full_spec()
 
     def get_body_spec(self, required_body=None):
         if self.__schema and isinstance(self.__schema, dict):
-            self.__spec = self.__schema
-        if not self.__spec:
-            self.__spec = self.__get_component_spec(required_body)
-        return self.__spec
+            return self.__schema
+        return self.__get_component_spec(required_body)
 
-    def get_route_spec(self, route):
-        pass
+    def get_route_spec(self, route, method):
+        return self.__get_route_spec(route, method)
 
     def __get_full_spec(self):
-        unresolved_spec = self.__get_spec_from_file()
-        resolved_spec = jsonref.loads(json.dumps(unresolved_spec), jsonschema=True, merge_props=True)
-        full_spec = self.__combine_all_of_spec(resolved_spec)
-        return full_spec
-
-    def __get_component_spec(self, required_body=None):
-        if not required_body:
-            return {}
-        spec = self.__get_full_spec()
-        definition = spec['components']['schemas'][required_body]
-        definition['additionalProperties'] = self.__config.get('allow_additional_properties', False)
-        return definition
+        if not self.spec:
+            unresolved_spec = self.__get_spec_from_file()
+            resolved_spec = jsonref.loads(json.dumps(unresolved_spec), jsonschema=True, merge_props=True)
+            self.__spec = self.__combine_all_of_spec(resolved_spec)
+        return self.spec
 
     def __get_spec_from_file(self):
         abs_schema_path = self.__get_abs_spec_path()
@@ -82,3 +75,19 @@ class Schema:
         for index, item in enumerate(spec[spec_key]):
             if isinstance(item, dict):
                 self.__walk_spec(item, combined_spec[spec_key][index])
+
+    def __get_component_spec(self, required_body=None):
+        if not required_body:
+            return {}
+        spec = self.__get_full_spec()
+        definition = spec['components']['schemas'][required_body]
+        definition['additionalProperties'] = self.__config.get('allow_additional_properties', False)
+        return definition
+
+    def __get_route_spec(self, route, method):
+        spec = self.__get_full_spec()
+        if spec.get('basePath'):
+            route = route.replace(spec['basePath'], '')
+        if route[0] != '/':
+            route = f'/{route}'
+        return spec['paths'][route][method]

@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from jsonschema import Draft7Validator
 
 from acai.common.schema import Schema
@@ -16,7 +18,9 @@ class Validator:
         }
 
     def validate_request_with_openapi(self, request, response):
-        pass
+        route_spec = self.__schema.get_route_spec(request.route, request.method)
+        requirements = Validator.combine_parameters(route_spec.get('parameters', []))
+        self.validate_request(request, response, requirements)
 
     def validate_request(self, request, response, requirements):
         for required, source in self.__pairings.items():
@@ -64,3 +68,18 @@ class Validator:
                 error_path = '.'.join(str(path) for path in schema_error.path)
                 error_key = error_path if error_path else 'root'
                 response.set_error(key_path=error_key, message=schema_error.message)
+
+    @staticmethod
+    def combine_parameters(parameters):
+        requirements = defaultdict(lambda: [])
+        for param in parameters:
+            if param.get('in') == 'query' and param.get('required'):
+                requirements['required_query'].append(param['name'])
+            elif param.get('in') == 'query':
+                requirements['available_query'].append(param['name'])
+            elif param.get('in') == 'header' and param.get('required'):
+                requirements['required_headers'].append(param['name'])
+            elif param.get('in') == 'header':
+                requirements['available_headers'].append(param['name'])
+        return dict(requirements)
+
