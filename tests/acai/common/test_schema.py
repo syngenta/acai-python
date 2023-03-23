@@ -1,7 +1,5 @@
 import unittest
 
-from openapi_core import Spec
-
 from acai.common.schema import Schema
 
 
@@ -59,7 +57,7 @@ class SchemaTest(unittest.TestCase):
     def test_get_openapi_spec(self):
         schema_factory = Schema(schema=self.schema_path)
         spec = schema_factory.get_openapi_spec()
-        self.assertTrue(isinstance(spec, Spec))
+        self.assertTrue(isinstance(spec, dict))
 
     def test_get_body_spec_from_file(self):
         schema_factory = Schema(schema=self.schema_path)
