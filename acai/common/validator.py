@@ -82,4 +82,3 @@ class Validator:
             elif param.get('in') == 'header':
                 requirements['available_headers'].append(param['name'])
         return dict(requirements)
-
