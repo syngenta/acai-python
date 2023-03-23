@@ -23,6 +23,8 @@ class Schema:
     def get_body_spec(self, required_body=None):
         if self.__schema and isinstance(self.__schema, dict):
             return self.__schema
+        if required_body and isinstance(required_body, dict):
+            return required_body
         return self.__get_component_spec(required_body)
 
     def get_route_spec(self, route, method):

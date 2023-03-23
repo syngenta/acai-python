@@ -20,6 +20,8 @@ class Validator:
     def validate_request_with_openapi(self, request, response):
         route_spec = self.__schema.get_route_spec(request.route, request.method)
         requirements = Validator.combine_parameters(route_spec.get('parameters', []))
+        if route_spec.get('requestBody'):
+            requirements['required_body'] = route_spec['requestBody']['content'][request.content_type]['schema']
         self.validate_request(request, response, requirements)
 
     def validate_request(self, request, response, requirements):

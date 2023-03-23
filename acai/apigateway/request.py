@@ -44,6 +44,10 @@ class Request:
         return 'https' if 'https' in protocol.lower() else 'http'
 
     @property
+    def content_type(self):
+        return self.headers['content-type'].split(';')[0]
+
+    @property
     def host_url(self):
         return f'{self.protocol}://{self.__host_url}'
 
