@@ -26,6 +26,10 @@ class RequestTest(unittest.TestCase):
         request = Request(self.aws_example)
         self.assertEqual(request.cookies, self.aws_example['headers']['cookie'])
 
+    def test_content_type(self):
+        request = Request(self.basic_request)
+        self.assertEqual(request.content_type, self.basic_request['headers']['content-type'])
+
     def test_protocol(self):
         request = Request(self.aws_example)
         self.assertEqual(request.protocol, 'http')

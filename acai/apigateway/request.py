@@ -45,7 +45,7 @@ class Request:
 
     @property
     def content_type(self):
-        return self.headers['content-type'].split(';')[0]
+        return self.headers.get('content-type', '').split(';')[0]
 
     @property
     def host_url(self):
@@ -85,11 +85,11 @@ class Request:
     @property
     def body(self):
         try:
-            content_type = self.headers['content-type'].split(';')[0]
+            content_type = self.headers.get('content-type', '').split(';')[0]
             parser = self.__parsers.get(content_type, 'raw')
             return getattr(self, parser)
         except Exception as error:
-            print(repr(error))
+            print(error)
             return self.__body
 
     @property
