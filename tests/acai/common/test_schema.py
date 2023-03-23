@@ -94,6 +94,59 @@ class SchemaTest(unittest.TestCase):
         'required': ['test_id', 'object_key', 'array_number', 'array_objects'],
         'additionalProperties': False
     }
+    expected_route_spec = {
+        'tags': [
+            'unit-test'
+        ],
+        'operationId': 'GetSchema',
+        'deprecated': False,
+        'parameters': [
+            {
+                'in': 'query',
+                'name': 'test_id',
+                'required': False,
+                'schema': {
+                    'type': 'string'
+                }
+            },
+            {
+                'in': 'query',
+                'name': 'unit_id',
+                'required': True,
+                'schema': {
+                    'type': 'string'
+                }
+            }
+        ],
+        'responses': {
+            '200': {
+                'description': 'valid',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                'data': {
+                                    'type': 'object',
+                                    'required': [
+                                        'id'
+                                    ],
+                                    'properties': {
+                                        'id': {
+                                            'type': 'string'
+                                        }
+                                    }
+                                }
+                            },
+                            'required': [
+                                'data'
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     def test_get_openapi_spec(self):
         schema_factory = Schema(schema=self.schema_path)
@@ -114,3 +167,8 @@ class SchemaTest(unittest.TestCase):
         schema = Schema(schema=self.schema_dict)
         spec = schema.get_body_spec()
         self.assertDictEqual(self.expected_dict_from_dict, spec)
+
+    def test_get_spec_from_route(self):
+        schema = Schema(schema=self.schema_path)
+        spec = schema.get_route_spec('/unit-test/v1/schema', 'get')
+        self.assertDictEqual(self.expected_route_spec, spec)
