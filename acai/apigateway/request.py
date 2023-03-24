@@ -15,7 +15,8 @@ class Request:
         self.__route = event.get('path', '')
         self.__path_params = event.get('pathParameters', '')
         self.__request_context = event.get('requestContext', {})
-        self.__host_url = event.get('requestContext', {}).get('domainName', '')
+        self.__domain = event.get('requestContext', {}).get('domainName', '')
+        self.__stage = event.get('requestContext', {}).get('stage', '')
         self.__context = {}
         self.__parsers = {
             'application/json': 'json',
@@ -49,7 +50,15 @@ class Request:
 
     @property
     def host_url(self):
-        return f'{self.protocol}://{self.__host_url}'
+        return f'{self.protocol}://{self.__domain}'
+
+    @property
+    def domain(self):
+        return self.__domain
+
+    @property
+    def stage(self):
+        return self.__stage
 
     @property
     def method(self):

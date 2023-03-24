@@ -38,6 +38,14 @@ class RequestTest(unittest.TestCase):
         request = Request(self.aws_example)
         self.assertEqual(request.host_url, 'http://70ixmpl4fl.execute-api.us-east-2.amazonaws.com')
 
+    def test_domain(self):
+        request = Request(self.aws_example)
+        self.assertEqual(request.domain, '70ixmpl4fl.execute-api.us-east-2.amazonaws.com')
+
+    def test_stage(self):
+        request = Request(self.aws_example)
+        self.assertEqual(request.stage, 'Prod')
+
     def test_resource(self):
         request = Request(self.basic_request)
         self.assertEqual(request.resource, self.basic_request['resource'])
