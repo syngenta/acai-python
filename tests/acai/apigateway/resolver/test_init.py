@@ -28,7 +28,7 @@ class ResolverTest(unittest.TestCase):
         request = Request(self.dynamic_request)
         resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
         resolver.get_endpoint(request)
-        self.assertEqual('/dynamic/{id}', request.route)
+        self.assertEqual('/unit-test/v1/dynamic/{id}', request.route)
         self.assertDictEqual(self.expected_path_params, request.path_params)
 
     def test_dynamic_resolve_checks_bad_route_throws_exception(self):
@@ -37,7 +37,7 @@ class ResolverTest(unittest.TestCase):
         try:
             resolver.get_endpoint(request)
         except ApiException as api_error:
-            self.assertEqual('no route found; endpoint does not have proper variables in required_route', api_error.message)
+            self.assertEqual('no route found; requested dynamic route does not match endpoint route definition', api_error.message)
 
     def test_dynamic_resolve_checks_no_route_throws_exception(self):
         request = Request(self.no_dynamic_request)

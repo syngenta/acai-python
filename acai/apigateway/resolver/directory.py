@@ -12,6 +12,10 @@ class Directory:
         self.__dynamic_parts = {}
 
     @property
+    def base_path(self):
+        return self.__base_path
+
+    @property
     def has_dynamic_route(self):
         return self.__has_dynamic_route
 

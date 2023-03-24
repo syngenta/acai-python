@@ -74,6 +74,8 @@ class Request:
 
     @property
     def route(self):
+        if self.__route and self.__route[0] != '/':
+            return f'/{self.__route}'
         return self.__route
 
     @route.setter
