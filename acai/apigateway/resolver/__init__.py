@@ -50,4 +50,4 @@ class Resolver:
                 raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does not have proper variables in required_route')
             dynamic_name = variable_name.strip('{').strip('}')
             request.path_params = dynamic_name, dynamic_parts[part]
-        request.route = endpoint.required_route
+        request.route = endpoint.required_route if endpoint.has_required_route else request.path

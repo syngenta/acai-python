@@ -22,13 +22,11 @@ class Router:
         try:
             self.__run_route(request, response)
         except ApiException as api_error:
-            response.code = api_error.code
-            response.set_error(key_path=api_error.key_path, message=api_error.message)
+            kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
+            self.__handle_error(request, response, **kwargs)
         except Exception as error:
-            response.code = 500
-            response.set_error(key_path='unknown', message=str(error))
-        if response.has_errors:
-            self.__handle_error(request, response)
+            kwargs = {'code': 500, 'key_path': 'unknown', 'message': str(error), 'error': error}
+            self.__handle_error(request, response, **kwargs)
         return response.full
 
     def __run_route(self, request, response):
@@ -47,9 +45,12 @@ class Router:
             self.__after_all(request, response, endpoint.requirements)
         return response
 
-    def __handle_error(self, request, response):
+    def __handle_error(self, request, response, **kwargs):
+        print(kwargs.get('error'))
         try:
+            response.code = kwargs['code']
+            response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])
             if self.__on_error and callable(self.__on_error):
-                self.__on_error(request, response)
+                self.__on_error(request, response, kwargs.get('error'))
         except Exception as error:
             print(error)

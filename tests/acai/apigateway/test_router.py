@@ -309,3 +309,67 @@ class RouterDirectoryTest(unittest.TestCase):
         json_dict_response = json.loads(result['body'])
         self.assertEqual(400, result['statusCode'])
         self.assertDictEqual({'errors': [{'key_path': 'root', 'message': "'test_id' is a required property"}]}, json_dict_response)
+
+    def test_auto_validate_works_and_passes_proper_dynamic_route_request(self):
+        body = {
+            'test_id': 'abc123',
+            'object_key': {
+                'key': 'value'
+            },
+            'array_number': [1, 2, 3],
+            'array_objects': [
+                {
+                    'array_string_key': 'string_value',
+                    'array_number_key': 0
+                }
+            ]
+        }
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json', 'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='post',
+            body=body
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path,
+            auto_validate=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual({'router_directory_auto': body}, json_dict_response)
+
+    def test_auto_validate_works_and_fails_improper_dynamic_route_request(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json', 'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='post',
+            body={
+                'object_key': {
+                    'key': 'value'
+                },
+                'array_number': [1, 2, 3],
+                'array_objects': [
+                    {
+                        'array_string_key': 'string_value',
+                        'array_number_key': 0
+                    }
+                ]
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path,
+            auto_validate=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual({'errors': [{'key_path': 'root', 'message': "'test_id' is a required property"}]}, json_dict_response)
