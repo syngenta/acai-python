@@ -33,7 +33,7 @@ class RequestTest(unittest.TestCase):
 
     def test_content_type(self):
         request = Request(self.basic_request)
-        self.assertEqual(request.content_type, self.basic_request['cookies']['content-type'])
+        self.assertEqual(request.content_type, self.basic_request['headers']['content-type'])
 
     def test_protocol(self):
         request = Request(self.aws_example)
