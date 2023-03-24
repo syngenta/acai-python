@@ -106,6 +106,7 @@ class ImporterTest(unittest.TestCase):
         importer = Importer(handlers=self.handler_bad_same_name, mode='directory')
         try:
             print(importer.handlers_file_tree)
+            self.assertTrue(False)
         except ApiException as importer_error:
             self.assertTrue(isinstance(importer_error, ApiException))
             self.assertTrue('Cannot have file and directory share same name.' in importer_error.message)

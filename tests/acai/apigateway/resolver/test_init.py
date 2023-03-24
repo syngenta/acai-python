@@ -37,6 +37,7 @@ class ResolverTest(unittest.TestCase):
         resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
         try:
             resolver.get_endpoint(request)
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertEqual('no route found; requested dynamic route does not match endpoint route definition', api_error.message)
 
@@ -45,6 +46,7 @@ class ResolverTest(unittest.TestCase):
         resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
         try:
             resolver.get_endpoint(request)
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertEqual('no route found; endpoint does not have proper variables in required_route', api_error.message)
 
@@ -53,6 +55,7 @@ class ResolverTest(unittest.TestCase):
         resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
         try:
             resolver.get_endpoint(request)
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertEqual('no route found; endpoint does have required_route configured', api_error.message)
 
@@ -61,12 +64,14 @@ class ResolverTest(unittest.TestCase):
         resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
         try:
             resolver.get_endpoint(request)
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertEqual('method not allowed', api_error.message)
 
     def test_resolver_validates_base_path(self):
         try:
             Resolver()
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('base_path is required', api_error.message)
@@ -74,6 +79,7 @@ class ResolverTest(unittest.TestCase):
     def test_resolver_validates_routing_mode_exists(self):
         try:
             Resolver(base_path=self.base_path)
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('routing_mode is required; must be one of `directory` || `pattern` || `mapping`', api_error.message)
@@ -81,6 +87,7 @@ class ResolverTest(unittest.TestCase):
     def test_resolver_validates_routing_mode_is_one_of(self):
         try:
             Resolver(base_path=self.base_path, routing_mode='n/a')
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('routing_mode must be one of `directory` || `pattern` || `mapping`', api_error.message)
@@ -88,6 +95,7 @@ class ResolverTest(unittest.TestCase):
     def test_resolver_validates_directory_routing_mode_handler_path(self):
         try:
             Resolver(base_path=self.base_path, routing_mode='directory')
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('`directory` routing_mode must use handler_path kwarg', api_error.message)
@@ -95,6 +103,7 @@ class ResolverTest(unittest.TestCase):
     def test_resolver_validates_pattern_routing_mode_handler_pattern(self):
         try:
             Resolver(base_path=self.base_path, routing_mode='pattern')
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('`pattern` routing_mode must use handler_pattern kwarg', api_error.message)
@@ -102,6 +111,7 @@ class ResolverTest(unittest.TestCase):
     def test_resolver_validates_pattern_routing_mode_handler_mapping(self):
         try:
             Resolver(base_path=self.base_path, routing_mode='mapping')
+            self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('`mapping` routing_mode must use handler_mapping kwarg', api_error.message)

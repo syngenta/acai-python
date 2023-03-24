@@ -51,7 +51,7 @@ class Resolver:
     def __apply_dynamic_route_params(self, request, required_route_parts):
         for part in list(self.__resolver.dynamic_parts.keys()):
             variable_name = required_route_parts[part]
-            if not variable_name.startswith('{') and not variable_name.endswith('}'):
+            if not variable_name.startswith('{') or not variable_name.endswith('}'):
                 raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does not have proper variables in required_route')
             dynamic_name = variable_name.strip('{').strip('}')
             request.path_params = dynamic_name, self.__resolver.dynamic_parts[part]
