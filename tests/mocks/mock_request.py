@@ -1,5 +1,55 @@
 import json
 
+
+def get_aws_websocket_example():
+    return {
+        'version': '2.0',
+        'routeKey': 'ANY /nodejs-apig-function-1G3XMPLZXVXYI',
+        'rawPath': '/default/nodejs-apig-function-1G3XMPLZXVXYI',
+        'rawQueryString': '',
+        'cookies': [
+            's_fid=7AABXMPL1AFD9BBF-0643XMPL09956DE2',
+            'regStatus=pre-register'
+        ],
+        'headers': {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-encoding': 'gzip, deflate, br',
+            'accept-language': 'en-US,en;q=0.9',
+            'content-length': '0',
+            'host': 'r3pmxmplak.execute-api.us-east-2.amazonaws.com',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'cross-site',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
+            'x-amzn-trace-id': 'Root=1-5e6722a7-cc56xmpl46db7ae02d4da47e',
+            'x-forwarded-for': '205.255.255.176',
+            'x-forwarded-port': '443',
+            'x-forwarded-proto': 'https'
+        },
+        'requestContext': {
+            'accountId': '123456789012',
+            'apiId': 'r3pmxmplak',
+            'domainName': 'r3pmxmplak.execute-api.us-east-2.amazonaws.com',
+            'domainPrefix': 'r3pmxmplak',
+            'http': {
+                'method': 'GET',
+                'path': '/default/nodejs-apig-function-1G3XMPLZXVXYI',
+                'protocol': 'HTTP/1.1',
+                'sourceIp': '205.255.255.176',
+                'userAgent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
+            },
+            'requestId': 'JKJaXmPLvHcESHA=',
+            'routeKey': 'ANY /nodejs-apig-function-1G3XMPLZXVXYI',
+            'stage': 'default',
+            'time': '10/Mar/2020:05:16:23 +0000',
+            'timeEpoch': 1583817383220
+        },
+        'isBase64Encoded': True
+    }
+
+
 def get_aws_example():
     return {
         'resource': '/',
@@ -102,6 +152,7 @@ def get_aws_example():
         'body': json.dumps({'body_key': 'body_value'}),
         'isBase64Encoded': False
     }
+
 
 def get_basic():
     return {
@@ -391,6 +442,33 @@ def get_basic_post():
     }
 
 
+def get_basic_post_bad_method():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/basic',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'PUT',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }
+
+
 def get_dynamic_post():
     return {
         'headers': {
@@ -415,6 +493,7 @@ def get_dynamic_post():
         'body': json.dumps({'body_key': 'body_value'})
     }
 
+
 def get_bad_dynamic_post():
     return {
         'headers': {
@@ -438,6 +517,7 @@ def get_bad_dynamic_post():
         },
         'body': json.dumps({'body_key': 'body_value'})
     }
+
 
 def get_no_dynamic_post():
     return {
@@ -542,6 +622,7 @@ def get_basic_for_validation():
         'body': json.dumps({})
     }
 
+
 def get_basic_passing_for_required_body_validation():
     return {
         'headers': {
@@ -561,17 +642,20 @@ def get_basic_passing_for_required_body_validation():
         'resource': '/{proxy+}',
         'httpMethod': 'GET',
         'queryStringParameters': {},
-        'body': json.dumps({
-            'id': 3,
-            'email': 'some@email.com',
-            'active': True,
-            'favorites': ['anime', 'video games', 'basketball'],
-            'notification_config': {
-                'marketing': False,
-                'transactions': True
+        'body': json.dumps(
+            {
+                'id': 3,
+                'email': 'some@email.com',
+                'active': True,
+                'favorites': ['anime', 'video games', 'basketball'],
+                'notification_config': {
+                    'marketing': False,
+                    'transactions': True
+                }
             }
-        })
+        )
     }
+
 
 def get_basic_failing_for_required_body_validation():
     return {
@@ -592,15 +676,17 @@ def get_basic_failing_for_required_body_validation():
         'resource': '/{proxy+}',
         'httpMethod': 'GET',
         'queryStringParameters': {},
-        'body': json.dumps({
-            'email': 'some@email.com',
-            'active': True,
-            'favorites': ['anime', 'video games', 'basketball'],
-            'notification_config': {
-                'marketing': False,
-                'transactions': True
+        'body': json.dumps(
+            {
+                'email': 'some@email.com',
+                'active': True,
+                'favorites': ['anime', 'video games', 'basketball'],
+                'notification_config': {
+                    'marketing': False,
+                    'transactions': True
+                }
             }
-        })
+        )
     }
 
 
@@ -623,6 +709,7 @@ def get_dynamic_event(**kwargs):
         'queryStringParameters': kwargs.get('query', {}),
         'body': json.dumps(kwargs.get('body', {}))
     }
+
 
 def get_auto_validated_data():
     return {
@@ -648,20 +735,23 @@ def get_auto_validated_data():
         'resource': '/{proxy+}',
         'httpMethod': 'POST',
         'queryStringParameters': {},
-        'body': json.dumps({
-            'test_id': 'abc123',
-            'object_key': {
-                'key': 'value'
-            },
-            'array_number': [1, 2, 3],
-            'array_objects': [
-                {
-                    'array_string_key': 'string_value',
-                    'array_number_key': 0
-                }
-            ]
-        })
+        'body': json.dumps(
+            {
+                'test_id': 'abc123',
+                'object_key': {
+                    'key': 'value'
+                },
+                'array_number': [1, 2, 3],
+                'array_objects': [
+                    {
+                        'array_string_key': 'string_value',
+                        'array_number_key': 0
+                    }
+                ]
+            }
+        )
     }
+
 
 def get_auto_validated_data_fails():
     return {
@@ -687,16 +777,18 @@ def get_auto_validated_data_fails():
         'resource': '/{proxy+}',
         'httpMethod': 'POST',
         'queryStringParameters': {},
-        'body': json.dumps({
-            'object_key': {
-                'key': 'value'
-            },
-            'array_number': [1, 2, 3],
-            'array_objects': [
-                {
-                    'array_string_key': 'string_value',
-                    'array_number_key': 0
-                }
-            ]
-        })
+        'body': json.dumps(
+            {
+                'object_key': {
+                    'key': 'value'
+                },
+                'array_number': [1, 2, 3],
+                'array_objects': [
+                    {
+                        'array_string_key': 'string_value',
+                        'array_number_key': 0
+                    }
+                ]
+            }
+        )
     }

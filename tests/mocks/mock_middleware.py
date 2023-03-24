@@ -12,3 +12,7 @@ def mock_with_auth(request, response, requirements):
 
 def mock_on_error(request, response, error):
     mock_on_error.has_been_called = True
+
+def mock_on_error_exception(request, response, error):
+    mock_on_error_exception.has_been_called = True
+    raise Exception('something went wrong with middleware')

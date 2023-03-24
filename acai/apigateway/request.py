@@ -33,7 +33,7 @@ class Request:
         if self.__event.get('headers', {}).get('cookie'):
             cookies = self.__event.get('headers', {}).get('cookie')
         else:
-            cookies = self.__event.get('cookies', '')
+            cookies = ';'.join(self.__event.get('cookies', []))
         return cookies
 
     @property

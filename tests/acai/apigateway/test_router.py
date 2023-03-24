@@ -118,6 +118,17 @@ class RouterDirectoryTest(unittest.TestCase):
         router.route(self.raise_exception_event, None)
         self.assertTrue(mock_middleware.mock_on_error.has_been_called)
 
+    def test_basic_directory_routing_works_and_bad_on_error_function_caught(self):
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            on_error=mock_middleware.mock_on_error_exception,
+            schema=self.schema_path
+        )
+        router.route(self.raise_exception_event, None)
+        self.assertTrue(mock_middleware.mock_on_error_exception.has_been_called)
+
     def test_requirements_decorator_works_and_passes_proper_body_request(self):
         dynamic_event = self.mock_request.get_dynamic_event(
             headers={'content-type': 'application/json'},

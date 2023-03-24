@@ -11,6 +11,7 @@ from tests.mocks import mock_request
 class ResolverTest(unittest.TestCase):
     base_path = 'unit-test/v1'
     handler_path = 'tests/mocks/resolver/directory_handlers'
+    bad_method_request = mock_request.get_basic_post_bad_method()
     basic_request = mock_request.get_basic_post()
     dynamic_request = mock_request.get_dynamic_post()
     bad_dynamic_request = mock_request.get_bad_dynamic_post()
@@ -45,6 +46,14 @@ class ResolverTest(unittest.TestCase):
             resolver.get_endpoint(request)
         except ApiException as api_error:
             self.assertEqual('no route found; endpoint does have required_route configured', api_error.message)
+
+    def test_basic_request_with_bad_method(self):
+        request = Request(self.bad_method_request)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        try:
+            resolver.get_endpoint(request)
+        except ApiException as api_error:
+            self.assertEqual('method not allowed', api_error.message)
 
     def test_resolver_validates_base_path(self):
         try:

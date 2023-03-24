@@ -9,6 +9,7 @@ from tests.mocks import mock_request
 
 
 class RequestTest(unittest.TestCase):
+    websocket_aws_example = mock_request.get_aws_websocket_example()
     aws_example = mock_request.get_aws_example()
     basic_request = mock_request.get_basic()
     basic_offline = mock_request.get_basic_offline()
@@ -26,12 +27,20 @@ class RequestTest(unittest.TestCase):
         request = Request(self.aws_example)
         self.assertEqual(request.cookies, self.aws_example['headers']['cookie'])
 
+    def test_websocket_cookies(self):
+        request = Request(self.websocket_aws_example)
+        self.assertEqual(request.cookies, ';'.join(self.websocket_aws_example.get('cookies', [])))
+
     def test_content_type(self):
         request = Request(self.basic_request)
-        self.assertEqual(request.content_type, self.basic_request['headers']['content-type'])
+        self.assertEqual(request.content_type, self.basic_request['cookies']['content-type'])
 
     def test_protocol(self):
         request = Request(self.aws_example)
+        self.assertEqual(request.protocol, 'http')
+
+    def test_websocket_protocol(self):
+        request = Request(self.websocket_aws_example)
         self.assertEqual(request.protocol, 'http')
 
     def test_host_url(self):
