@@ -44,7 +44,7 @@ class Resolver:
         self.__apply_dynamic_route_params(request, clean_endpoint_route)
 
     def __check_dynamic_route(self, request, clean_request_path, clean_endpoint_route):
-        for index, value in enumerate(clean_request_path):
+        for index, _ in enumerate(clean_request_path):
             if clean_request_path[index] != clean_endpoint_route[index] and index not in list(self.__resolver.dynamic_parts.keys()):
                 raise ApiException(code=404, key_path=request.path, message='no route found; requested dynamic route does not match endpoint route definition')
 
