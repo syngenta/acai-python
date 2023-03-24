@@ -65,10 +65,10 @@ class RequestTest(unittest.TestCase):
 
     def test_route_default(self):
         request = Request(self.basic_request)
-        self.assertEqual(request.route, self.basic_request['path'])
+        self.assertEqual(request.route, f'/{self.basic_request["path"]}')
 
     def test_route_mutated(self):
-        mutated = 'unit-test/v1/mutated'
+        mutated = '/unit-test/v1/mutated'
         request = Request(self.basic_request)
         request.route = mutated
         self.assertEqual(request.route, mutated)
