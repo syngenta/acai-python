@@ -79,8 +79,6 @@ class Schema:
                 self.__walk_spec(item, combined_spec[spec_key][index])
 
     def __get_component_spec(self, required_body=None):
-        if not required_body:
-            return {}
         spec = self.__get_full_spec()
         definition = spec['components']['schemas'][required_body]
         definition['additionalProperties'] = self.__config.get('allow_additional_properties', False)
