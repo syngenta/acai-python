@@ -46,7 +46,6 @@ class Router:
         return response
 
     def __handle_error(self, request, response, **kwargs):
-        print(kwargs.get('error'))
         try:
             response.code = kwargs['code']
             response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])

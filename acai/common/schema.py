@@ -88,8 +88,8 @@ class Schema:
 
     def __get_route_spec(self, route, method):
         spec = self.__get_full_spec()
-        if spec.get('basePath'):
-            route = route.replace(spec['basePath'], '')
         if route[0] != '/':
             route = f'/{route}'
+        if spec.get('basePath'):
+            route = route.replace(spec['basePath'], '')
         return spec['paths'][route][method]

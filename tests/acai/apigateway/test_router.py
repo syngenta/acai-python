@@ -10,6 +10,7 @@ class RouterDirectoryTest(unittest.TestCase):
     base_path = 'unit-test/v1'
     handler_path = 'tests/mocks/router/directory_handlers'
     schema_path = 'tests/mocks/openapi.yml'
+    base_path_schema_path = 'tests/mocks/base_path_openapi.yml'
     basic_event = mock_request.get_basic_post()
     raise_exception_event = mock_request.get_raised_exception_post()
     mock_request = mock_request
@@ -384,3 +385,47 @@ class RouterDirectoryTest(unittest.TestCase):
         json_dict_response = json.loads(result['body'])
         self.assertEqual(400, result['statusCode'])
         self.assertDictEqual({'errors': [{'key_path': 'root', 'message': "'test_id' is a required property"}]}, json_dict_response)
+
+    def test_auto_validate_works_and_passes_proper_dynamic_route_request_with_optional_params(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/optional-params',
+            proxy='optional-params',
+            method='get',
+            query={
+                'group': 'some-group'
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path,
+            auto_validate=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual({'router_directory_optional': True}, json_dict_response)
+
+    def test_auto_validate_works_with_base_path_and_optional_params(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/optional-params',
+            proxy='optional-params',
+            method='get',
+            query={
+                'group': 'some-group'
+            }
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.base_path_schema_path,
+            auto_validate=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual({'router_directory_optional': True}, json_dict_response)

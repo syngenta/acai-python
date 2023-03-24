@@ -7,8 +7,9 @@ servers:
 tags:
     -
         name: unit-test
+basePath: '/unit-test'
 paths:
-    /unit-test/v1/schema:
+    /v1/schema:
         get:
             tags:
                 - unit-test
@@ -79,7 +80,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/v1-required-response'
-    /unit-test/v1/schema/{test_id}:
+    /v1/schema/{test_id}:
         put:
             tags:
                 - unit-test
@@ -109,7 +110,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/v1-required-response'
-    /unit-test/v1/auto:
+    /v1/auto:
         post:
             tags:
                 - unit-test
@@ -134,7 +135,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/v1-required-response'
-    /unit-test/v1/auto/{id}:
+    /v1/auto/{id}:
         get:
             tags:
                 - unit-test
@@ -215,7 +216,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/v1-required-response'
-    /unit-test/v1/optional-params:
+    /v1/optional-params:
         get:
             tags:
                 - unit-test
