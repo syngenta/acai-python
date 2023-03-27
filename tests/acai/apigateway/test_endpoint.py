@@ -40,6 +40,14 @@ class EndpointTest(unittest.TestCase):
         endpoint = Endpoint(endpoint_module, 'get')
         self.assertTrue(endpoint.requires_auth)
 
+    def test_endpoint_has_required_response(self):
+        importer = Importer(handlers=self.handler_path, mode='directory')
+        file_path = f'/{importer.handlers_path_abs}/basic.py'
+        import_path = 'tests.mocks.endpoint.directory_handlers.basic'
+        endpoint_module = importer.import_module_from_file(file_path, import_path)
+        endpoint = Endpoint(endpoint_module, 'search')
+        self.assertTrue(endpoint.has_required_response)
+
     def test_endpoint_has_required_route(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
         file_path = f'/{importer.handlers_path_abs}/basic.py'
