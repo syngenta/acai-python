@@ -32,7 +32,7 @@ class Response:
     def content_type(self):
         if self.is_json and not self.__content_type and not self.headers.get('content-type', self.headers.get('Content-Type')):
             return 'application/json'
-        return self.__content_type if self.__content_type else self.headers.get('content-type', self.headers.get('Content-Type'))
+        return self.__content_type if self.__content_type else self.headers.get('content-type', self.headers.get('Content-Type', ''))
 
     @content_type.setter
     def content_type(self, content_type ):

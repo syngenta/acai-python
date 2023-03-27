@@ -92,6 +92,7 @@ class ResponseTest(unittest.TestCase):
 
     def test_default_content_type_with_is_json_false(self):
         self.response.is_json = False
+        print(self.response.content_type)
         self.assertEqual('', self.response.content_type)
 
     def test_default_content_type_set_will_stick(self):
