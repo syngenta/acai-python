@@ -12,7 +12,8 @@ class Router:
         self.__after_all = kwargs.get('after_all')
         self.__with_auth = kwargs.get('with_auth')
         self.__on_error = kwargs.get('on_error')
-        self.__auto_validate = kwargs.get('auto_validate')
+        self.__auto_validate = kwargs.get('auto_validate', False)
+        self.__validate_response = kwargs.get('validate_response', False)
         self.__resolver = Resolver(**kwargs)
         self.__validator = Validator(**kwargs)
 
@@ -33,6 +34,8 @@ class Router:
         endpoint = self.__resolver.get_endpoint(request)
         if not response.has_errors and self.__before_all and callable(self.__before_all):
             self.__before_all(request, response, endpoint.requirements)
+        if not response.has_errors and self.__auto_validate and self.__validator.request_has_security(request) and self.__with_auth and callable(self.__with_auth):
+            self.__with_auth(request, response, endpoint.requirements)
         if not response.has_errors and endpoint.requires_auth and self.__with_auth and callable(self.__with_auth):
             self.__with_auth(request, response, endpoint.requirements)
         if not response.has_errors and self.__auto_validate:
@@ -41,6 +44,10 @@ class Router:
             self.__validator.validate_request(request, response, endpoint.requirements)
         if not response.has_errors:
             endpoint.run(request, response)
+        if not response.has_errors and self.__auto_validate and self.__validate_response:
+            self.__validator.validate_response_with_openapi(request, response)
+        if not response.has_errors and self.__validate_response and endpoint.has_required_response:
+            self.__validator.validate_response(response, endpoint.requirements)
         if not response.has_errors and self.__after_all and callable(self.__after_all):
             self.__after_all(request, response, endpoint.requirements)
         return response

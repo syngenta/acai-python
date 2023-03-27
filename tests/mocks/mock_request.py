@@ -441,7 +441,6 @@ def get_basic_post():
         'body': json.dumps({'body_key': 'body_value'})
     }
 
-
 def get_basic_post_bad_method():
     return {
         'headers': {

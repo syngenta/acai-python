@@ -14,8 +14,15 @@ class Validator:
             'available_headers': 'headers',
             'required_query': 'query_params',
             'available_query': 'query_params',
+            'required_response': 'raw',
             'required_body': 'body'
         }
+
+    def request_has_security(self, request):
+        route_spec = self.__schema.get_route_spec(request.route, request.method)
+        if route_spec.get('security'):
+            return True
+        return False
 
     def validate_request_with_openapi(self, request, response):
         route_spec = self.__schema.get_route_spec(request.route, request.method)
@@ -35,6 +42,19 @@ class Validator:
                 Validator.check_available_fields(response, full_list, getattr(request, source), source)
         if response.has_errors:
             response.code = 400
+
+    def validate_response_with_openapi(self, request, response):
+        requirements = {}
+        route_spec = self.__schema.get_route_spec(request.route, request.method)
+        if route_spec.get('responses'):
+            requirements['required_response'] = route_spec['responses'][f'{response.code}']['content'][response.content_type]['schema']
+        self.validate_response(response, requirements)
+
+    def validate_response(self, response, requirements):
+        Validator.check_required_body(response, self.__schema.get_body_spec(requirements.get('required_response', {})), response.raw)
+        if response.has_errors:
+            response.set_error('response', 'There was a problem with the APIs response; does not match defined schema')
+            response.code = 500
 
     @staticmethod
     def check_required_fields(response, required, sent, list_name=''):
