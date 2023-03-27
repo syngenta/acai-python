@@ -13,6 +13,7 @@ class Response:
         self.__open_cors = True
         self.__base64_encoded = False
         self.__compress = False
+        self.__content_type = ''
         self.__headers = {}
         self.__body = {}
 
@@ -26,6 +27,16 @@ class Response:
     def headers(self, header):
         key, value = header
         self.__headers[key] = value
+
+    @property
+    def content_type(self):
+        if self.is_json and not self.__content_type and not self.headers.get('content-type', self.headers.get('Content-Type')):
+            return 'application/json'
+        return self.__content_type if self.__content_type else self.headers.get('content-type', self.headers.get('Content-Type'))
+
+    @content_type.setter
+    def content_type(self, content_type ):
+        self.__content_type = content_type
 
     @property
     def open_cors(self):
@@ -83,6 +94,10 @@ class Response:
     @body.setter
     def body(self, body):
         self.__body = body
+
+    @property
+    def raw(self):
+        return self.__body
 
     @property
     def full(self):

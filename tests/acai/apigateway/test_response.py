@@ -86,3 +86,22 @@ class ResponseTest(unittest.TestCase):
     def test_has_error(self):
         self.response.set_error('some-error-key', 'some-error-value')
         self.assertEqual(self.response.has_errors, True)
+
+    def test_default_content_type_with_default_is_json(self):
+        self.assertEqual('application/json', self.response.content_type)
+
+    def test_default_content_type_with_is_json_false(self):
+        self.response.is_json = False
+        self.assertEqual('', self.response.content_type)
+
+    def test_default_content_type_set_will_stick(self):
+        self.response.content_type = 'application/xml'
+        self.assertEqual('application/xml', self.response.content_type)
+
+    def test_default_content_type_follows_headers(self):
+        self.response.headers = ('Content-Type', 'text/html')
+        self.assertEqual('text/html', self.response.content_type)
+
+    def test_raw(self):
+        self.response.body = {'raw': True}
+        self.assertDictEqual({'raw': True}, self.response.raw)
