@@ -38,3 +38,11 @@ def delete(request, response):
 def put(request, response):
     response.body = {'endpoint_directory_basic': 'put'}
     return response
+
+
+@requirements(
+    required_response='somme-response-schema'
+)
+def search(request, response):
+    response.body = {'endpoint_directory_basic': 'search'}
+    return response
