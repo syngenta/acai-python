@@ -322,6 +322,24 @@ class RouterDirectoryTest(unittest.TestCase):
         self.assertEqual(400, result['statusCode'])
         self.assertDictEqual({'errors': [{'key_path': 'root', 'message': "'test_id' is a required property"}]}, json_dict_response)
 
+    def test_basic_directory_routing_works_with_validate_response_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='patch'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual({'page_number': 1, 'data': {'id': '2'}}, json_dict_response)
+
     def test_auto_validate_works_and_passes_proper_dynamic_route_request(self):
         body = {
             'test_id': 'abc123',
@@ -429,3 +447,111 @@ class RouterDirectoryTest(unittest.TestCase):
         json_dict_response = json.loads(result['body'])
         self.assertEqual(200, result['statusCode'])
         self.assertDictEqual({'router_directory_optional': True}, json_dict_response)
+
+    def test_basic_directory_routing_works_with_auto_validate_and_with_auth_function_called(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='get'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            with_auth=mock_middleware.mock_with_auth,
+            schema=self.schema_path,
+            auto_validate=True
+        )
+        router.route(dynamic_event, None)
+        self.assertTrue(mock_middleware.mock_with_auth.has_been_called)
+
+    def test_basic_directory_routing_works_with_auto_validate_response_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='get'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path,
+            auto_validate=True,
+            validate_response=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual({'page_number': 1, 'data': {'id': '2'}}, json_dict_response)
+
+    def test_basic_directory_routing_fails_with_auto_validate_response_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='put'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path,
+            auto_validate=True,
+            validate_response=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(500, result['statusCode'])
+        self.assertDictEqual(
+            {
+                'errors': [
+                    {
+                        'key_path': 'root',
+                        'message': "'data' is a required property"
+                    },
+                    {
+                        'key_path': 'response',
+                        'message': 'There was a problem with the APIs response; does not match defined schema'
+                    }
+                ]
+            },
+            json_dict_response
+        )
+
+    def test_basic_directory_routing_fails_with_response_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/auto',
+            proxy='auto',
+            method='delete'
+        )
+        router = Router(
+            routing_mode='directory',
+            base_path=self.base_path,
+            handler_path=self.handler_path,
+            schema=self.schema_path,
+            validate_response=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(500, result['statusCode'])
+        self.assertDictEqual(
+            {
+                'errors': [
+                    {
+                        'key_path': 'root',
+                        'message': "'data' is a required property"
+                    },
+                    {
+                        'key_path': 'root',
+                        'message': "Additional properties are not allowed ('bad-delete', 'page_number' were unexpected)"
+                    }, {
+                        'key_path': 'response',
+                        'message': 'There was a problem with the APIs response; does not match defined schema'
+                    }
+                ]
+            },
+            json_dict_response
+        )

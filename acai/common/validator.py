@@ -14,7 +14,6 @@ class Validator:
             'available_headers': 'headers',
             'required_query': 'query_params',
             'available_query': 'query_params',
-            'required_response': 'raw',
             'required_body': 'body'
         }
 

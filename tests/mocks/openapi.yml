@@ -110,6 +110,26 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/v1-required-response'
     /unit-test/v1/auto:
+        get:
+            tags:
+                - unit-test
+            operationId: GetAuto
+            deprecated: false
+            security:
+                - ApiKeyAuth: []
+            parameters:
+                -   in: header
+                    name: x-api-key
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                200:
+                    description: valid
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/v1-required-response'
         post:
             tags:
                 - unit-test
@@ -127,6 +147,26 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/v1-test-request'
+            responses:
+                200:
+                    description: valid
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/v1-required-response'
+        put:
+            tags:
+                - unit-test
+            operationId: GetAuto
+            deprecated: false
+            security:
+                - ApiKeyAuth: []
+            parameters:
+                -   in: header
+                    name: x-api-key
+                    required: true
+                    schema:
+                        type: string
             responses:
                 200:
                     description: valid
@@ -250,6 +290,11 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/v1-required-response'
 components:
+    securitySchemes:
+        ApiKeyAuth:
+            type: apiKey
+            in: header
+            name: x-api-key
     schemas:
         v1-test-reference-model:
             type: object
