@@ -21,7 +21,7 @@ class Router:
         request = Request(event, context)
         response = Response()
         try:
-            self.__run_route(request, response)
+            self.__run_route_procedure(request, response)
         except ApiException as api_error:
             kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
             self.__handle_error(request, response, **kwargs)
@@ -30,27 +30,42 @@ class Router:
             self.__handle_error(request, response, **kwargs)
         return response.full
 
-    def __run_route(self, request, response):
+    def __run_route_procedure(self, request, response):
         endpoint = self.__resolver.get_endpoint(request)
-        if not response.has_errors and self.__before_all and callable(self.__before_all):
-            self.__before_all(request, response, endpoint.requirements)
-        if not response.has_errors and self.__auto_validate and self.__validator.request_has_security(request) and self.__with_auth and callable(self.__with_auth):
-            self.__with_auth(request, response, endpoint.requirements)
-        if not response.has_errors and endpoint.requires_auth and self.__with_auth and callable(self.__with_auth):
-            self.__with_auth(request, response, endpoint.requirements)
-        if not response.has_errors and self.__auto_validate:
-            self.__validator.validate_request_with_openapi(request, response)
-        if not response.has_errors and endpoint.has_requirements:
-            self.__validator.validate_request(request, response, endpoint.requirements)
+        self.__run_before_all(request, response, endpoint)
+        self.__run_with_auth(request, response, endpoint)
+        self.__run_request_validation(request, response, endpoint)
         if not response.has_errors:
             endpoint.run(request, response)
+        self.__run_response_validation(request, response, endpoint)
+        self.__run_after_all(request, response, endpoint)
+        return response
+
+    def __run_before_all(self, request, response, endpoint):
+        if not response.has_errors and self.__before_all and callable(self.__before_all):
+            self.__before_all(request, response, endpoint.requirements)
+
+    def __run_with_auth(self, request, response, endpoint):
+        if not response.has_errors and self.__auto_validate and self.__validator.request_has_security(request) and self.__with_auth and callable(self.__with_auth):
+            self.__with_auth(request, response, endpoint.requirements)
+        elif not response.has_errors and endpoint.requires_auth and self.__with_auth and callable(self.__with_auth):
+            self.__with_auth(request, response, endpoint.requirements)
+
+    def __run_request_validation(self, request, response, endpoint):
+        if not response.has_errors and self.__auto_validate:
+            self.__validator.validate_request_with_openapi(request, response)
+        elif not response.has_errors and endpoint.has_requirements:
+            self.__validator.validate_request(request, response, endpoint.requirements)
+
+    def __run_response_validation(self, request, response, endpoint):
         if not response.has_errors and self.__auto_validate and self.__validate_response:
             self.__validator.validate_response_with_openapi(request, response)
-        if not response.has_errors and self.__validate_response and endpoint.has_required_response:
+        elif not response.has_errors and self.__validate_response and endpoint.has_required_response:
             self.__validator.validate_response(response, endpoint.requirements)
+
+    def __run_after_all(self, request, response, endpoint):
         if not response.has_errors and self.__after_all and callable(self.__after_all):
             self.__after_all(request, response, endpoint.requirements)
-        return response
 
     def __handle_error(self, request, response, **kwargs):
         try:
