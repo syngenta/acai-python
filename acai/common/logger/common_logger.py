@@ -16,7 +16,6 @@ class CommonLogger:
         self.__log_stage = os.getenv(self.__stage_variable)
         self.__json.set_encoder_options('simplejson', use_decimal=True)
         self.__json.set_preferred_backend('simplejson')
-        self.default_level = 3
         self.log_levels = {
             'INFO': 1,
             'WARN': 2,
