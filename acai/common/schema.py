@@ -22,10 +22,13 @@ class Schema:
 
     def get_body_spec(self, required_body=None):
         if self.__schema and isinstance(self.__schema, dict):
-            return self.__schema
-        if required_body and isinstance(required_body, dict):
-            return required_body
-        return self.__get_component_spec(required_body)
+            body_spec = self.__schema
+        elif required_body and isinstance(required_body, dict):
+            body_spec = required_body
+        else:
+            body_spec = self.__get_component_spec(required_body)
+        body_spec['additionalProperties'] = self.__config.get('allow_additional_properties', False)
+        return body_spec
 
     def get_route_spec(self, route, method):
         return self.__get_route_spec(route, method)
@@ -65,11 +68,17 @@ class Schema:
         return combined_spec
 
     def __combine_all_of(self, spec, spec_key, combined_spec):
-        combined = {}
+        combined = {
+            'type': 'object',
+            'properties': {},
+            'required': []
+        }
         for all_of in spec[spec_key]:
-            if isinstance(all_of, dict):
-                combined.update(all_of)
-        if combined:
+            if isinstance(all_of, dict) and all_of.get('properties'):
+                combined['properties'].update(all_of['properties'])
+            if isinstance(all_of, dict) and all_of.get('required'):
+                combined['required'] += all_of['required']
+        if combined['properties']:
             del combined_spec['allOf']
             combined_spec.update(combined)
 
@@ -80,9 +89,7 @@ class Schema:
 
     def __get_component_spec(self, required_body=None):
         spec = self.__get_full_spec()
-        definition = spec['components']['schemas'][required_body]
-        definition['additionalProperties'] = self.__config.get('allow_additional_properties', False)
-        return definition
+        return spec['components']['schemas'][required_body]
 
     def __get_route_spec(self, route, method):
         spec = self.__get_full_spec()

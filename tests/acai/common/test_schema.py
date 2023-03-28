@@ -4,6 +4,7 @@ from acai.common.schema import Schema
 
 
 class SchemaTest(unittest.TestCase):
+    maxDiff = None
     schema_path = 'tests/mocks/openapi.yml'
     schema_dict = {
         'type': 'object',
@@ -126,6 +127,9 @@ class SchemaTest(unittest.TestCase):
                         'schema': {
                             'type': 'object',
                             'properties': {
+                                'page_number': {
+                                    'type': 'number'
+                                },
                                 'data': {
                                     'type': 'object',
                                     'required': [
@@ -139,6 +143,7 @@ class SchemaTest(unittest.TestCase):
                                 }
                             },
                             'required': [
+                                'page_number',
                                 'data'
                             ]
                         }

@@ -7,6 +7,7 @@ from tests.mocks import mock_request, mock_middleware
 
 
 class RouterDirectoryTest(unittest.TestCase):
+    maxDiff = None
     base_path = 'unit-test/v1'
     handler_path = 'tests/mocks/router/directory_handlers'
     schema_path = 'tests/mocks/openapi.yml'
@@ -512,6 +513,10 @@ class RouterDirectoryTest(unittest.TestCase):
                         'message': "'data' is a required property"
                     },
                     {
+                        'key_path': 'root',
+                        'message': "Additional properties are not allowed ('bad-put' was unexpected)"
+                    },
+                    {
                         'key_path': 'response',
                         'message': 'There was a problem with the APIs response; does not match defined schema'
                     }
@@ -546,8 +551,9 @@ class RouterDirectoryTest(unittest.TestCase):
                     },
                     {
                         'key_path': 'root',
-                        'message': "Additional properties are not allowed ('bad-delete', 'page_number' were unexpected)"
-                    }, {
+                        'message': "Additional properties are not allowed ('bad-delete' was unexpected)"
+                    },
+                    {
                         'key_path': 'response',
                         'message': 'There was a problem with the APIs response; does not match defined schema'
                     }
