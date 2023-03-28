@@ -54,17 +54,16 @@ class CommonLogger:
     def __clean_up_stack_trace(self, log_object):
         if isinstance(log_object, Exception):
             return traceback.format_exc().splitlines()
-        else:
-            skip = False
-            new_line_split = [stack.split('\n') for stack in traceback.format_stack()]
-            stack_trace = []
-            for new_split in new_line_split:
-                for new_line in new_split:
-                    if 'acai/common/logger' in new_line:
-                        skip = True
-                    if new_line and not skip:
-                        stack_trace.append(new_line)
-            return stack_trace
+        skip = False
+        new_line_split = [stack.split('\n') for stack in traceback.format_stack()]
+        stack_trace = []
+        for new_split in new_line_split:
+            for new_line in new_split:
+                if 'acai/common/logger' in new_line:
+                    skip = True
+                if new_line and not skip:
+                    stack_trace.append(new_line)
+        return stack_trace
 
     def __should_log(self, **kwargs):
         current_log_level = self.log_levels[kwargs['level']]
