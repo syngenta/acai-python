@@ -1,8 +1,11 @@
+import logging
+
 from acai.apigateway.exception import ApiException
 from acai.apigateway.request import Request
 from acai.apigateway.resolver import Resolver
 from acai.apigateway.response import Response
 from acai.common.validator import Validator
+from acai.common import logger
 
 
 class Router:
@@ -69,9 +72,10 @@ class Router:
 
     def __handle_error(self, request, response, **kwargs):
         try:
+            logger.log(level='ERROR', log={'request': request, 'response': response, 'error': kwargs})
             response.code = kwargs['code']
             response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])
             if self.__on_error and callable(self.__on_error):
                 self.__on_error(request, response, kwargs.get('error'))
-        except Exception as error:
-            print(error)
+        except Exception as exception:
+            logging.exception(exception)
