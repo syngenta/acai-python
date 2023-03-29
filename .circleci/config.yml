@@ -16,7 +16,7 @@ commands:
             - run: pylint acai
     python-test:
         steps:
-            - run: python -m unittest discover
+            - run: RUN_MODE=unittest STAGE=local LOG_LEVEL=INFO python -m unittest discover
     python-report:
         steps:
             - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./reports/tests/xunit.xml --html=./reports/unit-test/index.html --self-contained-html --cov-report html:./reports -p no:warnings -o log_cli=true
