@@ -1,9 +1,9 @@
 from acai.apigateway.resolver.modes.base import BaseModeResolver
 
 
-class PatternModeResolver(BaseModeResolver): # pylint: disable=unused-private-member
+class PatternModeResolver(BaseModeResolver):
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):  # pylint: disable=unused-private-member
         super().__init__(**kwargs)
         self.__handler_pattern = kwargs['handlers']
 
