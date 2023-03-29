@@ -95,3 +95,13 @@ class EndpointTest(unittest.TestCase):
         response = Response()
         result = endpoint.run({}, response)
         self.assertEqual('{"endpoint_directory_basic": "patch"}', result.full['body'])
+
+    def test_endpoint_switch_method_works(self):
+        importer = Importer(handlers=self.handler_path, mode='directory')
+        file_path = f'/{importer.handlers_path_abs}/basic.py'
+        import_path = 'tests.mocks.endpoint.directory_handlers.basic'
+        endpoint_module = importer.import_module_from_file(file_path, import_path)
+        endpoint = Endpoint(endpoint_module, 'post')
+        self.assertTrue(endpoint.has_requirements)
+        endpoint.switch_method('patch')
+        self.assertFalse(endpoint.has_requirements)

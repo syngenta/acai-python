@@ -4,12 +4,12 @@ from acai.apigateway.requirements import requirements
 @requirements(
     required_body='some-schema'
 )
-def post(request, response):
+def post(_, response):
     response.body = {'endpoint_directory_basic': 'post'}
     return response
 
 
-def patch(request, response):
+def patch(_, response):
     response.body = {'endpoint_directory_basic': 'patch'}
     return response
 
@@ -17,7 +17,7 @@ def patch(request, response):
 @requirements(
     auth_required=True
 )
-def get(request, response):
+def get(_, response):
     response.body = {'endpoint_directory_basic': 'get'}
     return response
 
@@ -25,7 +25,7 @@ def get(request, response):
 @requirements(
     required_route='/some/route/{id}'
 )
-def delete(request, response):
+def delete(_, response):
     response.body = {'endpoint_directory_basic': 'delete'}
     return response
 
@@ -35,7 +35,7 @@ def delete(request, response):
     custom_dict={'key': 'value'},
     custom_simple=1
 )
-def put(request, response):
+def put(_, response):
     response.body = {'endpoint_directory_basic': 'put'}
     return response
 
@@ -43,6 +43,6 @@ def put(request, response):
 @requirements(
     required_response='somme-response-schema'
 )
-def search(request, response):
+def search(_, response):
     response.body = {'endpoint_directory_basic': 'search'}
     return response
