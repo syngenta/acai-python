@@ -38,8 +38,8 @@ class DirectoryResolverTest(unittest.TestCase):
         response = Response()
         endpoint_module = self.directory_resolver.get_endpoint_module(request)
         self.assertTrue(hasattr(endpoint_module, 'post'))
-        enpoint_returns = endpoint_module.post(request, response)
-        self.assertEqual(str(self.expected_endpoint_return), str(enpoint_returns))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertEqual(str(self.expected_endpoint_return), str(endpoint_returns))
 
     def test_basic_get_file_and_import_path(self):
         request = Request(self.basic_request)
