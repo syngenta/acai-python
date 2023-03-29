@@ -16,6 +16,16 @@ class EndpointTest(unittest.TestCase):
         endpoint = Endpoint(endpoint_module, 'post')
         self.assertTrue(isinstance(endpoint, Endpoint))
 
+    def test_endpoint_is_dynamic(self):
+        importer = Importer(handlers=self.handler_path, mode='directory')
+        file_path = f'/{importer.handlers_path_abs}/basic.py'
+        import_path = 'tests.mocks.endpoint.directory_handlers.basic'
+        endpoint_module = importer.import_module_from_file(file_path, import_path)
+        endpoint = Endpoint(endpoint_module, 'patch')
+        self.assertFalse(endpoint.is_dynamic)
+        endpoint.is_dynamic = True
+        self.assertTrue(endpoint.is_dynamic)
+
     def test_endpoint_has_requirements(self):
         importer = Importer(handlers=self.handler_path, mode='directory')
         file_path = f'/{importer.handlers_path_abs}/basic.py'

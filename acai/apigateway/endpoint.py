@@ -3,6 +3,15 @@ class Endpoint:
     def __init__(self, module, method):
         self.__endpoint_method = getattr(module, method)
         self.__requirements = getattr(self.__endpoint_method, 'requirements', {})
+        self.__is_dynamic = False
+
+    @property
+    def is_dynamic(self):
+        return self.__is_dynamic
+
+    @is_dynamic.setter
+    def is_dynamic(self, is_dynamic):
+        self.__is_dynamic = is_dynamic
 
     @property
     def has_requirements(self):
