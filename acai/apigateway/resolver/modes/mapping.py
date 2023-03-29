@@ -5,8 +5,9 @@ from acai.apigateway.exception import ApiException
 class MappingModeResolver(BaseModeResolver):
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self.__handler_mapping = kwargs['handlers']
+        kwargs['handlers'] = '/'
+        super().__init__(**kwargs)
 
     def _get_file_and_import_path(self, request_path):
         path_list = self.__get_request_path_as_list(request_path)
