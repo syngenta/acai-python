@@ -2,12 +2,12 @@ import unittest
 
 from acai.apigateway.request import Request
 from acai.apigateway.response import Response
-from acai.apigateway.resolver.directory import Directory
+from acai.apigateway.resolver.modes.directory import DirectoryModeResolver
 from acai.apigateway.exception import ApiException
 from tests.mocks import mock_request
 
 
-class DirectoryResolverTest(unittest.TestCase):
+class DirectoryModeResolverTest(unittest.TestCase):
     basic_request = mock_request.get_basic()
     nested_request = mock_request.get_basic_nested()
     init_request = mock_request.get_basic_init()
@@ -31,7 +31,7 @@ class DirectoryResolverTest(unittest.TestCase):
     }
 
     def setUp(self):
-        self.directory_resolver = Directory(base_path=self.base_path, handler_path=self.handler_path)
+        self.directory_resolver = DirectoryModeResolver(base_path=self.base_path, handler_path=self.handler_path)
 
     def test_get_endpoint_module(self):
         request = Request(self.basic_request)

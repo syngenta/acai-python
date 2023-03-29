@@ -1,17 +1,17 @@
 from acai.apigateway.resolver.cache import ResolverCache
 from acai.apigateway.endpoint import Endpoint
 from acai.apigateway.exception import ApiException
-from acai.apigateway.resolver.directory import Directory
-from acai.apigateway.resolver.mapping import Mapping
-from acai.apigateway.resolver.pattern import Pattern
+from acai.apigateway.resolver.modes.directory import DirectoryModeResolver
+from acai.apigateway.resolver.modes.mapping import MappingModeResolver
+from acai.apigateway.resolver.modes.pattern import PatternModeResolver
 
 
 class Resolver:
     __cache_misses = 0
     __available_resolvers = {
-        'directory': Directory,
-        'mapping': Mapping,
-        'pattern': Pattern
+        'directory': DirectoryModeResolver,
+        'mapping': MappingModeResolver,
+        'pattern': PatternModeResolver
     }
 
     def __init__(self, **kwargs):
