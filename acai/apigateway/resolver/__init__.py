@@ -23,10 +23,9 @@ class Resolver:
         if not hasattr(endpoint_module, request.method):
             raise ApiException(code=403, message='method not allowed')
         endpoint = Endpoint(endpoint_module, request.method)
-        endpoint.is_dynamic = self.__resolver.has_dynamic_route
         self.__assign_normalized_route(request, endpoint)
         self.__check_dynamic_route_and_apply_params(request, endpoint)
-        self.__cacher.put(request.path, endpoint_module)
+        self.__cacher.put(request.path, endpoint_module, self.__resolver.has_dynamic_route)
         return endpoint
 
     def __get_endpoint_module(self, request):

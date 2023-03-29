@@ -17,14 +17,14 @@ class Cacher:
         self.__cache.move_to_end(method_path)
         return self.__cache[method_path]
 
-    def put(self, method_path, endpoint):
+    def put(self, route_path, endpoint, is_dynamic_route=False):
         if self.__size is None:
             return
-        if endpoint.is_dynamic and self.__mode == self.CACHE_STATIC:
+        if is_dynamic_route and self.__mode == self.CACHE_STATIC:
             return
-        if not endpoint.is_dynamic and self.__mode == self.CACHE_DYNAMIC:
+        if not is_dynamic_route and self.__mode == self.CACHE_DYNAMIC:
             return
-        self.__cache[method_path] = endpoint
-        self.__cache.move_to_end(method_path)
+        self.__cache[route_path] = endpoint
+        self.__cache.move_to_end(route_path)
         if self.__size != 0 and len(self.__cache) > self.__size:
             self.__cache.popitem(last=False)

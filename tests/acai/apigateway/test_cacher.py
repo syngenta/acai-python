@@ -84,8 +84,7 @@ class CacherTest(unittest.TestCase):
         get_cache_result = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertFalse(get_cache_result.has_requirements)
         patch_endpoint = Endpoint(endpoint_module, 'patch')
-        patch_endpoint.is_dynamic = True
-        cacher.put('patch::/unit-test/v1/cacher/basic', patch_endpoint)
+        cacher.put('patch::/unit-test/v1/cacher/basic', patch_endpoint, True)
         patch_cache_result = cacher.get('patch::/unit-test/v1/cacher/basic')
         self.assertTrue(patch_cache_result is None)
 
@@ -96,8 +95,7 @@ class CacherTest(unittest.TestCase):
         get_endpoint = Endpoint(endpoint_module, 'get')
         cacher = Cacher(cache_mode='dynamic-only')
         patch_endpoint = Endpoint(endpoint_module, 'patch')
-        patch_endpoint.is_dynamic = True
-        cacher.put('patch::/unit-test/v1/cacher/basic', patch_endpoint)
+        cacher.put('patch::/unit-test/v1/cacher/basic', patch_endpoint, True)
         patch_cache_result = cacher.get('patch::/unit-test/v1/cacher/basic')
         self.assertTrue(patch_cache_result.has_requirements)
         cacher.put('get::/unit-test/v1/cacher/basic', get_endpoint)
