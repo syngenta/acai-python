@@ -28,9 +28,10 @@ class ResolverTest(unittest.TestCase):
     def test_dynamic_resolve_works(self):
         request = Request(self.dynamic_request)
         resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
-        resolver.get_endpoint(request)
+        endpoint = resolver.get_endpoint(request)
         self.assertEqual('/unit-test/v1/dynamic/{id}', request.route)
         self.assertDictEqual(self.expected_path_params, request.path_params)
+        self.assertTrue(endpoint.is_dynamic)
 
     def test_dynamic_resolve_checks_bad_route_throws_exception(self):
         request = Request(self.bad_dynamic_request)
