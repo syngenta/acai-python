@@ -53,7 +53,7 @@ class CacherTest(unittest.TestCase):
         post_endpoint = Endpoint(endpoint_module, 'post')
         patch_endpoint = Endpoint(endpoint_module, 'patch')
         get_endpoint = Endpoint(endpoint_module, 'get')
-        cacher = Cacher(size=1)
+        cacher = Cacher(cache_size=1)
         cacher.put('get::/unit-test/v1/cacher/basic', get_endpoint)
         get_cache_result = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertFalse(get_cache_result.has_requirements)
@@ -69,7 +69,7 @@ class CacherTest(unittest.TestCase):
         import_path = 'tests.mocks.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
-        cacher = Cacher(size=None)
+        cacher = Cacher(cache_size=None)
         cacher.put('get::/unit-test/v1/cacher/basic', get_endpoint)
         get_cache_result = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertTrue(get_cache_result is None)

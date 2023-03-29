@@ -8,7 +8,7 @@ class Cacher:
 
     def __init__(self, **kwargs):
         self.__cache = OrderedDict()
-        self.__size = kwargs.get('size', 128)
+        self.__size = kwargs.get('cache_size', 128)
         self.__mode = kwargs.get('cache_mode', self.CACHE_ALL)
 
     def get(self, method_path):

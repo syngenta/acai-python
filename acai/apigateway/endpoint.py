@@ -1,11 +1,9 @@
 class Endpoint:
 
-    def __init__(self, module, method=None):
-        self.__method = None
-        self.__requirements = {}
+    def __init__(self, module, method):
         self.__is_dynamic = False
-        self.__module = module
-        self.__set_method(method)
+        self.__method = getattr(module, method)
+        self.__requirements = getattr(self.__method, 'requirements', {})
 
     @property
     def is_dynamic(self):
@@ -41,12 +39,3 @@ class Endpoint:
 
     def run(self, request, response):
         return self.__method(request, response)
-
-    def switch_method(self, method):
-        self.__set_method(method)
-
-    def __set_method(self, method=None):
-        if method is None:
-            return
-        self.__method = getattr(self.__module, method)
-        self.__requirements = getattr(self.__method, 'requirements', {})

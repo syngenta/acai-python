@@ -1,3 +1,4 @@
+from acai.apigateway.cacher import Cacher
 from acai.apigateway.endpoint import Endpoint
 from acai.apigateway.exception import ApiException
 from acai.apigateway.resolver.directory import Directory
@@ -14,17 +15,25 @@ class Resolver:
 
     def __init__(self, **kwargs):
         Resolver.validate_config(kwargs)
+        self.__cacher = Cacher(**kwargs)
         self.__resolver = self.__available_resolvers[kwargs['routing_mode']](**kwargs)
 
     def get_endpoint(self, request):
-        endpoint_module = self.__resolver.get_endpoint_module(request)
+        endpoint_module = self.__get_endpoint_module(request)
         if not hasattr(endpoint_module, request.method):
             raise ApiException(code=403, message='method not allowed')
         endpoint = Endpoint(endpoint_module, request.method)
         endpoint.is_dynamic = self.__resolver.has_dynamic_route
         self.__assign_normalized_route(request, endpoint)
         self.__check_dynamic_route_and_apply_params(request, endpoint)
+        self.__cacher.put(request.path, endpoint_module)
         return endpoint
+
+    def __get_endpoint_module(self, request):
+        endpoint_module = self.__cacher.get(request.path)
+        if endpoint_module is None:
+            endpoint_module = self.__resolver.get_endpoint_module(request)
+        return endpoint_module
 
     def __assign_normalized_route(self, request, endpoint):
         base_path_parts = self.__resolver.base_path.split('/')
