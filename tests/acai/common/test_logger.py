@@ -77,3 +77,7 @@ class LoggerTest(TestCase):
     def test_log_decorator_with_condition_does_not_log(self):
         result = mock_func_condition(3, 2, test=True)
         self.assertDictEqual({'args': [3, 2], 'kwargs': {'test': True}}, result)
+
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'ERROR'})
+    def test_logger_handles_bad_level(self):
+        logger.log(level='BAD', log={'INFO': 'ignore'})
