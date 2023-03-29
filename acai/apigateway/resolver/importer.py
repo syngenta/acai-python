@@ -5,7 +5,7 @@ import os
 from acai.apigateway.exception import ApiException
 
 
-class Importer:
+class ResolverImporter:
     PATTERN_MODE = 'pattern'
     DIRECTORY_MODE = 'directory'
 

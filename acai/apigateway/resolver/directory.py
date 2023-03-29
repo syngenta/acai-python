@@ -1,11 +1,11 @@
-from acai.apigateway.importer import Importer
+from acai.apigateway.resolver.importer import ResolverImporter
 from acai.apigateway.exception import ApiException
 
 
 class Directory:
 
     def __init__(self, **kwargs):
-        self.__importer = Importer(handlers=kwargs['handler_path'], mode='directory')
+        self.__importer = ResolverImporter(handlers=kwargs['handler_path'], mode='directory')
         self.__handler_path = self.__importer.clean_path(kwargs['handler_path'])
         self.__base_path = self.__importer.clean_path(kwargs['base_path'])
         self.__has_dynamic_route = False

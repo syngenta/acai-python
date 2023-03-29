@@ -3,14 +3,14 @@ import logging
 
 from acai.apigateway.resolver.cache import ResolverCache
 from acai.apigateway.endpoint import Endpoint
-from acai.apigateway.importer import Importer
+from acai.apigateway.resolver.importer import ResolverImporter
 
 
 class ResolverCacheTest(unittest.TestCase):
     handler_path = 'tests/mocks/cacher/directory_handlers'
 
     def setUp(self):
-        self.importer = Importer(handlers=self.handler_path, mode='directory')
+        self.importer = ResolverImporter(handlers=self.handler_path, mode='directory')
 
     def test_cache_settings(self):
         cacher = ResolverCache()

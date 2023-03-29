@@ -1,7 +1,7 @@
 import unittest
 
 from acai.apigateway.endpoint import Endpoint
-from acai.apigateway.importer import Importer
+from acai.apigateway.resolver.importer import Importer
 from acai.apigateway.response import Response
 
 
