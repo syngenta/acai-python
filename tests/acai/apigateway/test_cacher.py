@@ -1,19 +1,19 @@
 import unittest
 import logging
 
-from acai.apigateway.cacher import Cacher
+from acai.apigateway.resolver.cache import ResolverCache
 from acai.apigateway.endpoint import Endpoint
 from acai.apigateway.importer import Importer
 
 
-class CacherTest(unittest.TestCase):
+class ResolverCacheTest(unittest.TestCase):
     handler_path = 'tests/mocks/cacher/directory_handlers'
 
     def setUp(self):
         self.importer = Importer(handlers=self.handler_path, mode='directory')
 
     def test_cache_settings(self):
-        cacher = Cacher()
+        cacher = ResolverCache()
         self.assertTrue(cacher.CACHE_ALL == 'all')
         self.assertTrue(cacher.CACHE_STATIC == 'static-only')
         self.assertTrue(cacher.CACHE_DYNAMIC == 'dynamic-only')
@@ -23,7 +23,7 @@ class CacherTest(unittest.TestCase):
         import_path = 'tests.mocks.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'post')
-        cacher = Cacher()
+        cacher = ResolverCache()
         try:
             cacher.put('post::/unit-test/v1/cacher/basic', endpoint)
             self.assertTrue(True)
@@ -36,13 +36,13 @@ class CacherTest(unittest.TestCase):
         import_path = 'tests.mocks.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'patch')
-        cacher = Cacher()
+        cacher = ResolverCache()
         cacher.put('patch::/unit-test/v1/cacher/basic', endpoint)
         cached_endpoint = cacher.get('patch::/unit-test/v1/cacher/basic')
         self.assertTrue(cached_endpoint.has_requirements)
 
     def test_cache_get_miss(self):
-        cacher = Cacher()
+        cacher = ResolverCache()
         endpoint = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertTrue(endpoint is None)
 
@@ -53,7 +53,7 @@ class CacherTest(unittest.TestCase):
         post_endpoint = Endpoint(endpoint_module, 'post')
         patch_endpoint = Endpoint(endpoint_module, 'patch')
         get_endpoint = Endpoint(endpoint_module, 'get')
-        cacher = Cacher(cache_size=1)
+        cacher = ResolverCache(cache_size=1)
         cacher.put('get::/unit-test/v1/cacher/basic', get_endpoint)
         get_cache_result = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertFalse(get_cache_result.has_requirements)
@@ -69,7 +69,7 @@ class CacherTest(unittest.TestCase):
         import_path = 'tests.mocks.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
-        cacher = Cacher(cache_size=None)
+        cacher = ResolverCache(cache_size=None)
         cacher.put('get::/unit-test/v1/cacher/basic', get_endpoint)
         get_cache_result = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertTrue(get_cache_result is None)
@@ -79,7 +79,7 @@ class CacherTest(unittest.TestCase):
         import_path = 'tests.mocks.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
-        cacher = Cacher(cache_mode='static-only')
+        cacher = ResolverCache(cache_mode='static-only')
         cacher.put('get::/unit-test/v1/cacher/basic', get_endpoint)
         get_cache_result = cacher.get('get::/unit-test/v1/cacher/basic')
         self.assertFalse(get_cache_result.has_requirements)
@@ -93,7 +93,7 @@ class CacherTest(unittest.TestCase):
         import_path = 'tests.mocks.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
-        cacher = Cacher(cache_mode='dynamic-only')
+        cacher = ResolverCache(cache_mode='dynamic-only')
         patch_endpoint = Endpoint(endpoint_module, 'patch')
         cacher.put('patch::/unit-test/v1/cacher/basic', patch_endpoint, True)
         patch_cache_result = cacher.get('patch::/unit-test/v1/cacher/basic')

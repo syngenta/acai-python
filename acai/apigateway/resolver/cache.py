@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 
-class Cacher:
+class ResolverCache:
     CACHE_ALL = 'all'
     CACHE_STATIC = 'static-only'
     CACHE_DYNAMIC = 'dynamic-only'

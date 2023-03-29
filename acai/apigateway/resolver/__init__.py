@@ -1,4 +1,4 @@
-from acai.apigateway.cacher import Cacher
+from acai.apigateway.resolver.cache import ResolverCache
 from acai.apigateway.endpoint import Endpoint
 from acai.apigateway.exception import ApiException
 from acai.apigateway.resolver.directory import Directory
@@ -16,7 +16,7 @@ class Resolver:
 
     def __init__(self, **kwargs):
         Resolver.validate_config(kwargs)
-        self.__cacher = Cacher(**kwargs)
+        self.__cacher = ResolverCache(**kwargs)
         self.__resolver = self.__available_resolvers[kwargs['routing_mode']](**kwargs)
 
     @property
