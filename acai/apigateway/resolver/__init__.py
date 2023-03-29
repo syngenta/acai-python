@@ -7,6 +7,7 @@ from acai.apigateway.resolver.pattern import Pattern
 
 
 class Resolver:
+    __cache_misses = 0
     __available_resolvers = {
         'directory': Directory,
         'mapping': Mapping,
@@ -17,6 +18,10 @@ class Resolver:
         Resolver.validate_config(kwargs)
         self.__cacher = Cacher(**kwargs)
         self.__resolver = self.__available_resolvers[kwargs['routing_mode']](**kwargs)
+
+    @property
+    def cache_misses(self):
+        return self.__cache_misses
 
     def get_endpoint(self, request):
         endpoint_module = self.__get_endpoint_module(request)
@@ -31,6 +36,7 @@ class Resolver:
     def __get_endpoint_module(self, request):
         endpoint_module = self.__cacher.get(request.path)
         if endpoint_module is None:
+            self.__cache_misses += 1
             endpoint_module = self.__resolver.get_endpoint_module(request)
         return endpoint_module
 

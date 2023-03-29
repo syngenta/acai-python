@@ -25,8 +25,7 @@ class Directory:
 
     def get_endpoint_module(self, request):
         file_path, import_path = self._get_file_and_import_path(request.path)
-        endpoint_module = self.__importer.import_module_from_file(file_path, import_path)
-        return endpoint_module
+        return self.__importer.import_module_from_file(file_path, import_path)
 
     def _get_file_and_import_path(self, request_path):
         split_path = self.__get_request_path_as_list(request_path)

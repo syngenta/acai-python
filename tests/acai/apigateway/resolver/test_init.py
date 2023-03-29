@@ -108,3 +108,12 @@ class ResolverTest(unittest.TestCase):
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('`mapping` routing_mode must use handler_mapping kwarg', api_error.message)
+
+    def test_get_endpoint_from_cache_works(self):
+        request = Request(self.basic_request)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        self.assertEqual(0, resolver.cache_misses)
+        resolver.get_endpoint(request)
+        self.assertEqual(1, resolver.cache_misses)
+        resolver.get_endpoint(request)
+        self.assertEqual(1, resolver.cache_misses)
