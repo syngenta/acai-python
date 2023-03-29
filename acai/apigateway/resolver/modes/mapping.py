@@ -1,5 +1,4 @@
 from acai.apigateway.resolver.modes.base import BaseModeResolver
-from acai.apigateway.resolver.importer import ResolverImporter
 from acai.apigateway.exception import ApiException
 
 
