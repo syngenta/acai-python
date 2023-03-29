@@ -77,11 +77,15 @@ class Resolver:
             raise ApiException(code=500, message='base_path is required')
         if not params.get('routing_mode'):
             raise ApiException(code=500, message='routing_mode is required; must be one of `directory` || `pattern` || `mapping`')
+        if not params.get('handlers'):
+            raise ApiException(code=500, message='handlers is required; must be glob patter, directory path or dictionary')
         if params['routing_mode'] not in {'directory', 'pattern', 'mapping'}:
             raise ApiException(code=500, message='routing_mode must be one of `directory` || `pattern` || `mapping`')
-        if params['routing_mode'] == 'directory' and not params.get('handler_path'):
-            raise ApiException(code=500, message='`directory` routing_mode must use handler_path kwarg')
-        if params['routing_mode'] == 'pattern' and not params.get('handler_pattern'):
-            raise ApiException(code=500, message='`pattern` routing_mode must use handler_pattern kwarg')
-        if params['routing_mode'] == 'mapping' and not params.get('handler_mapping'):
-            raise ApiException(code=500, message='`mapping` routing_mode must use handler_mapping kwarg')
+        if params['routing_mode'] == 'directory' and not isinstance(params['handlers'], str):
+            raise ApiException(code=500, message='`directory` routing_mode must use handlers kwarg and be a path to a directory')
+        if params['routing_mode'] == 'pattern' and not isinstance(params['handlers'], str):
+            raise ApiException(code=500, message='`pattern` routing_mode must use handlers kwarg')
+        if params['routing_mode'] == 'pattern' and '*' not in params['handlers']:
+            raise ApiException(code=500, message='`pattern` routing_mode must use handlers kwarg and be a glob pattern with a `*`')
+        if params['routing_mode'] == 'mapping' and not isinstance(params['handlers'], dict):
+            raise ApiException(code=500, message='`mapping` routing_mode must use handlers kwarg and be dictionary')

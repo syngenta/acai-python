@@ -21,13 +21,13 @@ class ResolverTest(unittest.TestCase):
 
     def test_basic_resolve_works(self):
         request = Request(self.basic_request)
-        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handlers=self.handler_path)
         endpoint = resolver.get_endpoint(request)
         self.assertTrue(isinstance(endpoint, Endpoint))
 
     def test_dynamic_resolve_checks_bad_route_throws_exception(self):
         request = Request(self.bad_dynamic_request)
-        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handlers=self.handler_path)
         try:
             resolver.get_endpoint(request)
             self.assertTrue(False)
@@ -36,7 +36,7 @@ class ResolverTest(unittest.TestCase):
 
     def test_dynamic_resolve_checks_bad_route_definition_throws_exception(self):
         request = Request(self.bad_dynamic_request_get)
-        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handlers=self.handler_path)
         try:
             resolver.get_endpoint(request)
             self.assertTrue(False)
@@ -45,7 +45,7 @@ class ResolverTest(unittest.TestCase):
 
     def test_dynamic_resolve_checks_no_route_throws_exception(self):
         request = Request(self.no_dynamic_request)
-        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handlers=self.handler_path)
         try:
             resolver.get_endpoint(request)
             self.assertTrue(False)
@@ -54,7 +54,7 @@ class ResolverTest(unittest.TestCase):
 
     def test_basic_request_with_bad_method(self):
         request = Request(self.bad_method_request)
-        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handlers=self.handler_path)
         try:
             resolver.get_endpoint(request)
             self.assertTrue(False)
@@ -79,7 +79,15 @@ class ResolverTest(unittest.TestCase):
 
     def test_resolver_validates_routing_mode_is_one_of(self):
         try:
-            Resolver(base_path=self.base_path, routing_mode='n/a')
+            Resolver(base_path=self.base_path, routing_mode='directory')
+            self.assertTrue(False)
+        except ApiException as api_error:
+            self.assertTrue(isinstance(api_error, ApiException))
+            self.assertEqual('handlers is required; must be glob patter, directory path or dictionary', api_error.message)
+
+    def test_resolver_validates_routing_mode_is_one_of(self):
+        try:
+            Resolver(base_path=self.base_path, routing_mode='n/a', handlers=1)
             self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
@@ -87,31 +95,39 @@ class ResolverTest(unittest.TestCase):
 
     def test_resolver_validates_directory_routing_mode_handler_path(self):
         try:
-            Resolver(base_path=self.base_path, routing_mode='directory')
+            Resolver(base_path=self.base_path, routing_mode='directory', handlers=1)
             self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
-            self.assertEqual('`directory` routing_mode must use handler_path kwarg', api_error.message)
+            self.assertEqual('`directory` routing_mode must use handlers kwarg and be a path to a directory', api_error.message)
 
     def test_resolver_validates_pattern_routing_mode_handler_pattern(self):
         try:
-            Resolver(base_path=self.base_path, routing_mode='pattern')
+            Resolver(base_path=self.base_path, routing_mode='pattern', handlers=1)
             self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
-            self.assertEqual('`pattern` routing_mode must use handler_pattern kwarg', api_error.message)
+            self.assertEqual('`pattern` routing_mode must use handlers kwarg', api_error.message)
+
+    def test_resolver_validates_pattern_routing_mode_handler_pattern_no_glob(self):
+        try:
+            Resolver(base_path=self.base_path, routing_mode='pattern', handlers='/some/dir/no-stars')
+            self.assertTrue(False)
+        except ApiException as api_error:
+            self.assertTrue(isinstance(api_error, ApiException))
+            self.assertEqual('`pattern` routing_mode must use handlers kwarg and be a glob pattern with a `*`', api_error.message)
 
     def test_resolver_validates_pattern_routing_mode_handler_mapping(self):
         try:
-            Resolver(base_path=self.base_path, routing_mode='mapping')
+            Resolver(base_path=self.base_path, routing_mode='mapping', handlers='/some/dir/no-stars')
             self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
-            self.assertEqual('`mapping` routing_mode must use handler_mapping kwarg', api_error.message)
+            self.assertEqual('`mapping` routing_mode must use handlers kwarg and be dictionary', api_error.message)
 
     def test_get_endpoint_from_cache_works(self):
         request = Request(self.basic_request)
-        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handler_path=self.handler_path)
+        resolver = Resolver(routing_mode='directory', base_path=self.base_path, handlers=self.handler_path)
         self.assertEqual(0, resolver.cache_misses)
         resolver.get_endpoint(request)
         self.assertEqual(1, resolver.cache_misses)

@@ -25,7 +25,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(self.basic_event, None)
@@ -39,7 +39,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handlers=self.handler_path
         )
         result = router.route(self.basic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -52,7 +52,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(self.raise_exception_event, None)
@@ -66,7 +66,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(self.unhandled_exception_event, None)
@@ -80,7 +80,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             before_all=mock_middleware.mock_before_all,
             schema=self.schema_path
         )
@@ -91,7 +91,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             after_all=mock_middleware.mock_after_all,
             schema=self.schema_path
         )
@@ -102,7 +102,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             with_auth=mock_middleware.mock_with_auth,
             schema=self.schema_path
         )
@@ -113,7 +113,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             on_error=mock_middleware.mock_on_error,
             schema=self.schema_path
         )
@@ -124,7 +124,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             on_error=mock_middleware.mock_on_error_exception,
             schema=self.schema_path
         )
@@ -147,7 +147,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -169,7 +169,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -192,7 +192,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -213,7 +213,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handlers=self.handler_path
         )
         result = router.route(dynamic_event, None)
         self.assertEqual(400, result['statusCode'])
@@ -230,7 +230,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handlers=self.handler_path
         )
         result = router.route(dynamic_event, None)
         self.assertEqual(200, result['statusCode'])
@@ -245,7 +245,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handlers=self.handler_path
         )
         result = router.route(dynamic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -262,7 +262,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path
+            handlers=self.handler_path
         )
         result = router.route(dynamic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -288,7 +288,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -315,7 +315,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -333,7 +333,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -365,7 +365,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path,
             auto_validate=True
         )
@@ -396,7 +396,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path,
             auto_validate=True
         )
@@ -418,7 +418,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path,
             auto_validate=True
         )
@@ -440,7 +440,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.base_path_schema_path,
             auto_validate=True
         )
@@ -459,7 +459,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             with_auth=mock_middleware.mock_with_auth,
             schema=self.schema_path,
             auto_validate=True
@@ -477,7 +477,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path,
             auto_validate=True,
             validate_response=True
@@ -497,7 +497,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path,
             auto_validate=True,
             validate_response=True
@@ -535,7 +535,7 @@ class RouterDirectoryTest(unittest.TestCase):
         router = Router(
             routing_mode='directory',
             base_path=self.base_path,
-            handler_path=self.handler_path,
+            handlers=self.handler_path,
             schema=self.schema_path,
             validate_response=True
         )

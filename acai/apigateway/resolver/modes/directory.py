@@ -5,10 +5,8 @@ from acai.apigateway.exception import ApiException
 class DirectoryModeResolver(BaseModeResolver):
 
     def __init__(self, **kwargs):
-        kwargs['handlers'] = kwargs['handler_path']
-        kwargs['routing_mode'] = 'directory'
         super().__init__(**kwargs)
-        self.__handler_path = self.importer.clean_path(kwargs['handler_path'])
+        self.__handler_path = self.importer.clean_path(kwargs['handlers'])
 
     def _get_file_and_import_path(self, request_path):
         split_path = self.__get_request_path_as_list(request_path)

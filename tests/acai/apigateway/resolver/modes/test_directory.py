@@ -31,7 +31,7 @@ class DirectoryModeResolverTest(unittest.TestCase):
     }
 
     def setUp(self):
-        self.directory_resolver = DirectoryModeResolver(base_path=self.base_path, handler_path=self.handler_path)
+        self.directory_resolver = DirectoryModeResolver(base_path=self.base_path, handlers=self.handler_path)
 
     def test_get_endpoint_module(self):
         request = Request(self.basic_request)
