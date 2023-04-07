@@ -1,3 +1,3 @@
-def post(request, response):
-    response.body = {'directory_home': True}
+def post(_, response):
+    response.body = {'mapping_home_init': True}
     return response

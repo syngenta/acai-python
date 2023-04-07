@@ -42,22 +42,29 @@ class MappingModeResolver(BaseModeResolver):
         return clean_base.split('/')
 
     def __get_matching_path_from_mapping(self, path_list):
-        init_matching = list(self.__handler_mapping.keys())
-        matching_path = self.__match_path_with_mapping(init_matching, path_list, 0)
-        if len(matching_path) != 1 or len(matching_path) != len(path_list):
+        mapping_keys = [self.__clean_route_mapping(route).split('/') for route in list(self.__handler_mapping.keys())]
+        matching_path = self.__match_mapping_with_path(mapping_keys, path_list)
+        if len(matching_path) != len(path_list):
             raise ApiException(code=404, message='route not found')
         return f'{self.importer.file_separator}'.join(matching_path)
-
-    def __match_path_with_mapping(self, routes, path_list, path_index):
-        if path_index >= len(path_list) or not routes:
-            return routes
-        matching = []
-        for route in routes:
-            clean_route = self.__clean_route_mapping(route)
-            if clean_route == path_list[path_index]:
-                matching.append(clean_route)
-        return self.__match_path_with_mapping(matching, path_list, path_index+1)
 
     def __clean_route_mapping(self, route):
         mapping_key = route.replace(self.base_path, '')
         return self.importer.clean_path(mapping_key)
+
+    def __match_mapping_with_path(self, mapping_list, path_list):
+        for mapping in mapping_list:
+            matching = self.__match_mapping(mapping, path_list)
+            if matching:
+                return matching
+        return []
+
+    def __match_mapping(self, route, path_list):
+        matching = []
+        if len(route) == len(path_list):
+            for index, value in enumerate(path_list):
+                if path_list[index] == route[index] or route[index].startswith('{') and route[index].endswith('}'):
+                    matching.append(route[index])
+                else:
+                    matching = []
+        return matching

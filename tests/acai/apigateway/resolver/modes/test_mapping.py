@@ -14,9 +14,6 @@ class MappingModeResolverTest(unittest.TestCase):
     dynamic_request = mock_request.get_dynamic()
     bad_route_request = mock_request.get_bad_route()
     base_path = 'unit-test/v1'
-    handler_mapping = {
-        'basic': 'tests/mocks/resolver/mapping_handlers/basic.py'
-    }
     handler_mapping_preferred = {
         'basic': 'tests/mocks/resolver/mapping_handlers/basic.py'
     }
@@ -29,19 +26,11 @@ class MappingModeResolverTest(unittest.TestCase):
     handler_mapping_base_path_mismatch_slashes = {
         'unit-test/v1/basic': '/tests/mocks/resolver/mapping_handlers/basic.py'
     }
-    expected_endpoint_return = {
-        'hasErrors': False,
-        'response': {
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': '*'
-            },
-            'statusCode': 200,
-            'isBase64Encoded': False,
-            'body': {
-                'directory_basic': True
-            }
-        }
+    handler_mapping = {
+        'basic': 'tests/mocks/resolver/mapping_handlers/basic.py',
+        'home': 'tests/mocks/resolver/mapping_handlers/home/__init__.py',
+        'nested-1/nested-2/basic': 'tests/mocks/resolver/mapping_handlers/nested_1/nested_2/basic.py',
+        'dynamic/{id}': 'tests/mocks/resolver/mapping_handlers/dynamic/_id.py'
     }
 
     def setUp(self):
@@ -81,4 +70,28 @@ class MappingModeResolverTest(unittest.TestCase):
         endpoint_module = self.mapping_resolver.get_endpoint_module(request)
         self.assertTrue(hasattr(endpoint_module, 'post'))
         endpoint_returns = endpoint_module.post(request, response)
-        self.assertEqual(str(self.expected_endpoint_return), str(endpoint_returns))
+        self.assertEqual({'mapping_basic': True}, endpoint_returns.raw)
+
+    def test_get_file_and_import_path_module_nested_route(self):
+        request = Request(self.nested_request)
+        response = Response()
+        endpoint_module = self.mapping_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertDictEqual({'mapping_nested_2_basic': True}, endpoint_returns.raw)
+
+    def test_get_file_and_import_path_module_home_route(self):
+        request = Request(self.init_request)
+        response = Response()
+        endpoint_module = self.mapping_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertDictEqual({'mapping_home_init': True}, endpoint_returns.raw)
+
+    def test_get_file_and_import_path_module_dynamic_route(self):
+        request = Request(self.dynamic_request)
+        response = Response()
+        endpoint_module = self.mapping_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertDictEqual({'mapping_dynamic': True}, endpoint_returns.raw)
