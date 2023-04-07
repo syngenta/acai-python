@@ -15,6 +15,7 @@ commands:
         steps:
             - run: pylint acai
     python-test:
+        # if tests get too long to run consider switching to pytest and use test splitting (see: https://circleci.com/docs/troubleshoot-test-splitting/)
         steps:
             - run: RUN_MODE=unittest STAGE=local LOG_LEVEL=INFO python -m unittest discover
     python-report:
