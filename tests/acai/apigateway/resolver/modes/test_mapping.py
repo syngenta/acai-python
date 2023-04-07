@@ -3,6 +3,7 @@ import unittest
 from acai.apigateway.request import Request
 from acai.apigateway.response import Response
 from acai.apigateway.resolver.modes.mapping import MappingModeResolver
+from acai.apigateway.exception import ApiException
 
 from tests.mocks import mock_request
 
@@ -95,3 +96,13 @@ class MappingModeResolverTest(unittest.TestCase):
         self.assertTrue(hasattr(endpoint_module, 'post'))
         endpoint_returns = endpoint_module.post(request, response)
         self.assertDictEqual({'mapping_dynamic': True}, endpoint_returns.raw)
+
+    def test_get_file_and_import_path_module_bad_route(self):
+        request = Request(self.bad_route_request)
+        try:
+            self.mapping_resolver.get_endpoint_module(request)
+            self.assertTrue(False)
+        except ApiException as resolver_error:
+            self.assertTrue(isinstance(resolver_error, ApiException))
+            self.assertEqual(resolver_error.code, 404)
+            self.assertEqual(resolver_error.message, 'route not found')

@@ -2,6 +2,7 @@ import unittest
 
 from acai.apigateway.request import Request
 from acai.apigateway.response import Response
+from acai.apigateway.resolver.modes.base import BaseModeResolver
 from acai.apigateway.resolver.modes.directory import DirectoryModeResolver
 from acai.apigateway.exception import ApiException
 from tests.mocks import mock_request
@@ -74,3 +75,11 @@ class DirectoryModeResolverTest(unittest.TestCase):
             self.assertTrue(isinstance(resolver_error, ApiException))
             self.assertEqual(resolver_error.code, 404)
             self.assertEqual(resolver_error.message, 'route not found')
+
+    def test_bad_class_extension(self):
+        class BadResolver(BaseModeResolver):
+            pass
+        try:
+            BadResolver()
+        except Exception as exception:
+            self.assertEqual("Can't instantiate abstract class BadResolver with abstract method _get_file_and_import_path", str(exception))

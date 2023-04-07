@@ -78,7 +78,7 @@ class Resolver:
         if not params.get('routing_mode'):
             raise ApiException(code=500, message='routing_mode is required; must be one of `directory` || `pattern` || `mapping`')
         if not params.get('handlers'):
-            raise ApiException(code=500, message='handlers is required; must be glob patter, directory path or dictionary')
+            raise ApiException(code=500, message='handlers is required; must be glob pattern, directory path or dictionary')
         if params['routing_mode'] not in {'directory', 'pattern', 'mapping'}:
             raise ApiException(code=500, message='routing_mode must be one of `directory` || `pattern` || `mapping`')
         if params['routing_mode'] == 'directory' and not isinstance(params['handlers'], str):

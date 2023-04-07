@@ -77,13 +77,13 @@ class ResolverTest(unittest.TestCase):
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('routing_mode is required; must be one of `directory` || `pattern` || `mapping`', api_error.message)
 
-    def test_resolver_validates_routing_mode_is_one_of(self):
+    def test_resolver_validates_routing_handlers_is_required(self):
         try:
             Resolver(base_path=self.base_path, routing_mode='directory')
             self.assertTrue(False)
         except ApiException as api_error:
             self.assertTrue(isinstance(api_error, ApiException))
-            self.assertEqual('handlers is required; must be glob patter, directory path or dictionary', api_error.message)
+            self.assertEqual('handlers is required; must be glob pattern, directory path or dictionary', api_error.message)
 
     def test_resolver_validates_routing_mode_is_one_of(self):
         try:
