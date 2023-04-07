@@ -62,7 +62,7 @@ class MappingModeResolver(BaseModeResolver):
     def __match_mapping(self, route, path_list):
         matching = []
         if len(route) == len(path_list):
-            for index, value in enumerate(path_list):
+            for index, _ in enumerate(path_list):
                 if path_list[index] == route[index] or route[index].startswith('{') and route[index].endswith('}'):
                     matching.append(route[index])
                 else:
