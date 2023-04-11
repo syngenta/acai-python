@@ -28,6 +28,7 @@ class MappingModeResolverTest(unittest.TestCase):
         'unit-test/v1/basic': '/tests/mocks/resolver/mapping_handlers/basic.py'
     }
     handler_mapping = {
+        '/': 'tests/mocks/resolver/mapping_handlers/basic.py',
         'basic': 'tests/mocks/resolver/mapping_handlers/basic.py',
         'home': 'tests/mocks/resolver/mapping_handlers/home/__init__.py',
         'nested-1/nested-2/basic': 'tests/mocks/resolver/mapping_handlers/nested_1/nested_2/basic.py',
@@ -106,3 +107,12 @@ class MappingModeResolverTest(unittest.TestCase):
             self.assertTrue(isinstance(resolver_error, ApiException))
             self.assertEqual(resolver_error.code, 404)
             self.assertEqual(resolver_error.message, 'route not found')
+
+    def test_get_file_and_import_path_module_empty_route(self):
+        variable_request = mock_request.get_dynamic_event(path='unit-test/v1/', method='post')
+        request = Request(variable_request)
+        response = Response()
+        endpoint_module = self.mapping_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertEqual({'mapping_basic': True}, endpoint_returns.raw)

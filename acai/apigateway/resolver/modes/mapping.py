@@ -12,22 +12,22 @@ class MappingModeResolver(BaseModeResolver):
     def _get_file_and_import_path(self, request_path):
         path_list = self.__get_request_path_as_list(request_path)
         mapping_path_key = self.__get_matching_path_from_mapping(path_list)
-        clean_path_key = self.__clean_mapping_key(mapping_path_key)
-        mapping_file_path = self.__handler_mapping.get(clean_path_key)
+        mapping_file_path = self.__try_get_mapping_file_path(mapping_path_key)
         if mapping_file_path is None:
             raise ApiException(code=404, message='route not found')
         file_path = self.__get_abs_file_path(mapping_file_path)
         import_path = self.importer.clean_path(mapping_file_path).replace(self.importer.file_separator, '.').replace('.py', '')
         return file_path, import_path
 
-    def __clean_mapping_key(self, mapping_path_key):
-        base_path = [mapping_key for mapping_key in self.__handler_mapping if self.base_path in mapping_key]
-        if base_path:
-            mapping_path_key = f'{self.base_path}/{mapping_path_key}'
-        slashes = [mapping_key for mapping_key in self.__handler_mapping if mapping_key.startswith('/')]
-        if slashes:
-            mapping_path_key = f'/{mapping_path_key}'
-        return mapping_path_key
+    def __try_get_mapping_file_path(self, mapping_path_key):
+        mapping_file_path = self.__handler_mapping.get(mapping_path_key)
+        if not mapping_file_path:
+            mapping_file_path = self.__handler_mapping.get(f'{self.base_path}/{mapping_path_key}')
+        if not mapping_file_path:
+            mapping_file_path = self.__handler_mapping.get(f'/{mapping_path_key}')
+        if not mapping_file_path:
+            mapping_file_path = self.__handler_mapping.get(f'/{self.base_path}/{mapping_path_key}')
+        return mapping_file_path
 
     def __get_abs_file_path(self, mapping_file_path):
         clean_path = self.importer.clean_path(mapping_file_path)
