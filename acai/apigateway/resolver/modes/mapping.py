@@ -13,8 +13,6 @@ class MappingModeResolver(BaseModeResolver):
         path_list = self.__get_request_path_as_list(request_path)
         mapping_path_key = self.__get_matching_path_from_mapping(path_list)
         mapping_file_path = self.__try_get_mapping_file_path(mapping_path_key)
-        if mapping_file_path is None:
-            raise ApiException(code=404, message='route not found')
         file_path = self.__get_abs_file_path(mapping_file_path)
         import_path = self.importer.clean_path(mapping_file_path).replace(self.importer.file_separator, '.').replace('.py', '')
         return file_path, import_path
@@ -53,11 +51,12 @@ class MappingModeResolver(BaseModeResolver):
         return self.importer.clean_path(mapping_key)
 
     def __match_mapping_with_path(self, mapping_list, path_list):
+        matching = []
         for mapping in mapping_list:
             matching = self.__match_mapping(mapping, path_list)
             if matching:
-                return matching
-        return []
+                break
+        return matching
 
     def __match_mapping(self, route, path_list):
         matching = []
