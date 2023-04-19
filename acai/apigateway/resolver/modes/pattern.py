@@ -30,7 +30,7 @@ class PatternModeResolver(BaseModeResolver):
     def __get_import_path_file_tree(self, split_path, split_index, file_tree, import_path, file_pattern):
         if split_index < len(split_path) and file_tree != '*':
             import_part = None
-            route_part = split_path[split_index].replace("-", "_")
+            route_part = split_path[split_index].replace('-', '_')
             mvvm = f'{route_part}'
             mvc = file_pattern.replace('*', route_part)
             if mvvm in file_tree:
