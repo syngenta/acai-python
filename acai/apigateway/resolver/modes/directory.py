@@ -9,17 +9,12 @@ class DirectoryModeResolver(BaseModeResolver):
         self.__handler_path = self.importer.clean_path(kwargs['handlers'])
 
     def _get_file_and_import_path(self, request_path):
-        split_path = self.__get_request_path_as_list(request_path)
+        split_path = self.get_request_path_as_list(request_path)
         relative_path = self.__get_relative_path(split_path)
         relative_file_path = self.__handler_path + self.importer.file_separator + relative_path
-        file_path = self.importer.file_separator + self.importer.project_root + self.importer.file_separator + relative_file_path
-        import_path = relative_file_path.replace(self.importer.file_separator, '.').replace('.py', '')
+        file_path = self.get_abs_file_path(relative_file_path)
+        import_path = self.get_abs_import_path(relative_file_path)
         return file_path, import_path
-
-    def __get_request_path_as_list(self, request_path):
-        base_path = request_path.replace(self.base_path, '').replace('-', '_')
-        clean_base = self.importer.clean_path(base_path)
-        return clean_base.split('/')
 
     def __get_relative_path(self, split_path):
         file_tree = self.importer.handlers_file_tree
