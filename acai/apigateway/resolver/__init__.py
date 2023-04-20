@@ -7,6 +7,9 @@ from acai.apigateway.resolver.modes.pattern import PatternModeResolver
 
 
 class Resolver:
+    PATTERN_MODE = 'pattern'
+    DIRECTORY_MODE = 'directory'
+    MAPPING_MODE = 'mapping'
     __cache_misses = 0
     __available_resolvers = {
         'directory': DirectoryModeResolver,
@@ -15,16 +18,17 @@ class Resolver:
     }
 
     def __init__(self, **kwargs):
-        self.__determine_routing_mode(kwargs)
+        self.__mode = self.__determine_routing_mode(kwargs)
         self.__cacher = ResolverCache(**kwargs)
-        self.__resolver = self.__available_resolvers[kwargs['routing_mode']](**kwargs)
+        self.__resolver = self.__available_resolvers[self.__mode](**kwargs)
 
     @property
     def cache_misses(self):
         return self.__cache_misses
 
     def auto_load(self):
-        self.__resolver.load_importer_files()
+        if self.__mode != self.MAPPING_MODE:
+            self.__resolver.load_importer_files()
 
     def get_endpoint(self, request):
         endpoint_module = self.__get_endpoint_module(request)
@@ -38,11 +42,11 @@ class Resolver:
 
     def __determine_routing_mode(self, kwargs):
         if isinstance(kwargs['handlers'], dict):
-            kwargs['routing_mode'] = 'mapping'
+            return self.MAPPING_MODE
         elif isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' in kwargs['handlers']:
-            kwargs['routing_mode'] = 'pattern'
+            return self.PATTERN_MODE
         else:
-            kwargs['routing_mode'] = 'directory'
+            return self.DIRECTORY_MODE
 
     def __get_endpoint_module(self, request):
         endpoint_module = self.__cacher.get(request.path)
