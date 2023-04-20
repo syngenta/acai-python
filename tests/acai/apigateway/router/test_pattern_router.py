@@ -48,6 +48,19 @@ class RouterPatternTest(unittest.TestCase):
         self.assertDictEqual(self.expected_open_headers, result['headers'])
         self.assertDictEqual({"router_pattern_basic": {"body_key": "body_value"}}, json_dict_response)
 
+    def test_auto_load_works(self):
+        try:
+            router = Router(
+                base_path=self.base_path,
+                handlers=self.handler_path,
+                schema=self.schema_path
+            )
+            router.auto_load()
+            self.assertTrue(True)
+        except Exception as error:
+            print(error)
+            self.assertTrue(False)
+
     def test_basic_pattern_routing_works_no_schema_defined(self):
         router = Router(
             base_path=self.base_path,
