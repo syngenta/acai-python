@@ -59,7 +59,7 @@ class ResolverImporterTest(unittest.TestCase):
 
     def test_project_root(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertTrue(os.sep in importer.project_root)
+        self.assertTrue(os.sep in importer.get_project_root())
 
     def test_clean_handlers(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
