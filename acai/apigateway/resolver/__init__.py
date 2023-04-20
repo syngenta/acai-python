@@ -15,7 +15,7 @@ class Resolver:
     }
 
     def __init__(self, **kwargs):
-        Resolver.validate_config(kwargs)
+        self.__determine_routing_mode(kwargs)
         self.__cacher = ResolverCache(**kwargs)
         self.__resolver = self.__available_resolvers[kwargs['routing_mode']](**kwargs)
 
@@ -32,6 +32,17 @@ class Resolver:
         self.__check_dynamic_route_and_apply_params(request, endpoint)
         self.__cacher.put(request.path, endpoint_module, self.__resolver.has_dynamic_route)
         return endpoint
+
+    def __determine_routing_mode(self, kwargs):
+        if isinstance(kwargs['handlers'], dict):
+            kwargs['routing_mode'] = 'mapping'
+        elif isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' in kwargs['handlers']:
+            kwargs['routing_mode'] = 'pattern'
+        elif isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' not in kwargs['handlers']:
+            kwargs['handlers'] = kwargs['routing_mode'].repalce('*', '')
+            kwargs['routing_mode'] = 'directory'
+        else:
+            kwargs['routing_mode'] = 'directory'
 
     def __get_endpoint_module(self, request):
         endpoint_module = self.__cacher.get(request.path)
@@ -70,22 +81,3 @@ class Resolver:
                 raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does not have proper variables in required_route')
             dynamic_name = variable_name.strip('{').strip('}')
             request.path_params = dynamic_name, self.__resolver.dynamic_parts[part]
-
-    @staticmethod
-    def validate_config(params):
-        if not params.get('base_path'):
-            raise ApiException(code=500, message='base_path is required')
-        if not params.get('routing_mode'):
-            raise ApiException(code=500, message='routing_mode is required; must be one of `directory` || `pattern` || `mapping`')
-        if not params.get('handlers'):
-            raise ApiException(code=500, message='handlers is required; must be glob pattern, directory path or dictionary')
-        if params['routing_mode'] not in {'directory', 'pattern', 'mapping'}:
-            raise ApiException(code=500, message='routing_mode must be one of `directory` || `pattern` || `mapping`')
-        if params['routing_mode'] == 'directory' and not isinstance(params['handlers'], str):
-            raise ApiException(code=500, message='`directory` routing_mode must use handlers kwarg and be a path to a directory')
-        if params['routing_mode'] == 'pattern' and not isinstance(params['handlers'], str):
-            raise ApiException(code=500, message='`pattern` routing_mode must use handlers kwarg')
-        if params['routing_mode'] == 'pattern' and '*' not in params['handlers']:
-            raise ApiException(code=500, message='`pattern` routing_mode must use handlers kwarg and be a glob pattern with a `*`')
-        if params['routing_mode'] == 'mapping' and not isinstance(params['handlers'], dict):
-            raise ApiException(code=500, message='`mapping` routing_mode must use handlers kwarg and be dictionary')

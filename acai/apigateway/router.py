@@ -4,6 +4,7 @@ from acai.apigateway.exception import ApiException
 from acai.apigateway.request import Request
 from acai.apigateway.resolver import Resolver
 from acai.apigateway.response import Response
+from acai.apigateway.config_validator import ConfigValidator
 from acai.common.validator import Validator
 from acai.common import logger
 
@@ -11,6 +12,7 @@ from acai.common import logger
 class Router:
 
     def __init__(self, **kwargs):
+        ConfigValidator.validate(**kwargs)
         self.__before_all = kwargs.get('before_all')
         self.__after_all = kwargs.get('after_all')
         self.__with_auth = kwargs.get('with_auth')
