@@ -2,6 +2,7 @@ import json
 import jsonref
 from jsonschema import Draft7Validator
 import yaml
+import functools
 
 
 class RequestValidator:
@@ -57,6 +58,7 @@ class RequestValidator:
         for schema_error in sorted(schema_validator.iter_errors(request), key=str):
             self.response_client.set_error(self._get_error_path(schema_error), schema_error.message)
 
+    @functools.lru_cache(maxsize=128)
     def _get_combined_schema(self, schema):
         combined_schema = {}
         swagger = self._get_api_doc()
@@ -72,6 +74,7 @@ class RequestValidator:
         path = '.'.join(str(path) for path in error.path)
         return path if path else 'root'
 
+    @functools.lru_cache(maxsize=128)
     def _get_api_doc(self):
         with open(self.schema_path) as api_doc:
             return yaml.load(api_doc, Loader=yaml.FullLoader)
