@@ -78,6 +78,14 @@ class ConfigValidatorTest(unittest.TestCase):
             self.assertTrue(isinstance(api_error, ApiException))
             self.assertEqual('validate_response should be a boolean', api_error.message)
 
+    def test_config_validator_validates_routing_verbose_logging_is_appropriate(self):
+        try:
+            ConfigValidator.validate(base_path='some/path', handlers={'route': 'file/path.py'}, verbose_logging=1)
+            self.assertTrue(False)
+        except ApiException as api_error:
+            self.assertTrue(isinstance(api_error, ApiException))
+            self.assertEqual('verbose_logging should be a boolean', api_error.message)
+
     def test_config_validator_validates_routing_cache_size_is_appropriate(self):
         try:
             ConfigValidator.validate(base_path='some/path', handlers={'route': 'file/path.py'}, cache_size='1')

@@ -19,3 +19,5 @@ class ConfigValidator:
             raise ApiException(code=500, message='cache_size should be an int (0 for unlimited size) or None (to disable route caching)')
         if kwargs.get('cache_mode') and kwargs['cache_mode'] not in ('all', 'static-only', 'dynamic-only'):
             raise ApiException(code=500, message='cache_mode should be a string of the one of the following values: all, static-only, dynamic-only')
+        if kwargs.get('verbose_logging') and not isinstance(kwargs.get('verbose_logging'), bool):
+            raise ApiException(code=500, message='verbose_logging should be a boolean')
