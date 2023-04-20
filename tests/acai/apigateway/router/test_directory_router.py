@@ -34,6 +34,20 @@ class RouterDirectoryTest(unittest.TestCase):
         self.assertDictEqual(self.expected_open_headers, result['headers'])
         self.assertDictEqual({"router_directory_basic": {"body_key": "body_value"}}, json_dict_response)
 
+    def test_basic_directory_routing_works_with_verbose_logging(self):
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            schema=self.schema_path,
+            verbose_logging=True
+        )
+        result = router.route(self.basic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({"router_directory_basic": {"body_key": "body_value"}}, json_dict_response)
+
     def test_basic_directory_routing_works_no_schema_defined(self):
         router = Router(
             base_path=self.base_path,
