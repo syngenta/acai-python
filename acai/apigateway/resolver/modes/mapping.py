@@ -30,7 +30,7 @@ class MappingModeResolver(BaseModeResolver):
     def __get_abs_file_path(self, mapping_file_path):
         clean_path = self.importer.clean_path(mapping_file_path)
         base_dir = clean_path.split(self.importer.file_separator)[0]
-        project_root = self.importer.project_root.split(base_dir)[0]
+        project_root = self.importer.get_project_root().split(base_dir)[0]
         join_list = ['', self.importer.clean_path(project_root), self.importer.clean_path(mapping_file_path)]
         return f'{self.importer.file_separator}'.join(join_list)
 

@@ -17,7 +17,7 @@ class PatternModeResolver(BaseModeResolver):
         return file_path, import_path
 
     def __get_relative_path(self, split_path):
-        file_tree = self.importer.handlers_file_tree
+        file_tree = self.importer.get_handlers_file_tree()
         file_pattern = self.__get_file_pattern()
         relative_path = self.__get_import_path_file_tree(split_path, 0, file_tree, [], file_pattern)
         return f'{self.importer.file_separator}'.join(relative_path)

@@ -72,32 +72,32 @@ class ResolverImporterTest(unittest.TestCase):
 
     def test_handlers_root_directory_handlers(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertEqual(importer.handlers_root, 'tests/mocks/importer/directory_handlers')
+        self.assertEqual(importer.get_handlers_root(), 'tests/mocks/importer/directory_handlers')
 
     def test_handlers_root_pattern_handlers(self):
         importer = ResolverImporter(handlers=self.handler_pattern, mode='pattern')
-        self.assertEqual(importer.handlers_root, 'tests/mocks/importer/pattern_handlers')
+        self.assertEqual(importer.get_handlers_root(), 'tests/mocks/importer/pattern_handlers')
 
     def test_handlers_path_abs_directory_mode(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertTrue('/tests/mocks/importer/directory_handlers' in importer.handlers_path_abs)
+        self.assertTrue('/tests/mocks/importer/directory_handlers' in importer.get_handlers_path_abs())
 
     def test_handlers_path_abs_pattern_mode(self):
         importer = ResolverImporter(handlers=self.handler_pattern, mode='pattern')
-        self.assertTrue('/tests/mocks/importer/pattern_handlers' in importer.handlers_path_abs)
+        self.assertTrue('/tests/mocks/importer/pattern_handlers' in importer.get_handlers_path_abs())
 
     def test_handlers_file_tree_directory_mode(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertDictEqual(self.expected_directory_file_tree, importer.handlers_file_tree)
+        self.assertDictEqual(self.expected_directory_file_tree, importer.get_handlers_file_tree())
 
     def test_handlers_file_tree_pattern_mode(self):
         importer = ResolverImporter(handlers=self.handler_pattern, mode='pattern')
-        self.assertDictEqual(self.expected_pattern_file_tree, importer.handlers_file_tree)
+        self.assertDictEqual(self.expected_pattern_file_tree, importer.get_handlers_file_tree())
 
     def test_handlers_file_throw_exception_on_two_dynamic_files(self):
         importer = ResolverImporter(handlers=self.handler_bad_multi_dynamic, mode='directory')
         try:
-            print(importer.handlers_file_tree)
+            print(importer.get_handlers_file_tree())
         except ApiException as importer_error:
             self.assertTrue(isinstance(importer_error, ApiException))
             self.assertTrue('Cannot have two dynamic files in the same directory.' in importer_error.message)
@@ -105,7 +105,7 @@ class ResolverImporterTest(unittest.TestCase):
     def test_handlers_file_throw_exception_on_directory_and_file_share_name(self):
         importer = ResolverImporter(handlers=self.handler_bad_same_name, mode='directory')
         try:
-            print(importer.handlers_file_tree)
+            print(importer.get_handlers_file_tree())
             self.assertTrue(False)
         except ApiException as importer_error:
             self.assertTrue(isinstance(importer_error, ApiException))
@@ -113,11 +113,11 @@ class ResolverImporterTest(unittest.TestCase):
 
     def test_handlers_file_should_allow_directory_and_file_share_name_on_different_levels(self):
         importer = ResolverImporter(handlers=self.handler_should_pass, mode='directory')
-        self.assertDictEqual(self.expected_passing_shared_name_diff_levels, importer.handlers_file_tree)
+        self.assertDictEqual(self.expected_passing_shared_name_diff_levels, importer.get_handlers_file_tree())
 
     def test_import_module_from_file(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.handlers_path_abs}/basic.py'
+        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
         import_path = 'tests.mocks.importer.directory_handlers.basic'
         handler_module = importer.import_module_from_file(file_path, import_path)
         self.assertTrue(hasattr(handler_module, 'post'))

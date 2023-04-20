@@ -23,6 +23,10 @@ class Router:
         self.__resolver = Resolver(**kwargs)
         self.__validator = Validator(**kwargs)
 
+    def auto_load(self):
+        self.__resolver.auto_load()
+        self.__validator.auto_load()
+
     def route(self, event, context):
         request = Request(event, context)
         response = Response()

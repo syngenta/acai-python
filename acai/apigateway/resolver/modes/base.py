@@ -11,6 +11,12 @@ class BaseModeResolver(abc.ABC):
         self.dynamic_parts = {}
         self.base_path = self.importer.clean_path(kwargs['base_path'])
 
+    def load_importer_files(self):
+        self.importer.get_handlers_file_tree()
+        self.importer.get_handlers_path_abs()
+        self.importer.get_handlers_root()
+        self.importer.get_project_root()
+
     def get_endpoint_module(self, request):
         file_path, import_path = self._get_file_and_import_path(request.path)
         return self.importer.import_module_from_file(file_path, import_path)
@@ -21,7 +27,7 @@ class BaseModeResolver(abc.ABC):
         return clean_base.split('/')
 
     def get_abs_file_path(self, relative_file_path):
-        return f'{self.importer.file_separator}'.join(['', self.importer.project_root, relative_file_path])
+        return f'{self.importer.file_separator}'.join(['', self.importer.get_project_root(), relative_file_path])
 
     def get_abs_import_path(self, relative_file_path):
         return relative_file_path.replace(self.importer.file_separator, '.').replace('.py', '')

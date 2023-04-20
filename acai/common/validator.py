@@ -17,6 +17,9 @@ class Validator:
             'required_body': 'body'
         }
 
+    def auto_load(self):
+        self.__schema.load_schema_file()
+
     def request_has_security(self, request):
         route_spec = self.__schema.get_route_spec(request.route, request.method)
         if route_spec.get('security'):

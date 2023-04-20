@@ -23,6 +23,9 @@ class Resolver:
     def cache_misses(self):
         return self.__cache_misses
 
+    def auto_load(self):
+        self.__resolver.load_importer_files()
+
     def get_endpoint(self, request):
         endpoint_module = self.__get_endpoint_module(request)
         if not hasattr(endpoint_module, request.method):

@@ -17,6 +17,9 @@ class Schema:
     def spec(self):
         return self.__spec
 
+    def load_schema_file(self):
+        self.__get_full_spec()
+
     def get_openapi_spec(self):
         return self.__get_full_spec()
 
