@@ -60,7 +60,7 @@ class RouterMappingTest(unittest.TestCase):
         try:
             router = Router(
                 base_path=self.base_path,
-                handlers=self.handler_path,
+                handlers=self.handler_mapping,
                 schema=self.schema_path
             )
             router.auto_load()
