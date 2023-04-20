@@ -6,11 +6,8 @@ from acai.apigateway.exception import ApiException
 
 
 class ResolverImporter:
-    PATTERN_MODE = 'pattern'
-    DIRECTORY_MODE = 'directory'
 
     def __init__(self, **kwargs):
-        self.__mode = kwargs['mode']
         self.__handlers = self.clean_path(kwargs['handlers'])
         self.__handlers_root = None
         self.__handlers_tree = {}
@@ -66,7 +63,7 @@ class ResolverImporter:
         return self.__handlers_tree
 
     def __get_glob_pattern(self):
-        if self.__mode == self.PATTERN_MODE:
+        if '*' in self.__handlers and '.py' in self.__handlers:
             return self.file_separator + self.project_root + self.file_separator + self.handlers
         return self.handlers_path_abs + self.file_separator + '**' + self.file_separator + '*.py'
 

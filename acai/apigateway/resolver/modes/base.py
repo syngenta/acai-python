@@ -6,7 +6,7 @@ from acai.apigateway.resolver.importer import ResolverImporter
 class BaseModeResolver(abc.ABC):
 
     def __init__(self, **kwargs):
-        self.importer = ResolverImporter(handlers=kwargs['handlers'], mode=kwargs['routing_mode'])
+        self.importer = ResolverImporter(handlers=kwargs['handlers'])
         self.has_dynamic_route = False
         self.dynamic_parts = {}
         self.base_path = self.importer.clean_path(kwargs['base_path'])
