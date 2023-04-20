@@ -43,10 +43,9 @@ class Resolver:
     def __determine_routing_mode(self, kwargs):
         if isinstance(kwargs['handlers'], dict):
             return self.MAPPING_MODE
-        elif isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' in kwargs['handlers']:
+        if isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' in kwargs['handlers']:
             return self.PATTERN_MODE
-        else:
-            return self.DIRECTORY_MODE
+        return self.DIRECTORY_MODE
 
     def __get_endpoint_module(self, request):
         endpoint_module = self.__cacher.get(request.path)
