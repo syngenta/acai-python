@@ -39,7 +39,7 @@ class Resolver:
         elif isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' in kwargs['handlers']:
             kwargs['routing_mode'] = 'pattern'
         elif isinstance(kwargs['handlers'], str) and '*' in kwargs['handlers'] and '.py' not in kwargs['handlers']:
-            kwargs['handlers'] = kwargs['routing_mode'].repalce('*', '')
+            kwargs['handlers'] = kwargs['handlers'].repalce('*', '')
             kwargs['routing_mode'] = 'directory'
         else:
             kwargs['routing_mode'] = 'directory'
