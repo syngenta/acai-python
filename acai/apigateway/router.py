@@ -17,6 +17,7 @@ class Router:
         self.__after_all = kwargs.get('after_all')
         self.__with_auth = kwargs.get('with_auth')
         self.__on_error = kwargs.get('on_error')
+        self.__verbose = kwargs.get('verbose_logging', False)
         self.__auto_validate = kwargs.get('auto_validate', False)
         self.__validate_response = kwargs.get('validate_response', False)
         self.__resolver = Resolver(**kwargs)
@@ -26,6 +27,7 @@ class Router:
         request = Request(event, context)
         response = Response()
         try:
+            self.__log_verbose(title='request-received', log={'request': request})
             self.__run_route_procedure(request, response)
         except ApiException as api_error:
             kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
@@ -33,6 +35,7 @@ class Router:
         except Exception as error:
             kwargs = {'code': 500, 'key_path': 'unknown', 'message': str(error), 'error': error}
             self.__handle_error(request, response, **kwargs)
+        self.__log_verbose(title='request-processed', log={'request': request, 'response': response})
         return response.full
 
     def __run_route_procedure(self, request, response):
@@ -81,3 +84,7 @@ class Router:
                 self.__on_error(request, response, kwargs.get('error'))
         except Exception as exception:
             logging.exception(exception)
+
+    def __log_verbose(self, title, log):
+        if self.__verbose:
+            logger.log(level='INFO', log={'title': title, 'log': log})
