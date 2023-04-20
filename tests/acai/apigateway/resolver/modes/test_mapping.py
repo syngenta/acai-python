@@ -36,31 +36,31 @@ class MappingModeResolverTest(unittest.TestCase):
     }
 
     def setUp(self):
-        self.mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping,  routing_mode='mapping')
+        self.mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping)
 
     def test_get_file_and_import_path_module_with_preferred_mapping(self):
-        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_preferred,  routing_mode='mapping')
+        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_preferred)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.resolver.mapping_handlers.basic', import_path)
 
     def test_get_file_and_import_path_module_with_dirty_mapping(self):
-        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_leading_slashes,  routing_mode='mapping')
+        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_leading_slashes)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.resolver.mapping_handlers.basic', import_path)
 
     def test_get_file_and_import_path_module_with_disgusting_mapping(self):
-        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_base_path_leading_slashes,  routing_mode='mapping')
+        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_base_path_leading_slashes)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.resolver.mapping_handlers.basic', import_path)
 
     def test_get_file_and_import_path_module_with_super_disgusting_mapping(self):
-        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_base_path_mismatch_slashes,  routing_mode='mapping')
+        mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_base_path_mismatch_slashes)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)

@@ -32,7 +32,7 @@ class PatternMVVMModeResolverTest(unittest.TestCase):
     }
 
     def setUp(self):
-        self.mvvm_pattern_resolver = PatternModeResolver(base_path=self.base_path, handlers=self.mvvm_pattern, routing_mode='pattern')
+        self.mvvm_pattern_resolver = PatternModeResolver(base_path=self.base_path, handlers=self.mvvm_pattern)
 
     def test_get_endpoint_module(self):
         request = Request(self.basic_request)
@@ -100,7 +100,7 @@ class PatternMVCModeResolverTest(unittest.TestCase):
     }
 
     def setUp(self):
-        self.mvc_pattern_resolver = PatternModeResolver(base_path=self.base_path, handlers=self.mvc_pattern, routing_mode='pattern')
+        self.mvc_pattern_resolver = PatternModeResolver(base_path=self.base_path, handlers=self.mvc_pattern)
 
     def test_get_endpoint_module(self):
         request = Request(self.basic_request)

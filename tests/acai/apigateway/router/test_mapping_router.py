@@ -31,7 +31,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -45,7 +44,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_no_schema_defined(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping
         )
@@ -58,7 +56,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_with_raised_exception(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -72,7 +69,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_with_unhandled_exception(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -86,7 +82,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_and_before_all_function_called(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             before_all=mock_middleware.mock_before_all,
@@ -97,7 +92,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_and_after_all_function_called(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             after_all=mock_middleware.mock_after_all,
@@ -108,7 +102,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_and_with_auth_function_called(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             with_auth=mock_middleware.mock_with_auth,
@@ -119,7 +112,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_and_on_error_function_called(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             on_error=mock_middleware.mock_on_error,
@@ -130,7 +122,6 @@ class RouterMappingTest(unittest.TestCase):
 
     def test_basic_mapping_routing_works_and_bad_on_error_function_caught(self):
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             on_error=mock_middleware.mock_on_error_exception,
@@ -153,7 +144,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -175,7 +165,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -198,7 +187,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -219,7 +207,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping
         )
@@ -236,7 +223,6 @@ class RouterMappingTest(unittest.TestCase):
             method='delete'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping
         )
@@ -251,7 +237,6 @@ class RouterMappingTest(unittest.TestCase):
             method='delete'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping
         )
@@ -268,7 +253,6 @@ class RouterMappingTest(unittest.TestCase):
             method='delete'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping
         )
@@ -294,7 +278,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -324,7 +307,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -342,7 +324,6 @@ class RouterMappingTest(unittest.TestCase):
             method='patch'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path
@@ -374,7 +355,6 @@ class RouterMappingTest(unittest.TestCase):
             body=body
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path,
@@ -405,7 +385,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path,
@@ -427,7 +406,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path,
@@ -449,7 +427,6 @@ class RouterMappingTest(unittest.TestCase):
             }
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.base_path_schema_path,
@@ -468,7 +445,6 @@ class RouterMappingTest(unittest.TestCase):
             method='get'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             with_auth=mock_middleware.mock_with_auth,
@@ -486,7 +462,6 @@ class RouterMappingTest(unittest.TestCase):
             method='get'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path,
@@ -506,7 +481,6 @@ class RouterMappingTest(unittest.TestCase):
             method='put'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path,
@@ -544,7 +518,6 @@ class RouterMappingTest(unittest.TestCase):
             method='delete'
         )
         router = Router(
-            routing_mode='mapping',
             base_path=self.base_path,
             handlers=self.handler_mapping,
             schema=self.schema_path,
