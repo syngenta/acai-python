@@ -6,6 +6,7 @@ import functools
 
 
 class RequestValidator:
+    cached_yamls = {}
 
     def __init__(self, request_client, response_client, schema_path = ''):
         self.request_client = request_client
@@ -62,7 +63,11 @@ class RequestValidator:
     def _get_combined_schema(self, schema):
         combined_schema = {}
         swagger = self._get_api_doc()
-        definitions = jsonref.loads(json.dumps(swagger))['components']['schemas']
+        if self.schema_path in self.cached_yamls:
+            definitions = self.cached_yamls[self.schema_path]['components']['schemas']
+        else:
+            definitions = jsonref.loads(json.dumps(swagger))['components']['schemas']
+            self.cached_yamls[self.schema_path] = swagger
         definition_schema = definitions[schema]
         json_schemas = definition_schema['allOf'] if definition_schema.get('allOf') else [definition_schema]
         for json_schema in json_schemas:
