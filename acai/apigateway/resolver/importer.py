@@ -41,7 +41,7 @@ class ResolverImporter:
     def get_handlers_root(self):
         if not self.__handlers_root:
             sep_split = self.__handlers.split(self.file_separator)
-            cleaned_split = [directory for directory in sep_split if '*' not in directory]
+            cleaned_split = [directory for directory in sep_split if self.__is_directory(directory)]
             self.__handlers_root = self.clean_path(f'{self.file_separator}'.join(cleaned_split))
         return self.__handlers_root
 
@@ -57,6 +57,11 @@ class ResolverImporter:
                 sections = file_path.split(self.file_separator)
                 self.__recurse_section(self.__handlers_tree, sections, 0)
         return self.__handlers_tree
+
+    def __is_directory(self, directory):
+        if '*' not in directory and '.py' not in directory:
+            return True
+        return False
 
     def __get_glob_pattern(self):
         if '*' in self.__handlers and '.py' in self.__handlers:

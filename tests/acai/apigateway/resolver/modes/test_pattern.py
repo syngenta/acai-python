@@ -76,6 +76,7 @@ class PatternMVVMModeResolverTest(unittest.TestCase):
             self.assertEqual(resolver_error.code, 404)
             self.assertEqual(resolver_error.message, 'route not found')
 
+
 class PatternMVCModeResolverTest(unittest.TestCase):
     basic_request = mock_request.get_basic()
     nested_request = mock_request.get_basic_nested()
@@ -143,3 +144,65 @@ class PatternMVCModeResolverTest(unittest.TestCase):
             self.assertTrue(isinstance(resolver_error, ApiException))
             self.assertEqual(resolver_error.code, 404)
             self.assertEqual(resolver_error.message, 'route not found')
+
+
+class PatternConstantModeResolverTest(unittest.TestCase):
+    basic_request = mock_request.get_basic()
+    base_path = 'unit-test/v1'
+    constant_pattern = 'tests/mocks/resolver/pattern_handlers/constant/**/*/endpoint.py'
+    expected_endpoint_return = {
+        'hasErrors': False,
+        'response': {
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            'statusCode': 200,
+            'isBase64Encoded': False,
+            'body': {
+                'basic_constant_pattern': True
+            }
+        }
+    }
+
+    def setUp(self):
+        self.constant_pattern_resolver = PatternModeResolver(base_path=self.base_path, handlers=self.constant_pattern)
+
+    def test_get_endpoint_module(self):
+        request = Request(self.basic_request)
+        response = Response()
+        endpoint_module = self.constant_pattern_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertEqual(str(self.expected_endpoint_return), str(endpoint_returns))
+
+
+class PatternStraightModeResolverTest(unittest.TestCase):
+    basic_request = mock_request.get_basic()
+    base_path = 'unit-test/v1'
+    straight_pattern = 'tests/mocks/resolver/pattern_handlers/straight/*.py'
+    expected_endpoint_return = {
+        'hasErrors': False,
+        'response': {
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
+            },
+            'statusCode': 200,
+            'isBase64Encoded': False,
+            'body': {
+                'basic_straight_pattern': True
+            }
+        }
+    }
+
+    def setUp(self):
+        self.straight_pattern_resolver = PatternModeResolver(base_path=self.base_path, handlers=self.straight_pattern)
+
+    def test_get_endpoint_module(self):
+        request = Request(self.basic_request)
+        response = Response()
+        endpoint_module = self.straight_pattern_resolver.get_endpoint_module(request)
+        self.assertTrue(hasattr(endpoint_module, 'post'))
+        endpoint_returns = endpoint_module.post(request, response)
+        self.assertEqual(str(self.expected_endpoint_return), str(endpoint_returns))
