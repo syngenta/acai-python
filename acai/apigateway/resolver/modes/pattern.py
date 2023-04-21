@@ -31,13 +31,13 @@ class PatternModeResolver(BaseModeResolver):
         if split_index < len(split_path):
             import_part = None
             route_part = split_path[split_index].replace('-', '_')
-            mvvm = f'{route_part}'
-            mvc = file_pattern.replace('*', route_part)
-            if mvvm in file_tree:
-                import_part = mvvm
+            possible_directory = f'{route_part}'
+            possible_file = file_pattern.replace('*', route_part)
+            if possible_directory in file_tree:
+                import_part = possible_directory
                 split_index = split_index - 1 if split_index + 1 == len(split_path) else split_index
-            elif mvc in file_tree:
-                import_part = mvc
+            elif possible_file in file_tree:
+                import_part = possible_file
             elif file_tree.get('__dynamic_files') and file_tree['__dynamic_files']:
                 import_part = list(file_tree['__dynamic_files'])[0]
                 self.has_dynamic_route = True
