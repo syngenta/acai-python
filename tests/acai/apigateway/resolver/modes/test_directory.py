@@ -83,21 +83,21 @@ class DirectoryModeResolverTest(unittest.TestCase):
         self.assertEqual('tests.mocks.resolver.directory_handlers.triple._coordinates', import_path)
 
     def test_single_nested_dynamic_get_file_and_import_path(self):
-        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('1')
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/user/_user_id/__init__.py' in file_path)
         self.assertEqual('tests.mocks.resolver.directory_handlers.user._user_id.__init__', import_path)
 
     def test_double_nested_dynamic_get_file_and_import_path(self):
-        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('1/item')
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/user/_user_id/item/__init__.py' in file_path)
         self.assertEqual('tests.mocks.resolver.directory_handlers.user._user_id.item.__init__', import_path)
 
     def test_triple_nested_dynamic_get_file_and_import_path(self):
-        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('1/item/a')
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item/a')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/user/_user_id/item/_item_id.py' in file_path)

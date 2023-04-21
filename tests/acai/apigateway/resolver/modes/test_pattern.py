@@ -14,6 +14,7 @@ class PatternMVVMModeResolverTest(unittest.TestCase):
     init_request = mock_request.get_basic_init()
     dynamic_request = mock_request.get_dynamic()
     bad_route_request = mock_request.get_bad_route()
+    triple_request = mock_request.get_triple_post()
     base_path = 'unit-test/v1'
     mvvm_pattern = 'tests/mocks/resolver/pattern_handlers/mvvm/**/*_controller.py'
     expected_endpoint_return = {
@@ -76,6 +77,33 @@ class PatternMVVMModeResolverTest(unittest.TestCase):
             self.assertEqual(resolver_error.code, 404)
             self.assertEqual(resolver_error.message, 'route not found')
 
+    def test_triple_dynamic_get_file_and_import_path(self):
+        request = Request(self.triple_request)
+        file_path, import_path = self.mvvm_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/mvvm/triple/_coordinates_controller.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.mvvm.triple._coordinates_controller', import_path)
+
+    def test_single_nested_dynamic_get_file_and_import_path(self):
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1')
+        request = Request(dynamic_nested_request)
+        file_path, import_path = self.mvvm_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/mvvm/user/_user_id/_user_id_controller.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.mvvm.user._user_id._user_id_controller', import_path)
+
+    def test_double_nested_dynamic_get_file_and_import_path(self):
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item')
+        request = Request(dynamic_nested_request)
+        file_path, import_path = self.mvvm_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/mvvm/user/_user_id/item/item_controller.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.mvvm.user._user_id.item.item_controller', import_path)
+
+    def test_triple_nested_dynamic_get_file_and_import_path(self):
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item/a')
+        request = Request(dynamic_nested_request)
+        file_path, import_path = self.mvvm_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/mvvm/user/_user_id/item/_item_id_controller.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.mvvm.user._user_id.item._item_id_controller', import_path)
+
 
 class PatternMVCModeResolverTest(unittest.TestCase):
     basic_request = mock_request.get_basic()
@@ -83,6 +111,7 @@ class PatternMVCModeResolverTest(unittest.TestCase):
     init_request = mock_request.get_basic_init()
     dynamic_request = mock_request.get_dynamic()
     bad_route_request = mock_request.get_bad_route()
+    triple_request = mock_request.get_triple_post()
     base_path = 'unit-test/v1'
     mvc_pattern = 'tests/mocks/resolver/pattern_handlers/mvc/**/*_controller.py'
     expected_endpoint_return = {
@@ -145,9 +174,23 @@ class PatternMVCModeResolverTest(unittest.TestCase):
             self.assertEqual(resolver_error.code, 404)
             self.assertEqual(resolver_error.message, 'route not found')
 
+    def test_triple_dynamic_get_file_and_import_path(self):
+        request = Request(self.triple_request)
+        file_path, import_path = self.mvc_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/mvc/triple/_coordinates_controller.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.mvc.triple._coordinates_controller', import_path)
+
+    def test_single_nested_dynamic_get_file_and_import_path(self):
+        dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1')
+        request = Request(dynamic_nested_request)
+        file_path, import_path = self.mvc_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/mvc/user/_user_id_controller.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.mvc.user._user_id_controller', import_path)
+
 
 class PatternConstantModeResolverTest(unittest.TestCase):
     basic_request = mock_request.get_basic()
+    triple_request = mock_request.get_triple_post()
     base_path = 'unit-test/v1'
     constant_pattern = 'tests/mocks/resolver/pattern_handlers/constant/**/*/endpoint.py'
     expected_endpoint_return = {
@@ -176,11 +219,18 @@ class PatternConstantModeResolverTest(unittest.TestCase):
         endpoint_returns = endpoint_module.post(request, response)
         self.assertEqual(str(self.expected_endpoint_return), str(endpoint_returns))
 
+    def test_triple_dynamic_get_file_and_import_path(self):
+        request = Request(self.triple_request)
+        file_path, import_path = self.constant_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/constant/triple/_coordinates/endpoint.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.constant.triple._coordinates.endpoint', import_path)
+
 
 class PatternStraightModeResolverTest(unittest.TestCase):
     basic_request = mock_request.get_basic()
+    triple_request = mock_request.get_triple_post()
     base_path = 'unit-test/v1'
-    straight_pattern = 'tests/mocks/resolver/pattern_handlers/straight/*.py'
+    straight_pattern = 'tests/mocks/resolver/pattern_handlers/straight/**/*.py'
     expected_endpoint_return = {
         'hasErrors': False,
         'response': {
@@ -206,3 +256,9 @@ class PatternStraightModeResolverTest(unittest.TestCase):
         self.assertTrue(hasattr(endpoint_module, 'post'))
         endpoint_returns = endpoint_module.post(request, response)
         self.assertEqual(str(self.expected_endpoint_return), str(endpoint_returns))
+
+    def test_triple_dynamic_get_file_and_import_path(self):
+        request = Request(self.triple_request)
+        file_path, import_path = self.straight_pattern_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/resolver/pattern_handlers/straight/triple/_coordinates.py' in file_path)
+        self.assertEqual('tests.mocks.resolver.pattern_handlers.straight.triple._coordinates', import_path)

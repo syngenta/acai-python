@@ -9,7 +9,7 @@ from tests.mocks import mock_request, mock_middleware
 class RouterPatternTest(unittest.TestCase):
     maxDiff = None
     base_path = 'unit-test/v1'
-    handler_path = 'tests/mocks/router/pattern_handlers/**/*_controller.py'
+    handler_pattern = 'tests/mocks/router/pattern_handlers/**/*_controller.py'
     schema_path = 'tests/mocks/openapi.yml'
     base_path_schema_path = 'tests/mocks/base_path_openapi.yml'
     basic_event = mock_request.get_basic_post()
@@ -24,7 +24,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(self.basic_event, None)
@@ -34,10 +34,28 @@ class RouterPatternTest(unittest.TestCase):
         self.assertDictEqual(self.expected_open_headers, result['headers'])
         self.assertDictEqual({"router_pattern_basic": {"body_key": "body_value"}}, json_dict_response)
 
+    def test_basic_directory_routing_works_with_ending_path_parameters(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/triple/1/2/3',
+            proxy='triple',
+            method='post'
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_pattern
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'pattern_triple_coordinates': {'proxy': 'triple', 'x': '1', 'y': '2', 'z': '3'}}, json_dict_response)
+
     def test_basic_pattern_routing_works_with_verbose_logging(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             verbose_logging=True
         )
@@ -52,7 +70,7 @@ class RouterPatternTest(unittest.TestCase):
         try:
             router = Router(
                 base_path=self.base_path,
-                handlers=self.handler_path,
+                handlers=self.handler_pattern,
                 schema=self.schema_path
             )
             router.auto_load()
@@ -64,7 +82,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_no_schema_defined(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path
+            handlers=self.handler_pattern
         )
         result = router.route(self.basic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -76,7 +94,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_with_raised_exception(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(self.raise_exception_event, None)
@@ -89,7 +107,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_with_unhandled_exception(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(self.unhandled_exception_event, None)
@@ -102,7 +120,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_and_before_all_function_called(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             before_all=mock_middleware.mock_before_all,
             schema=self.schema_path
         )
@@ -112,7 +130,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_and_after_all_function_called(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             after_all=mock_middleware.mock_after_all,
             schema=self.schema_path
         )
@@ -122,7 +140,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_and_with_auth_function_called(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             with_auth=mock_middleware.mock_with_auth,
             schema=self.schema_path
         )
@@ -132,7 +150,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_and_on_error_function_called(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             on_error=mock_middleware.mock_on_error,
             schema=self.schema_path
         )
@@ -142,7 +160,7 @@ class RouterPatternTest(unittest.TestCase):
     def test_basic_pattern_routing_works_and_bad_on_error_function_caught(self):
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             on_error=mock_middleware.mock_on_error_exception,
             schema=self.schema_path
         )
@@ -164,7 +182,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -185,7 +203,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -207,7 +225,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -227,7 +245,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path
+            handlers=self.handler_pattern
         )
         result = router.route(dynamic_event, None)
         self.assertEqual(400, result['statusCode'])
@@ -243,7 +261,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path
+            handlers=self.handler_pattern
         )
         result = router.route(dynamic_event, None)
         self.assertEqual(200, result['statusCode'])
@@ -257,7 +275,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path
+            handlers=self.handler_pattern
         )
         result = router.route(dynamic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -273,7 +291,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path
+            handlers=self.handler_pattern
         )
         result = router.route(dynamic_event, None)
         json_dict_response = json.loads(result['body'])
@@ -298,7 +316,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -324,7 +342,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -341,7 +359,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path
         )
         result = router.route(dynamic_event, None)
@@ -372,7 +390,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             auto_validate=True
         )
@@ -402,7 +420,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             auto_validate=True
         )
@@ -423,7 +441,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             auto_validate=True
         )
@@ -444,7 +462,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.base_path_schema_path,
             auto_validate=True
         )
@@ -462,7 +480,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             with_auth=mock_middleware.mock_with_auth,
             schema=self.schema_path,
             auto_validate=True
@@ -479,7 +497,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             auto_validate=True,
             validate_response=True
@@ -498,7 +516,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             auto_validate=True,
             validate_response=True
@@ -535,7 +553,7 @@ class RouterPatternTest(unittest.TestCase):
         )
         router = Router(
             base_path=self.base_path,
-            handlers=self.handler_path,
+            handlers=self.handler_pattern,
             schema=self.schema_path,
             validate_response=True
         )

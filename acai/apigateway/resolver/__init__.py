@@ -38,6 +38,7 @@ class Resolver:
         self.__assign_normalized_route(request, endpoint)
         self.__check_dynamic_route_and_apply_params(request, endpoint)
         self.__cacher.put(request.path, endpoint_module, self.__resolver.has_dynamic_route)
+        self.__resolver.reset()
         return endpoint
 
     def __determine_routing_mode(self, kwargs):

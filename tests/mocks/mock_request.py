@@ -853,7 +853,7 @@ def get_dynamic_nested_request_get(path=''):
                 'integrationLatency': 572,
             }
         },
-        'path': f'unit-test/v1/user/{path}',
+        'path': f'unit-test/v1/{path}',
         'pathParameters': {},
         'resource': '/{proxy+}',
         'httpMethod': 'POST',
