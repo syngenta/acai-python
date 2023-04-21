@@ -2,5 +2,5 @@ from acai.apigateway.requirements import requirements
 
 @requirements(required_route='/triple/{x}/{y}/{z}')
 def post(request, response):
-    response.body = {'directory_triple_coordinates': request.path_params}
+    response.body = {'pattern_triple_coordinates': request.path_params}
     return response
