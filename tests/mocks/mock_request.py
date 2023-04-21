@@ -815,3 +815,48 @@ def get_auto_validated_data_fails():
             }
         )
     }
+
+
+def get_triple_post():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/triple/1/2/3',
+        'pathParameters': {},
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {},
+        'body': json.dumps({'body_key': 'body_value'})
+    }
+
+def get_dynamic_nested_request_get(path=''):
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': f'unit-test/v1/user/{path}',
+        'pathParameters': {},
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {},
+        'body': {}
+    }

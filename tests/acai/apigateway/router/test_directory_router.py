@@ -34,6 +34,78 @@ class RouterDirectoryTest(unittest.TestCase):
         self.assertDictEqual(self.expected_open_headers, result['headers'])
         self.assertDictEqual({"router_directory_basic": {"body_key": "body_value"}}, json_dict_response)
 
+    def test_basic_directory_routing_works_with_ending_path_parameters(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/triple/1/2/3',
+            proxy='triple',
+            method='post'
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'directory_triple_coordinates': {'proxy': 'triple', 'x': '1', 'y': '2', 'z': '3'}}, json_dict_response)
+
+    def test_basic_directory_routing_works_with_single_dynamic_route(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/user/1',
+            proxy='user',
+            method='get'
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'directory_user_id': {'proxy': 'user', 'user_id': '1'}}, json_dict_response)
+
+    def test_basic_directory_routing_works_with_double_dynamic_route(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/user/1/item',
+            proxy='user',
+            method='get'
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'directory_user_id_item': {'proxy': 'user', 'user_id': '1'}}, json_dict_response)
+
+    def test_basic_directory_routing_works_with_triple_dynamic_route(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/user/1/item/a',
+            proxy='user',
+            method='get'
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'directory_user_id_item_id': {'proxy': 'user', 'user_id': '1', 'item_id': 'a'}}, json_dict_response)
+
     def test_basic_directory_routing_works_with_verbose_logging(self):
         router = Router(
             base_path=self.base_path,
