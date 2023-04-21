@@ -57,5 +57,3 @@ class DirectoryModeResolver(BaseModeResolver):
         self.has_dynamic_route = True
         self.dynamic_parts[split_index] = split_path[split_index]
         self.__get_import_path_file_tree(split_path, split_index+1, file_leaf)
-
-
