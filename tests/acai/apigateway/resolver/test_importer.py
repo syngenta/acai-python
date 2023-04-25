@@ -13,18 +13,21 @@ class ResolverImporterTest(unittest.TestCase):
     handler_bad_same_name = 'tests/mocks/apigateway/importer/bad_handlers/same-name'
     handler_should_pass = 'tests/mocks/apigateway/importer/bad_handlers/should-pass'
     expected_directory_file_tree = {
+        '__init__.py': '*',
         '__dynamic_files': {'_dynamic'},
         'basic.py': '*',
         '_dynamic': {
-            '__dynamic_files': set(),
-            '__init__.py': '*'
+            '__init__.py': '*',
+            '__dynamic_files': set()
         },
         'nested_1': {
+            '__init__.py': '*',
             '__dynamic_files': set(),
             'nested_2': {
+                '__init__.py': '*',
                 '__dynamic_files': {'_id.py'},
-                'basic.py': '*',
-                '_id.py': '*'
+                '_id.py': '*',
+                'basic.py': '*'
             }
         }
     }
@@ -45,11 +48,13 @@ class ResolverImporterTest(unittest.TestCase):
         }
     }
     expected_passing_shared_name_diff_levels = {
-        'good_file.py': '*',
+        '__init__.py': '*',
         '__dynamic_files': set(),
+        'good_file.py': '*',
         'good_directory': {
-            'good_file.py': '*',
-            '__dynamic_files': set()
+            '__init__.py': '*',
+            '__dynamic_files': set(),
+            'good_file.py': '*'
         }
     }
 

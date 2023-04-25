@@ -5,7 +5,7 @@ from acai.common.schema import Schema
 
 class SchemaTest(unittest.TestCase):
     maxDiff = None
-    schema_path = 'tests/mocks/openapi.yml'
+    schema_path = 'tests/mocks/common/openapi.yml'
     schema_dict = {
         'type': 'object',
         'required': ['id', 'body'],

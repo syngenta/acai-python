@@ -8,7 +8,7 @@ from tests.mocks.apigateway import mock_request
 
 
 class ValidatorTest(unittest.TestCase):
-    schema_path = 'tests/mocks/openapi.yml'
+    schema_path = 'tests/mocks/common/openapi.yml'
 
     def setUp(self):
         self.validator = Validator(schema=self.schema_path)
