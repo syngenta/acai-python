@@ -13,5 +13,3 @@ class RecordsEvent(BaseRecordsEvent):
     @property
     def data_classes(self):
         return [self.data_class(record=RecordEvent(record)) for record in self._event.get('Records', [])]
-
-
