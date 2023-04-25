@@ -4,7 +4,7 @@ from acai.apigateway.request import Request
 from acai.apigateway.response import Response
 from acai.common.validator import Validator
 
-from tests.mocks import mock_request
+from tests.mocks.apigateway import mock_request
 
 
 class ValidatorTest(unittest.TestCase):

@@ -3,8 +3,8 @@ import unittest
 from acai.apigateway.request import Request
 from acai.apigateway.response import Response
 
-from tests.mocks import mock_request
-from tests.mocks.requirements.basic import post, before_call, after_call, call_order
+from tests.mocks.apigateway import mock_request
+from tests.mocks.apigateway.requirements.basic import post, before_call, after_call, call_order
 
 
 class RequirementsTest(unittest.TestCase):

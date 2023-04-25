@@ -1,3 +1,4 @@
+boto3
 dynamodb_json
 jsonpickle
 jsonref
@@ -5,8 +6,8 @@ jsonschema
 pyyaml
 xmltodict
 autopep8
-pylint
 pytest
 pytest-html
 pytest-cov
+pylint
 pylint-quotes

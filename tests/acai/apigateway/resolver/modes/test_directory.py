@@ -4,7 +4,7 @@ from acai.apigateway.request import Request
 from acai.apigateway.response import Response
 from acai.apigateway.resolver.modes.directory import DirectoryModeResolver
 from acai.apigateway.exception import ApiException
-from tests.mocks import mock_request
+from tests.mocks.apigateway import mock_request
 
 
 class DirectoryModeResolverTest(unittest.TestCase):
@@ -46,25 +46,25 @@ class DirectoryModeResolverTest(unittest.TestCase):
         request = Request(self.basic_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/basic.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.basic', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.basic', import_path)
 
     def test_nested_get_file_and_import_path(self):
         request = Request(self.nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/nested_1/nested_2/basic.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.nested_1.nested_2.basic', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.nested_1.nested_2.basic', import_path)
 
     def test_default_init_get_file_and_import_path(self):
         request = Request(self.init_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/home/__init__.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.home.__init__', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.home.__init__', import_path)
 
     def test_dynamic_get_file_and_import_path(self):
         request = Request(self.dynamic_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/dynamic/_id_.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.dynamic._id_', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.dynamic._id_', import_path)
 
     def test_file_and_import_path_not_found_raises_resolver_exception(self):
         try:
@@ -80,26 +80,26 @@ class DirectoryModeResolverTest(unittest.TestCase):
         request = Request(self.triple_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/triple/_coordinates.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.triple._coordinates', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.triple._coordinates', import_path)
 
     def test_single_nested_dynamic_get_file_and_import_path(self):
         dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/user/_user_id/__init__.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.user._user_id.__init__', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.user._user_id.__init__', import_path)
 
     def test_double_nested_dynamic_get_file_and_import_path(self):
         dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/user/_user_id/item/__init__.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.user._user_id.item.__init__', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.user._user_id.item.__init__', import_path)
 
     def test_triple_nested_dynamic_get_file_and_import_path(self):
         dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item/a')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/resolver/directory_handlers/user/_user_id/item/_item_id.py' in file_path)
-        self.assertEqual('tests.mocks.resolver.directory_handlers.user._user_id.item._item_id', import_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.user._user_id.item._item_id', import_path)
 

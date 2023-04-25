@@ -118,6 +118,6 @@ class ResolverImporterTest(unittest.TestCase):
     def test_import_module_from_file(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
         file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.importer.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.importer.directory_handlers.basic'
         handler_module = importer.import_module_from_file(file_path, import_path)
         self.assertTrue(hasattr(handler_module, 'post'))

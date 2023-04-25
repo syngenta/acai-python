@@ -5,7 +5,7 @@ from acai.apigateway.exception import ApiException
 from acai.apigateway.request import Request
 from acai.apigateway.resolver import Resolver
 
-from tests.mocks import mock_request
+from tests.mocks.apigateway import mock_request
 
 
 class ResolverTest(unittest.TestCase):

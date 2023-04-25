@@ -3,7 +3,7 @@ import unittest
 
 from acai.apigateway.router import Router
 
-from tests.mocks import mock_request, mock_middleware
+from tests.mocks.apigateway import mock_middleware, mock_request
 
 
 class RouterDirectoryTest(unittest.TestCase):

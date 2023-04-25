@@ -5,7 +5,7 @@ import urllib
 import xmltodict
 
 from acai.apigateway.request import Request
-from tests.mocks import mock_request
+from tests.mocks.apigateway import mock_request
 
 
 class RequestTest(unittest.TestCase):

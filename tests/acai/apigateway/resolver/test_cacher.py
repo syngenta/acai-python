@@ -20,7 +20,7 @@ class ResolverCacheTest(unittest.TestCase):
 
     def test_cache_put(self):
         file_path = f'/{self.importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.cacher.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'post')
         cacher = ResolverCache()
@@ -33,7 +33,7 @@ class ResolverCacheTest(unittest.TestCase):
 
     def test_cache_put_and_get(self):
         file_path = f'/{self.importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.cacher.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'patch')
         cacher = ResolverCache()
@@ -48,7 +48,7 @@ class ResolverCacheTest(unittest.TestCase):
 
     def test_cache_lru_sequence_size_reaches_capacity_and_result_in_miss(self):
         file_path = f'/{self.importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.cacher.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         post_endpoint = Endpoint(endpoint_module, 'post')
         patch_endpoint = Endpoint(endpoint_module, 'patch')
@@ -66,7 +66,7 @@ class ResolverCacheTest(unittest.TestCase):
 
     def test_cache_size_none_always_miss(self):
         file_path = f'/{self.importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.cacher.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
         cacher = ResolverCache(cache_size=None)
@@ -76,7 +76,7 @@ class ResolverCacheTest(unittest.TestCase):
 
     def test_cache_static_only(self):
         file_path = f'/{self.importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.cacher.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
         cacher = ResolverCache(cache_mode='static-only')
@@ -90,7 +90,7 @@ class ResolverCacheTest(unittest.TestCase):
 
     def test_cache_dynamic_only(self):
         file_path = f'/{self.importer.get_handlers_path_abs()}/basic.py'
-        import_path = 'tests.mocks.cacher.directory_handlers.basic'
+        import_path = 'tests.mocks.apigateway.cacher.directory_handlers.basic'
         endpoint_module = self.importer.import_module_from_file(file_path, import_path)
         get_endpoint = Endpoint(endpoint_module, 'get')
         cacher = ResolverCache(cache_mode='dynamic-only')
