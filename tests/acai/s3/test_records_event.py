@@ -8,7 +8,6 @@ from tests.mocks.s3.mock_data_class import MockS3DataClass
 
 
 class RecordsEventTest(unittest.TestCase):
-    maxDiff = None
     basic_event = mock_event.get_basic()
 
     def test_records_event_accepts_event(self):
@@ -16,7 +15,7 @@ class RecordsEventTest(unittest.TestCase):
         self.assertEqual(records_event.context, None)
         self.assertEqual(records_event.data_class, None)
         self.assertDictEqual(records_event.event, self.basic_event)
-        self.assertEqual(len(records_event.records), len(self.basic_event['Records']))
+        self.assertEqual(len(records_event .records), len(self.basic_event['Records']))
 
     def test_records_event_returns_record_event(self):
         records_event = RecordsEvent(self.basic_event)
