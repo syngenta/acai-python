@@ -16,7 +16,7 @@ class S3RequirementsTest(unittest.TestCase):
 
     def test_s3_decorator_with_full_requirements(self):
         expected = {'s3_full': [True]}
-        result = test_s3_full(self.basic_event, None)
+        result = mock_s3_full(self.basic_event, None)
         self.assertDictEqual(result, expected)
         self.assertTrue(before_call.has_been_called)
         self.assertTrue(after_call.has_been_called)
