@@ -4,8 +4,8 @@ class RecordEvent:
     UNKNOWN = 'unknown'
 
     def __init__(self, record):
-        self._record = record
         self.valid = True
+        self._record = record
         self.__body = None
 
     @property
