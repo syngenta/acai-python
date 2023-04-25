@@ -2,7 +2,7 @@ import abc
 
 class BaseRecordsEvent(abc.ABC):
 
-    def __init__(self, event, context):
+    def __init__(self, event, context=None):
         self._event = event
         self._context = context
         self.data_class = None
@@ -19,13 +19,13 @@ class BaseRecordsEvent(abc.ABC):
     def raw_records(self):
         return self._event.get('Records', [])
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def records(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def data_classes(self):
         raise NotImplementedError
 
