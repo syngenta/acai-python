@@ -6,6 +6,7 @@ class RecordEvent:
     def __init__(self, record):
         self._record = record
         self.valid = True
+        self.__body = None
 
     @property
     def name(self):
@@ -66,6 +67,14 @@ class RecordEvent:
         if 'ObjectRemoved' in self.name:
             return self.REMOVED
         return self.UNKNOWN
+
+    @property
+    def body(self):
+        return self.__body
+
+    @body.setter
+    def body(self, body):
+        self.__body = body
 
     def __str__(self):
         return str({
