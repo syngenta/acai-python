@@ -3,7 +3,7 @@ import unittest
 from acai.common.record_exception import RecordException
 
 from tests.mocks.s3 import mock_event
-from tests.mocks.s3.mock_functions import test_s3_full, mock_s3_basic, mock_s3_operation_ignore, mock_s3_operation_raise, before_call, after_call, call_list
+from tests.mocks.s3.mock_functions import mock_s3_full, mock_s3_basic, mock_s3_operation_ignore, mock_s3_operation_raise, before_call, after_call, call_list
 
 
 class S3RequirementsTest(unittest.TestCase):
