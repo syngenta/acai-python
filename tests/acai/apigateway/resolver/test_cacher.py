@@ -7,7 +7,7 @@ from acai.apigateway.resolver.importer import ResolverImporter
 
 
 class ResolverCacheTest(unittest.TestCase):
-    handler_path = 'tests/mocks/cacher/directory_handlers'
+    handler_path = 'tests/mocks/apigateway/cacher/directory_handlers'
 
     def setUp(self):
         self.importer = ResolverImporter(handlers=self.handler_path, mode='directory')

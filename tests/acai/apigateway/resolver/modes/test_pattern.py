@@ -15,7 +15,7 @@ class PatternModeResolverTest(unittest.TestCase):
     bad_route_request = mock_request.get_bad_route()
     triple_request = mock_request.get_triple_post()
     base_path = 'unit-test/v1'
-    pattern = 'tests/mocks/resolver/pattern_handlers/**/*_controller.py'
+    pattern = 'tests/mocks/apigateway/resolver/pattern_handlers/**/*_controller.py'
     expected_endpoint_return = {
         'hasErrors': False,
         'response': {
@@ -45,25 +45,25 @@ class PatternModeResolverTest(unittest.TestCase):
     def test_basic_get_file_and_import_path(self):
         request = Request(self.basic_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/basic/basic_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/basic/basic_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.basic.basic_controller', import_path)
 
     def test_nested_get_file_and_import_path(self):
         request = Request(self.nested_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/nested_1/nested_2/basic/basic_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/nested_1/nested_2/basic/basic_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.nested_1.nested_2.basic.basic_controller', import_path)
 
     def test_default_init_get_file_and_import_path(self):
         request = Request(self.init_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/home/home_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/home/home_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.home.home_controller', import_path)
 
     def test_dynamic_get_file_and_import_path(self):
         request = Request(self.dynamic_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/dynamic/_id_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/dynamic/_id_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.dynamic._id_controller', import_path)
 
     def test_file_and_import_path_not_found_raises_resolver_exception(self):
@@ -79,26 +79,26 @@ class PatternModeResolverTest(unittest.TestCase):
     def test_triple_dynamic_get_file_and_import_path(self):
         request = Request(self.triple_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/triple/_coordinates_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/triple/_coordinates_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.triple._coordinates_controller', import_path)
 
     def test_single_nested_dynamic_get_file_and_import_path(self):
         dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/user/_user_id/_user_id_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/user/_user_id/_user_id_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.user._user_id._user_id_controller', import_path)
 
     def test_double_nested_dynamic_get_file_and_import_path(self):
         dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/user/_user_id/item/item_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/user/_user_id/item/item_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.user._user_id.item.item_controller', import_path)
 
     def test_triple_nested_dynamic_get_file_and_import_path(self):
         dynamic_nested_request = mock_request.get_dynamic_nested_request_get('user/1/item/a')
         request = Request(dynamic_nested_request)
         file_path, import_path = self.pattern_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/pattern_handlers/user/_user_id/item/_item_id_controller.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/pattern_handlers/user/_user_id/item/_item_id_controller.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.pattern_handlers.user._user_id.item._item_id_controller', import_path)

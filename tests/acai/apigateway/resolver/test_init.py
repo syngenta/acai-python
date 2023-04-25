@@ -10,7 +10,7 @@ from tests.mocks.apigateway import mock_request
 
 class ResolverTest(unittest.TestCase):
     base_path = 'unit-test/v1'
-    handler_path = 'tests/mocks/resolver/directory_handlers'
+    handler_path = 'tests/mocks/apigateway/resolver/directory_handlers'
     bad_method_request = mock_request.get_basic_post_bad_method()
     basic_request = mock_request.get_basic_post()
     dynamic_request = mock_request.get_dynamic_post()

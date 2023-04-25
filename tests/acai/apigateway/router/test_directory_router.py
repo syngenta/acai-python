@@ -9,9 +9,9 @@ from tests.mocks.apigateway import mock_middleware, mock_request
 class RouterDirectoryTest(unittest.TestCase):
     maxDiff = None
     base_path = 'unit-test/v1'
-    handler_path = 'tests/mocks/router/directory_handlers'
-    schema_path = 'tests/mocks/openapi.yml'
-    base_path_schema_path = 'tests/mocks/base_path_openapi.yml'
+    handler_path = 'tests/mocks/apigateway/router/directory_handlers'
+    schema_path = 'tests/mocks/apigateway/openapi.yml'
+    base_path_schema_path = 'tests/mocks/apigateway/base_path_openapi.yml'
     basic_event = mock_request.get_basic_post()
     raise_exception_event = mock_request.get_raised_exception_post()
     mock_request = mock_request

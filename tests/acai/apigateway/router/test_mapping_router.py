@@ -9,8 +9,8 @@ from tests.mocks.apigateway import mock_middleware, mock_request
 class RouterMappingTest(unittest.TestCase):
     maxDiff = None
     base_path = 'unit-test/v1'
-    schema_path = 'tests/mocks/openapi.yml'
-    base_path_schema_path = 'tests/mocks/base_path_openapi.yml'
+    schema_path = 'tests/mocks/apigateway/openapi.yml'
+    base_path_schema_path = 'tests/mocks/apigateway/base_path_openapi.yml'
     basic_event = mock_request.get_basic_post()
     raise_exception_event = mock_request.get_raised_exception_post()
     mock_request = mock_request
@@ -20,13 +20,13 @@ class RouterMappingTest(unittest.TestCase):
         'Access-Control-Allow-Headers': '*'
     }
     handler_mapping = {
-        'auto': 'tests/mocks/router/mapping_handlers/auto/__init__.py',
-        'basic': 'tests/mocks/router/mapping_handlers/basic.py',
-        'optional-params': 'tests/mocks/router/mapping_handlers/optional_params.py',
-        'raise-exception': 'tests/mocks/router/mapping_handlers/raise_exception.py',
-        'unhandled-exception': 'tests/mocks/router/mapping_handlers/unhandled_exception.py',
-        'nested/reqs': 'tests/mocks/router/mapping_handlers/nested/reqs.py',
-        'nested/{id}': 'tests/mocks/router/mapping_handlers/nested/nested_id.py'
+        'auto': 'tests/mocks/apigateway/router/mapping_handlers/auto/__init__.py',
+        'basic': 'tests/mocks/apigateway/router/mapping_handlers/basic.py',
+        'optional-params': 'tests/mocks/apigateway/router/mapping_handlers/optional_params.py',
+        'raise-exception': 'tests/mocks/apigateway/router/mapping_handlers/raise_exception.py',
+        'unhandled-exception': 'tests/mocks/apigateway/router/mapping_handlers/unhandled_exception.py',
+        'nested/reqs': 'tests/mocks/apigateway/router/mapping_handlers/nested/reqs.py',
+        'nested/{id}': 'tests/mocks/apigateway/router/mapping_handlers/nested/nested_id.py'
     }
 
     def test_basic_mapping_routing_works(self):

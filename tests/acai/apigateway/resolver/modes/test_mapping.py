@@ -16,23 +16,23 @@ class MappingModeResolverTest(unittest.TestCase):
     bad_route_request = mock_request.get_bad_route()
     base_path = 'unit-test/v1'
     handler_mapping_preferred = {
-        'basic': 'tests/mocks/resolver/mapping_handlers/basic.py'
+        'basic': 'tests/mocks/apigateway/resolver/mapping_handlers/basic.py'
     }
     handler_mapping_leading_slashes = {
-        '/basic': '/tests/mocks/resolver/mapping_handlers/basic.py'
+        '/basic': '/tests/mocks/apigateway/resolver/mapping_handlers/basic.py'
     }
     handler_mapping_base_path_leading_slashes = {
-        '/unit-test/v1/basic': '/tests/mocks/resolver/mapping_handlers/basic.py'
+        '/unit-test/v1/basic': '/tests/mocks/apigateway/resolver/mapping_handlers/basic.py'
     }
     handler_mapping_base_path_mismatch_slashes = {
-        'unit-test/v1/basic': '/tests/mocks/resolver/mapping_handlers/basic.py'
+        'unit-test/v1/basic': '/tests/mocks/apigateway/resolver/mapping_handlers/basic.py'
     }
     handler_mapping = {
-        '/': 'tests/mocks/resolver/mapping_handlers/basic.py',
-        'basic': 'tests/mocks/resolver/mapping_handlers/basic.py',
-        'home': 'tests/mocks/resolver/mapping_handlers/home/__init__.py',
-        'nested-1/nested-2/basic': 'tests/mocks/resolver/mapping_handlers/nested_1/nested_2/basic.py',
-        'dynamic/{id}': 'tests/mocks/resolver/mapping_handlers/dynamic/_id.py'
+        '/': 'tests/mocks/apigateway/resolver/mapping_handlers/basic.py',
+        'basic': 'tests/mocks/apigateway/resolver/mapping_handlers/basic.py',
+        'home': 'tests/mocks/apigateway/resolver/mapping_handlers/home/__init__.py',
+        'nested-1/nested-2/basic': 'tests/mocks/apigateway/resolver/mapping_handlers/nested_1/nested_2/basic.py',
+        'dynamic/{id}': 'tests/mocks/apigateway/resolver/mapping_handlers/dynamic/_id.py'
     }
 
     def setUp(self):
@@ -42,28 +42,28 @@ class MappingModeResolverTest(unittest.TestCase):
         mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_preferred)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.mapping_handlers.basic', import_path)
 
     def test_get_file_and_import_path_module_with_dirty_mapping(self):
         mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_leading_slashes)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.mapping_handlers.basic', import_path)
 
     def test_get_file_and_import_path_module_with_disgusting_mapping(self):
         mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_base_path_leading_slashes)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.mapping_handlers.basic', import_path)
 
     def test_get_file_and_import_path_module_with_super_disgusting_mapping(self):
         mapping_resolver = MappingModeResolver(base_path=self.base_path, handlers=self.handler_mapping_base_path_mismatch_slashes)
         request = Request(self.basic_request)
         file_path, import_path = mapping_resolver._get_file_and_import_path(request.path)
-        self.assertTrue('tests/mocks/resolver/mapping_handlers/basic.py' in file_path)
+        self.assertTrue('tests/mocks/apigateway/resolver/mapping_handlers/basic.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.mapping_handlers.basic', import_path)
 
     def test_get_endpoint_module(self):

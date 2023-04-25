@@ -6,7 +6,7 @@ from acai.apigateway.response import Response
 
 
 class EndpointTest(unittest.TestCase):
-    handler_path = 'tests/mocks/endpoint/directory_handlers'
+    handler_path = 'tests/mocks/apigateway/endpoint/directory_handlers'
 
     def test_endpoint_initializes(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
