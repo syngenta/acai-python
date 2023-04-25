@@ -3,7 +3,7 @@ import unittest
 from acai.common.record_exception import RecordException
 
 from tests.mocks.s3 import mock_event
-from tests.mocks.s3.mock_functions import test_s3_full, test_s3_basic, test_s3_operation_ignore, test_s3_operation_raise, before_call, after_call, call_list
+from tests.mocks.s3.mock_functions import test_s3_full, mock_s3_basic, mock_s3_operation_ignore, mock_s3_operation_raise, before_call, after_call, call_list
 
 
 class S3RequirementsTest(unittest.TestCase):
@@ -11,7 +11,7 @@ class S3RequirementsTest(unittest.TestCase):
 
     def test_s3_decorator_with_basic_requirements(self):
         expected = {'s3_basic': ['ObjectCreated: Put']}
-        result = test_s3_basic(self.basic_event, None)
+        result = mock_s3_basic(self.basic_event, None)
         self.assertDictEqual(result, expected)
 
     def test_s3_decorator_with_full_requirements(self):
@@ -25,12 +25,12 @@ class S3RequirementsTest(unittest.TestCase):
 
     def test_s3_decorator_ignore_non_matching_operation(self):
         expected = {'s3_operation_ignore': []}
-        result = test_s3_operation_ignore(self.basic_event, None)
+        result = mock_s3_operation_ignore(self.basic_event, None)
         self.assertDictEqual(result, expected)
 
     def test_s3_decorator_ignore_non_matching_operation_error(self):
         try:
-            test_s3_operation_raise(self.basic_event, None)
+            mock_s3_operation_raise(self.basic_event, None)
             self.assertTrue(False)
         except RecordException as record_error:
             self.assertTrue(isinstance(record_error, RecordException))
