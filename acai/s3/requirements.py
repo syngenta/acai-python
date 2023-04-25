@@ -15,7 +15,7 @@ def requirements(**kwargs):
                 kwargs['after'](records_event, result, kwargs)
 
         def run_function(event, context):
-            records_event = RecordsEvent(event, context)
+            records_event = RecordsEvent(event, context, **kwargs)
             run_before(records_event)
             if kwargs.get('data_class') and inspect.isclass(kwargs['data_class']):
                 records_event.data_class = kwargs['data_class']

@@ -7,7 +7,7 @@ from tests.mocks.apigateway import mock_request
 from tests.mocks.apigateway.requirements.basic import post, before_call, after_call, call_order
 
 
-class RequirementsTest(unittest.TestCase):
+class ApigatewayRequirementsTest(unittest.TestCase):
     basic_request = mock_request.get_basic()
     expected_data_class_result = {
         'hasErrors': False,
