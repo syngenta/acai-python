@@ -49,9 +49,9 @@ class BaseRecordsEvent(abc.ABC):
         validated = []
         for record in self._records:
             errors = self._validator.validate_record_body(record.body, self._kwargs.get('required_body'))
-            if len(errors) and self._kwargs.get('raise_body_error'):
+            if len(errors) != 0 and self._kwargs.get('raise_body_error'):
                 raise RecordException(record=record, message=f'record did not meet body requirement; errors: {errors}')
-            elif not len(errors):
+            if len(errors) == 0:
                 validated.append(record)
         self._reset_records(validated)
 
