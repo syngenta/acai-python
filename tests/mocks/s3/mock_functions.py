@@ -53,7 +53,7 @@ def mock_s3_operation_ignore(event):
 
 @requirements(
     operations=['deleted'],
-    operation_error=True
+    raise_operation_error=True
 )
 def mock_s3_operation_raise(event):
     ignored_results = []

@@ -58,6 +58,14 @@ class Validator:
             response.set_error('response', 'There was a problem with the APIs response; does not match defined schema')
             response.code = 500
 
+    def validate_record_body(self, body, schema):
+        errors = []
+        schema_validator = Draft7Validator(self.__schema.get_body_spec(schema))
+        for schema_error in sorted(schema_validator.iter_errors(body), key=str):
+            error_key = Validator.format_schema_error_key(schema_error)
+            errors.append({'key': error_key, 'message': schema_error.message})
+        return errors
+
     @staticmethod
     def check_required_fields(response, required, sent, list_name=''):
         sent_keys = []
@@ -89,8 +97,7 @@ class Validator:
         if schema:
             schema_validator = Draft7Validator(schema)
             for schema_error in sorted(schema_validator.iter_errors(request_body), key=str):
-                error_path = '.'.join(str(path) for path in schema_error.path)
-                error_key = error_path if error_path else 'root'
+                error_key = Validator.format_schema_error_key(schema_error)
                 response.set_error(key_path=error_key, message=schema_error.message)
 
     @staticmethod
@@ -106,3 +113,8 @@ class Validator:
             elif param.get('in') == 'header':
                 requirements['available_headers'].append(param['name'])
         return dict(requirements)
+
+    @staticmethod
+    def format_schema_error_key(schema_error):
+        error_path = '.'.join(str(path) for path in schema_error.path)
+        return error_path if error_path else 'root'

@@ -1,6 +1,7 @@
 import abc
 
 from acai.common.record_exception import RecordException
+from acai.common.validator import Validator
 
 
 class BaseRecordsEvent(abc.ABC):
@@ -11,6 +12,7 @@ class BaseRecordsEvent(abc.ABC):
         self._kwargs = kwargs
         self._records = []
         self.data_class = None
+        self._validator = Validator(**kwargs)
 
     @property
     def event(self):
@@ -39,8 +41,21 @@ class BaseRecordsEvent(abc.ABC):
         for record in self._records:
             if record.operation in operations:
                 validated.append(record)
-            elif self._kwargs.get('operation_error'):
+            elif self._kwargs.get('raise_operation_error'):
                 raise RecordException(record=record, message=f'record did not meet operation requirement; required: {operations}, received: {record.operation}')
+        self._reset_records(validated)
+
+    def _validate_record_body(self):
+        validated = []
+        for record in self._records:
+            errors = self._validator.validate_record_body(record.body, self._kwargs.get('required_body'))
+            if len(errors) and self._kwargs.get('raise_body_error'):
+                raise RecordException(record=record, message=f'record did not meet body requirement; errors: {errors}')
+            elif not len(errors):
+                validated.append(record)
+        self._reset_records(validated)
+
+    def _reset_records(self, validated):
         self._records.clear()
         self._records = validated
 
