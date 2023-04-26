@@ -46,7 +46,15 @@ class RecordEvent:
 
     @property
     def bucket(self):
-        return self._record['s3'].get('bucket')
+        return self._record['s3'].get('bucket', {}).get('name')
+
+    @property
+    def bucket_arn(self):
+        return self._record['s3'].get('bucket', {}).get('arn')
+
+    @property
+    def bucket_owner(self):
+        return self._record['s3'].get('bucket', {}).get('ownerIdentity', {}).get('principalId')
 
     @property
     def key(self):

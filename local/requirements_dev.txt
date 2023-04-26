@@ -6,6 +6,7 @@ jsonschema
 pyyaml
 xmltodict
 autopep8
+moto
 pytest
 pytest-html
 pytest-cov
