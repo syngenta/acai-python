@@ -1,7 +1,7 @@
-from acai.common.base_record_event import BaseRecordEvent
+from acai.common.records.record import CommonRecord
 
 
-class RecordEvent(BaseRecordEvent):
+class Record(CommonRecord):
 
     @property
     def name(self):

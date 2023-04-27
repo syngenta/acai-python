@@ -3,15 +3,15 @@ import csv
 import boto3
 import jsonpickle
 
-from acai.common.base_records_event import BaseRecordsEvent
-from acai.s3.record_event import RecordEvent
+from acai.common.records import CommonRecords
+from acai.s3.record import Record
 
 
-class RecordsEvent(BaseRecordsEvent):
+class Records(CommonRecords):
 
     @property
     def records(self):
-        self._records = [RecordEvent(record) for record in self._event.get('Records', [])]
+        self._records = [Record(record) for record in self._event.get('Records', [])]
         self.__validate_operations()
         self.__get_objects()
         self.__validate_s3_record_body()

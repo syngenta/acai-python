@@ -1,10 +1,10 @@
 import abc
 
-from acai.common.record_exception import RecordException
+from acai.common.records.exception import RecordException
 from acai.common.validator import Validator
 
 
-class BaseRecordsEvent(abc.ABC):
+class CommonRecords(abc.ABC):
 
     def __init__(self, event, context=None, **kwargs):
         self._event = event

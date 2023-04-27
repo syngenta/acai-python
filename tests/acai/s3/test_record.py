@@ -1,15 +1,15 @@
 import unittest
 
-from acai.s3.record_event import RecordEvent
+from acai.s3.record import Record
 
 from tests.mocks.s3 import mock_event
 
 
-class RecordEventTest(unittest.TestCase):
+class S3RecordTest(unittest.TestCase):
     basic_record = mock_event.get_basic()['Records'][0]
 
     def test_record_event_accepts_event(self):
-        record = RecordEvent(self.basic_record)
+        record = Record(self.basic_record)
         self.assertIsNone(record.body)
         self.assertEqual(record.name, self.basic_record['eventName'])
         self.assertEqual(record.source, self.basic_record['eventSource'])
@@ -29,6 +29,6 @@ class RecordEventTest(unittest.TestCase):
 
     def test_record_event_allows_body_to_be_set(self):
         expected = {'some_key': 'some_value'}
-        record = RecordEvent(self.basic_record)
+        record = Record(self.basic_record)
         record.body = expected.copy()
         self.assertDictEqual(record.body, expected)
