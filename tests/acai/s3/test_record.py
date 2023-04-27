@@ -8,6 +8,7 @@ from tests.mocks.s3 import mock_event
 class S3RecordTest(unittest.TestCase):
     basic_record = mock_event.get_basic()['Records'][0]
     removed_record = mock_event.get_basic_removed()['Records'][0]
+    unknown_record = mock_event.get_basic_unknown()['Records'][0]
 
     def test_record_event_accepts_event(self):
         record = Record(self.basic_record)
@@ -32,6 +33,10 @@ class S3RecordTest(unittest.TestCase):
     def test_record_event_accepts_remove_event(self):
         record = Record(self.removed_record)
         self.assertEqual(record.operation, record.DELETED)
+
+    def test_record_event_accepts_unknown_event(self):
+        record = Record(self.unknown_record)
+        self.assertEqual(record.operation, record.UNKNOWN)
 
     def test_record_event_allows_body_to_be_set(self):
         expected = {'some_key': 'some_value'}
