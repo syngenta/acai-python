@@ -1,12 +1,9 @@
-class RecordEvent:
-    CREATED = 'created'
-    REMOVED = 'removed'
-    UNKNOWN = 'unknown'
+from abc import ABC
 
-    def __init__(self, record):
-        self.valid = True
-        self._record = record
-        self.__body = None
+from acai.common.base_record_event import BaseRecordEvent
+
+
+class RecordEvent(BaseRecordEvent):
 
     @property
     def name(self):
@@ -73,16 +70,16 @@ class RecordEvent:
         if 'ObjectCreated' in self.name:
             return self.CREATED
         if 'ObjectRemoved' in self.name:
-            return self.REMOVED
+            return self.DELETED
         return self.UNKNOWN
 
     @property
     def body(self):
-        return self.__body
+        return self._body
 
     @body.setter
     def body(self, body):
-        self.__body = body
+        self._body = body
 
     def __str__(self):
         return str({
