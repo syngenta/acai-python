@@ -83,7 +83,82 @@ class S3RecordsTest(unittest.TestCase):
         )
         self.assertDictEqual(records.records[0].body, self.expected_json_data)
 
-    def test_records_validate_filter_out_record_body_with_schema_file(self):
+    def test_records_validate_record_body_with_schema_dict(self):
+        schema = {
+            '$id': 'https://example.com/person.schema.json',
+            '$schema': 'https://json-schema.org/draft/2020-12/schema',
+            'title': 'Person',
+            'type': 'object',
+            "properties": {
+                'lang': {
+                    'type': 'string'
+                },
+                'sms': {
+                    'type': 'boolean'
+                },
+                'email': {
+                    'type': 'boolean'
+                },
+                'push': {
+                    'type': 'boolean'
+                }
+            }
+        }
+        records = Records(
+            self.basic_event,
+            get_object=True,
+            data_type='json',
+            required_body='v1-s3-body',
+            schema=schema
+        )
+        self.assertDictEqual(records.records[0].body, self.expected_json_data)
+
+    def test_records_errors_record_body_with_schema_dict(self):
+        schema = {
+            '$id': 'https://example.com/person.schema.json',
+            '$schema': 'https://json-schema.org/draft/2020-12/schema',
+            'title': 'Person',
+            'type': 'object',
+            "properties": {
+                'lang': {
+                    'type': 'integer'
+                },
+                'sms': {
+                    'type': 'boolean'
+                },
+                'email': {
+                    'type': 'boolean'
+                },
+                'push': {
+                    'type': 'boolean'
+                }
+            }
+        }
+        records = Records(
+            self.basic_event,
+            get_object=True,
+            data_type='json',
+            required_body='v1-s3-body',
+            schema=schema,
+            raise_body_error=True
+        )
+        try:
+            records.records
+            self.assertTrue(False)
+        except RecordException as record_error:
+            self.assertTrue(isinstance(record_error, RecordException))
+
+    def test_records_validate_filters_out_record_body_with_schema_file(self):
+        records = Records(
+            self.basic_event,
+            get_object=True,
+            data_type='json',
+            schema=self.schema_path,
+            required_body='v1-s3-body-wrong'
+        )
+        self.assertEqual(len(records.records), 0)
+
+    def test_records_validate_errors_out_record_body_with_schema_file(self):
         records = Records(
             self.basic_event,
             get_object=True,
