@@ -87,7 +87,7 @@ class Record(CommonRecord):
             'time': self.time,
             'region': self.region,
             'request': self.request,
-            'response_': self.response_,
+            'response': self.response,
             'configuration_id': self.configuration_id,
             'object': self.object,
             'bucket': self.bucket,

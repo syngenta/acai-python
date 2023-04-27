@@ -7,6 +7,7 @@ from tests.mocks.s3 import mock_event
 
 class S3RecordTest(unittest.TestCase):
     basic_record = mock_event.get_basic()['Records'][0]
+    removed_record = mock_event.get_basic_removed()['Records'][0]
 
     def test_record_event_accepts_event(self):
         record = Record(self.basic_record)
@@ -24,11 +25,25 @@ class S3RecordTest(unittest.TestCase):
         self.assertEqual(record.bucket_arn, self.basic_record['s3']['bucket']['arn'])
         self.assertEqual(record.bucket_owner, self.basic_record['s3']['bucket']['ownerIdentity']['principalId'])
         self.assertEqual(record.key, self.basic_record['s3']['object']['key'])
+        self.assertEqual(record.schema_version, self.basic_record['s3']['s3SchemaVersion'])
         self.assertEqual(record.user_identity, self.basic_record['userIdentity']['principalId'])
         self.assertEqual(record.operation, record.CREATED)
+
+    def test_record_event_accepts_remove_event(self):
+        record = Record(self.removed_record)
+        self.assertEqual(record.operation, record.DELETED)
 
     def test_record_event_allows_body_to_be_set(self):
         expected = {'some_key': 'some_value'}
         record = Record(self.basic_record)
         record.body = expected.copy()
         self.assertDictEqual(record.body, expected)
+
+    def test_record_event_prints(self):
+        try:
+            record = Record(self.basic_record)
+            print(record)
+            self.assertTrue(True)
+        except Exception as error:
+            print(error)
+            self.assertTrue(False)

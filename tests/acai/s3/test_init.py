@@ -172,3 +172,16 @@ class S3RecordsTest(unittest.TestCase):
             self.assertTrue(False)
         except RecordException as record_error:
             self.assertTrue(isinstance(record_error, RecordException))
+
+    def test_records_raw_records(self):
+        records = Records(self.basic_event)
+        self.assertCountEqual(records.raw_records, self.basic_event['Records'])
+
+    def test_records_print(self):
+        records = Records(self.basic_event)
+        try:
+            print(records)
+            self.assertTrue(True)
+        except Exception as error:
+            print(error)
+            self.assertTrue(False)
