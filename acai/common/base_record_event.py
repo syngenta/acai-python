@@ -24,5 +24,5 @@ class BaseRecordEvent(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def operations(self):
+    def operation(self):
         raise NotImplementedError

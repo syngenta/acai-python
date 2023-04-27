@@ -1,5 +1,3 @@
-from abc import ABC
-
 from acai.common.base_record_event import BaseRecordEvent
 
 
