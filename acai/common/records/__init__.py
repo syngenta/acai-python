@@ -1,6 +1,6 @@
 import abc
 
-from acai.common.records.exception import RecordException
+from acai.common.records.exception import RecordException, NoDataClass
 from acai.common.validator import Validator
 
 
@@ -11,7 +11,7 @@ class CommonRecords(abc.ABC):
         self._context = context
         self._kwargs = kwargs
         self._records = []
-        self._data_class = {}
+        self._data_class = NoDataClass()
         self._validator = Validator(**kwargs)
 
     @property
