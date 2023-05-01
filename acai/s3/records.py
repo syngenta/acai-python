@@ -16,7 +16,7 @@ class Records(CommonRecords):
         self._validate_operations()
         self.__get_objects()
         self._validate_record_body()
-        return self.data_classes if not isinstance(self.data_class, NoDataClass) else self._records
+        return self.data_classes if self.data_class is not None else self._records
 
     def __get_objects(self):
         if not self._kwargs.get('get_object'):

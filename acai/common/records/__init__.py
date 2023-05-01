@@ -28,6 +28,8 @@ class CommonRecords(abc.ABC):
 
     @property
     def data_class(self):
+        if isinstance(self._data_class, type(NoDataClass)):
+            return None
         return self._data_class
 
     @data_class.setter
