@@ -12,6 +12,7 @@ class CommonRecords(abc.ABC):
         self._kwargs = kwargs
         self._records = []
         self._data_class = NoDataClass
+        self._data_class_set = False
         self._validator = Validator(**kwargs)
 
     @property
@@ -28,13 +29,14 @@ class CommonRecords(abc.ABC):
 
     @property
     def data_class(self):
-        if isinstance(self._data_class, type(NoDataClass)):
+        if not self._data_class_set:
             return None
         return self._data_class
 
     @data_class.setter
     def data_class(self, data_class):
         self._data_class = data_class
+        self._data_class_set = True
 
     @property
     def data_classes(self):
