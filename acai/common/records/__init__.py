@@ -11,7 +11,7 @@ class CommonRecords(abc.ABC):
         self._context = context
         self._kwargs = kwargs
         self._records = []
-        self._data_class = NoDataClass()
+        self._data_class = NoDataClass
         self._validator = Validator(**kwargs)
 
     @property
