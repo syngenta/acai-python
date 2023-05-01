@@ -1,5 +1,4 @@
 from acai.common.records import CommonRecords
-from acai.common.records.exception import NoDataClass
 from acai.dynamodb.record import Record
 
 

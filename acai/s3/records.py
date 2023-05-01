@@ -4,7 +4,6 @@ import boto3
 import jsonpickle
 
 from acai.common.records import CommonRecords
-from acai.common.records.exception import NoDataClass
 from acai.s3.record import Record
 
 
