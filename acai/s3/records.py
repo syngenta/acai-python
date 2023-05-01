@@ -12,18 +12,10 @@ class Records(CommonRecords):
     @property
     def records(self):
         self._records = [Record(record) for record in self._event.get('Records', [])]
-        self.__validate_operations()
+        self._validate_operations()
         self.__get_objects()
-        self.__validate_s3_record_body()
+        self._validate_record_body()
         return self.data_classes if self.data_class is not None else self._records
-
-    @property
-    def data_classes(self):
-        return [self.data_class(record=record) for record in self._records]
-
-    def __validate_operations(self):
-        if self._kwargs.get('operations'):
-            self._validate_operations(self._kwargs['operations'])
 
     def __get_objects(self):
         if not self._kwargs.get('get_object'):
@@ -37,7 +29,3 @@ class Records(CommonRecords):
                 csv_data = csv.DictReader(s3_object_body.read().decode('utf-8').splitlines(), delimiter=self._kwargs.get('delimiter', ','))
                 s3_object_body = list(csv_data)
             record.body = s3_object_body.copy()
-
-    def __validate_s3_record_body(self):
-        if self._kwargs.get('required_body'):
-            self._validate_record_body()

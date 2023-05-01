@@ -17,11 +17,6 @@ class CommonRecord(abc.ABC):
     def body(self):
         raise NotImplementedError
 
-    @body.setter
-    @abc.abstractmethod
-    def body(self, _):
-        raise NotImplementedError
-
     @property
     @abc.abstractmethod
     def operation(self):

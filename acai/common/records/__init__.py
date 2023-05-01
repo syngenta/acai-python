@@ -27,25 +27,28 @@ class CommonRecords(abc.ABC):
         return self._event.get('Records', [])
 
     @property
+    def data_classes(self):
+        return [self.data_class(record=record) for record in self._records]
+
+    @property
     @abc.abstractmethod
     def records(self):
         raise NotImplementedError
 
-    @property
-    @abc.abstractmethod
-    def data_classes(self):
-        raise NotImplementedError
-
-    def _validate_operations(self, operations):
+    def _validate_operations(self):
+        if not self._kwargs.get('operations'):
+            return
         validated = []
         for record in self._records:
-            if record.operation in operations:
+            if record.operation in self._kwargs['operations']:
                 validated.append(record)
             elif self._kwargs.get('raise_operation_error'):
-                raise RecordException(record=record, message=f'record did not meet operation requirement; required: {operations}, received: {record.operation}')
+                raise RecordException(record=record, message=f'record did not meet operation requirement; required: {self._kwargs["operations"]}, received: {record.operation}')
         self._reset_records(validated)
 
     def _validate_record_body(self):
+        if not self._kwargs.get('required_body'):
+            return
         validated = []
         for record in self._records:
             errors = self._validator.validate_record_body(record.body, self._kwargs.get('required_body'))
