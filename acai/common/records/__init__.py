@@ -11,7 +11,7 @@ class CommonRecords(abc.ABC):
         self._context = context
         self._kwargs = kwargs
         self._records = []
-        self.data_class = None
+        self._data_class = None
         self._validator = Validator(**kwargs)
 
     @property
@@ -25,6 +25,14 @@ class CommonRecords(abc.ABC):
     @property
     def raw_records(self):
         return self._event.get('Records', [])
+
+    @property
+    def data_class(self):
+        return self._data_class
+
+    @data_class.setter
+    def data_class(self, data_class):
+        self._data_class = data_class
 
     @property
     def data_classes(self):
