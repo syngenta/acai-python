@@ -28,7 +28,7 @@ class CommonRecords(abc.ABC):
 
     @property
     def data_class(self):
-        if type(self._data_class_set()) == NoDataClass:
+        if issubclass(self._data_class, NoDataClass):
             return None
         return self._data_class
 
