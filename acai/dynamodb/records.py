@@ -6,4 +6,4 @@ class Records(CommonRecords):
 
     def __init__(self, event, context=None, **kwargs):
         super().__init__(event, context, **kwargs)
-        self._Record = Record
+        self._record_class = Record

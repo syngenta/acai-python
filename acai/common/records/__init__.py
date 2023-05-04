@@ -10,7 +10,7 @@ class CommonRecords:
         self._kwargs = kwargs
         self._records = []
         self._data_class = NoDataClass
-        self._RecordClass = NoRecordClass
+        self._record_class = NoRecordClass
         self._validator = Validator(**kwargs)
 
     @property
@@ -41,7 +41,7 @@ class CommonRecords:
 
     @property
     def records(self):
-        self._records = [self._RecordClass(record) for record in self._event.get('Records', [])]
+        self._records = [self._record_class(record) for record in self._event.get('Records', [])]
         self._validate_operations()
         self._validate_record_body()
         return self.data_classes if self.data_class is not None else self._records

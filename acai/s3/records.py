@@ -11,11 +11,11 @@ class Records(CommonRecords):
 
     def __init__(self, event, context=None, **kwargs):
         super().__init__(event, context, **kwargs)
-        self._Record = Record
+        self._record_class = Record
 
     @property
     def records(self):
-        self._records = [Record(record) for record in self._event.get('Records', [])]
+        self._records = [self._record_class(record) for record in self._event.get('Records', [])]
         self._validate_operations()
         self.__get_objects()
         self._validate_record_body()
