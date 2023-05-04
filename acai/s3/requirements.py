@@ -1,5 +1,3 @@
-import inspect
-
 from acai.common.records.requirements import requirements as common_requirements
 
 
