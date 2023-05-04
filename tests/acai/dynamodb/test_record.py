@@ -48,6 +48,12 @@ class DynamoDBRecordTest(unittest.TestCase):
         record = Record(self.deleted_record)
         self.assertEqual(record.operation, record.DELETED)
 
+    def test_record_accepts_unknown_event(self):
+        unknown_event = self.deleted_record.copy()
+        del unknown_event['dynamodb']['OldImage']
+        record = Record(unknown_event)
+        self.assertEqual(record.operation, record.UNKNOWN)
+
     def test_record_prints(self):
         try:
             record = Record(self.created_record)
