@@ -3,7 +3,7 @@ def get_basic_removed():
         'Records': [
             {
                 'eventVersion': '2.0',
-                'eventSource': 'aws: s3',
+                'eventSource': 'aws:s3',
                 'awsRegion': 'us-east-1',
                 'eventTime': '2018-09-20T21: 10: 13.821Z',
                 'eventName': 'ObjectRemoved: Put',
@@ -43,7 +43,7 @@ def get_basic_unknown():
         'Records': [
             {
                 'eventVersion': '2.0',
-                'eventSource': 'aws: s3',
+                'eventSource': 'aws:s3',
                 'awsRegion': 'us-east-1',
                 'eventTime': '2018-09-20T21: 10: 13.821Z',
                 'eventName': 'SomethingElse: Put',
@@ -84,7 +84,7 @@ def get_basic():
         'Records': [
             {
                 'eventVersion': '2.0',
-                'eventSource': 'aws: s3',
+                'eventSource': 'aws:s3',
                 'awsRegion': 'us-east-1',
                 'eventTime': '2018-09-20T21: 10: 13.821Z',
                 'eventName': 'ObjectCreated: Put',
@@ -125,7 +125,7 @@ def get_basic_csv():
         'Records': [
             {
                 'eventVersion': '2.0',
-                'eventSource': 'aws: s3',
+                'eventSource': 'aws:s3',
                 'awsRegion': 'us-east-1',
                 'eventTime': '2018-09-20T21: 10: 13.821Z',
                 'eventName': 'ObjectCreated: Put',
