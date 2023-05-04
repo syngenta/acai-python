@@ -3,11 +3,11 @@ import csv
 import boto3
 import jsonpickle
 
-from acai.common.records import CommonRecords
+from acai.common.records.base import BaseRecords
 from acai.s3.record import Record
 
 
-class Records(CommonRecords):
+class Records(BaseRecords):
 
     def __init__(self, event, context=None, **kwargs):
         super().__init__(event, context, **kwargs)

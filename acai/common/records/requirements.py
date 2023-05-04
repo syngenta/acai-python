@@ -1,15 +1,26 @@
 import inspect
 
-from acai.common.records import CommonRecords
+from acai.common import logger
+from acai.common.records.common_records import CommonRecords
 from acai.s3.records import Records as S3Records
 from acai.dynamodb.records import Records as DDBRecords
 
 
 def requirements(**kwargs):
-    records_client = {
-        'aws:s3': S3Records,
-        'aws:dynamodb': DDBRecords
-    }
+
+    def __determine_event_type(event, context):
+        records_clients = {
+            'unknown': CommonRecords,
+            'aws:s3': S3Records,
+            'aws:dynamodb': DDBRecords
+        }
+        try:
+            source = event['Records'][0]['eventSource']
+            return records_clients[source](event, context, **kwargs)
+        except Exception as error:
+            if kwargs.get('verbose'):
+                logger.log(level='ERROR', log={'event': event, 'context': context, 'error': error})
+            return records_clients['unknown'](event, context, **kwargs)
 
     def decorator_func(func):
 
@@ -22,8 +33,7 @@ def requirements(**kwargs):
                 kwargs['after'](records_event, result, kwargs)
 
         def run_function(event, context):
-            source = event['Records'][0]['eventSource']
-            records_event = records_client[source](event, context, **kwargs)
+            records_event = __determine_event_type(event, context)
             run_before(records_event)
             if kwargs.get('data_class') and inspect.isclass(kwargs['data_class']):
                 records_event.data_class = kwargs['data_class']

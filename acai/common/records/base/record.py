@@ -1,7 +1,7 @@
 import abc
 
 
-class CommonRecord(abc.ABC):
+class BaseRecord(abc.ABC):
     CREATED = 'created'
     UPDATED = 'updated'
     DELETED = 'deleted'

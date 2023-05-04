@@ -1,9 +1,9 @@
 from dynamodb_json import json_util as ddb_json
 
-from acai.common.records.record import CommonRecord
+from acai.common.records.base.record import BaseRecord
 
 
-class Record(CommonRecord):
+class Record(BaseRecord):
 
     @property
     def name(self):
