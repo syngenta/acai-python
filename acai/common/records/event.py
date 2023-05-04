@@ -1,8 +1,8 @@
-from acai.common.records.base import BaseRecords
-from acai.common.records.common_record import CommonRecord
+from acai.base.event import BaseRecordsEvent
+from acai.common.records.record import CommonRecord
 
 
-class CommonRecords(BaseRecords):
+class CommonRecordsEvent(BaseRecordsEvent):
 
     def __init__(self, event, context=None, **kwargs):
         super().__init__(event, context, **kwargs)

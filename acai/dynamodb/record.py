@@ -1,6 +1,6 @@
 from dynamodb_json import json_util as ddb_json
 
-from acai.common.records.base.record import BaseRecord
+from acai.base.record import BaseRecord
 
 
 class Record(BaseRecord):

@@ -1,8 +1,8 @@
-from acai.common.records.base import BaseRecords
+from acai.base.event import BaseRecordsEvent
 from acai.dynamodb.record import Record
 
 
-class Records(BaseRecords):
+class Event(BaseRecordsEvent):
 
     def __init__(self, event, context=None, **kwargs):
         super().__init__(event, context, **kwargs)

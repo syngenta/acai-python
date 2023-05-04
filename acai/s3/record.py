@@ -1,4 +1,4 @@
-from acai.common.records.base.record import BaseRecord
+from acai.base.record import BaseRecord
 
 
 class Record(BaseRecord):

@@ -1,16 +1,16 @@
 import inspect
 
 from acai.common import logger
-from acai.common.records.common_records import CommonRecords
-from acai.s3.records import Records as S3Records
-from acai.dynamodb.records import Records as DDBRecords
+from acai.common.records.event import CommonRecordsEvent
+from acai.s3.event import Records as S3Records
+from acai.dynamodb.event import Records as DDBRecords
 
 
 def requirements(**kwargs):
 
     def __determine_event_type(event, context):
         records_clients = {
-            'unknown': CommonRecords,
+            'unknown': CommonRecordsEvent,
             'aws:s3': S3Records,
             'aws:dynamodb': DDBRecords
         }

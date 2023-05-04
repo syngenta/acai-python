@@ -1,8 +1,9 @@
-from acai.common.records.exception import RecordException, NoDataClass, NoRecordClass
+from acai.common.records.exception import RecordException
+from acai.base.placeholder_classes import NoDataClass, PlaceHolderRecordClass
 from acai.common.validator import Validator
 
 
-class BaseRecords:
+class BaseRecordsEvent:
 
     def __init__(self, event, context=None, **kwargs):
         self._event = event
@@ -10,7 +11,7 @@ class BaseRecords:
         self._kwargs = kwargs
         self._records = []
         self._data_class = NoDataClass
-        self._record_class = NoRecordClass
+        self._record_class = PlaceHolderRecordClass
         self._validator = Validator(**kwargs)
 
     @property
