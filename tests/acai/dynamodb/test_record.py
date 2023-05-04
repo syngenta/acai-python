@@ -28,6 +28,7 @@ class DynamoDBRecordTest(unittest.TestCase):
         self.assertDictEqual(record.new_image, expected_body)
         self.assertDictEqual(record.old_image, {})
         self.assertEqual(record.name, self.created_record['eventName'])
+        self.assertEqual(record.source_arn, self.created_record['eventSourceARN'])
         self.assertEqual(record.source, self.created_record['eventSource'])
         self.assertEqual(record.version, self.created_record['eventVersion'])
         self.assertEqual(record.id, self.created_record['eventID'])
@@ -38,3 +39,18 @@ class DynamoDBRecordTest(unittest.TestCase):
         self.assertEqual(record.keys, expected_keys)
         self.assertEqual(record.approximate_creation_time, self.created_record['dynamodb']['ApproximateCreationDateTime'])
         self.assertEqual(record.operation, record.CREATED)
+
+    def test_record_accepts_updated_event(self):
+        record = Record(self.updated_record)
+        self.assertEqual(record.operation, record.UPDATED)
+
+    def test_record_accepts_deleted_event(self):
+        record = Record(self.deleted_record)
+        self.assertEqual(record.operation, record.DELETED)
+
+    def test_record_prints(self):
+        try:
+            record = Record(self.created_record)
+            print(record)
+        except Exception as error:
+            print(error)
