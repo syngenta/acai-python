@@ -1,10 +1,8 @@
-import abc
-
 from acai.common.records.exception import RecordException, NoDataClass
 from acai.common.validator import Validator
 
 
-class CommonRecords(abc.ABC):
+class CommonRecords:
 
     def __init__(self, event, context=None, **kwargs):
         self._event = event
@@ -41,9 +39,11 @@ class CommonRecords(abc.ABC):
         return [self.data_class(record=record) for record in self._records]
 
     @property
-    @abc.abstractmethod
     def records(self):
-        raise NotImplementedError
+        self._records = [Record(record) for record in self._event.get('Records', [])]
+        self._validate_operations()
+        self._validate_record_body()
+        return self.data_classes if self.data_class is not None else self._records
 
     def _validate_operations(self):
         if not self._kwargs.get('operations'):
