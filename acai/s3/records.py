@@ -9,6 +9,10 @@ from acai.s3.record import Record
 
 class Records(CommonRecords):
 
+    def __init__(self, event, context=None, **kwargs):
+        super().__init__(event, context, **kwargs)
+        self._Record = Record
+
     @property
     def records(self):
         self._records = [Record(record) for record in self._event.get('Records', [])]

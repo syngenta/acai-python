@@ -8,3 +8,7 @@ class RecordException(Exception):
 
 class NoDataClass:
     pass
+
+
+class NoRecordClass:
+    pass
