@@ -1,4 +1,4 @@
-from acai.common.records.requirements import requirements as common_requirements
+from acai.common.records.requirements import requirements as s3_requirements
 
 
-requirements = common_requirements
+requirements = s3_requirements
