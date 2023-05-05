@@ -85,5 +85,5 @@ class Record(BaseRecord):
             'dynamodb_size_bytes': self.size_bytes,
             'dynamodb_old_image': self.old_image,
             'dynamodb_new_image': self.new_image,
-            'approximate_creation_time': self.approximate_creation_time,
+            'approximate_creation_time': self.approximate_creation_time
         })

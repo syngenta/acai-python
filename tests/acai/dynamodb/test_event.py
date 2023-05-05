@@ -8,7 +8,7 @@ from tests.mocks.dynamodb import mock_event
 from tests.mocks.dynamodb.mock_data_class import MockDDBDataClass
 
 
-class DynamoDBRecordsTest(unittest.TestCase):
+class DynamoDBEventTest(unittest.TestCase):
     created_event = mock_event.get_created_event()
     updated_event = mock_event.get_updated_event()
     deleted_event = mock_event.get_deleted_event()
@@ -109,7 +109,7 @@ class DynamoDBRecordsTest(unittest.TestCase):
         event = Event(self.created_event, schema=self.schema_path, required_body=schema)
         self.assertDictEqual(event.records[0].body, self.expected_body)
 
-    def test_event_validate_filters_out_record_body_with_schema_dict(self):
+    def test_event_validate_raises_error_record_body_with_schema_dict(self):
         schema = {
             '$id': 'https://example.com/person.schema.json',
             '$schema': 'https://json-schema.org/draft/2020-12/schema',
@@ -160,7 +160,7 @@ class DynamoDBRecordsTest(unittest.TestCase):
         except RecordException as record_error:
             self.assertTrue(isinstance(record_error, RecordException))
 
-    def test_event_validate_raises_error_record_body_with_schema_dict(self):
+    def test_event_validate_filters_out_record_body_with_schema_dict(self):
         schema = {
             '$id': 'https://example.com/person.schema.json',
             '$schema': 'https://json-schema.org/draft/2020-12/schema',

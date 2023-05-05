@@ -11,6 +11,7 @@ class BaseRecord(abc.ABC):
         self.valid = True
         self._body = None
         self._record = record
+        self._attributes = {}
 
     @property
     @abc.abstractmethod
