@@ -21,7 +21,7 @@ class JsonHelperTest(unittest.TestCase):
 
     def test_decode_invalid_raise_error(self):
         try:
-            invalid_json = JsonHelper.decode(self.invalid_json, True)
+            JsonHelper.decode(self.invalid_json, True)
             fail = True
         except:
             fail = False

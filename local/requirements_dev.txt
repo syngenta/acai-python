@@ -4,6 +4,7 @@ jsonpickle
 jsonref
 jsonschema
 pyyaml
+simplejson
 xmltodict
 autopep8
 moto

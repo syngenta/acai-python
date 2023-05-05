@@ -1,8 +1,8 @@
 import csv
 
 import boto3
-import jsonpickle
 
+from acai.common.json_helper import JsonHelper
 from acai.base.event import BaseRecordsEvent
 from acai.s3.record import Record
 
@@ -28,7 +28,7 @@ class Event(BaseRecordsEvent):
         for record in self._records:
             s3_object_body = client.get_object(Bucket=record.bucket, Key=record.key)['Body']
             if self._kwargs.get('data_type') == 'json':
-                s3_object_body = jsonpickle.decode(s3_object_body.read().decode('utf-8'))
+                s3_object_body = JsonHelper.decode(s3_object_body.read().decode('utf-8'), True)
             elif self._kwargs.get('data_type') == 'csv':
                 csv_data = csv.DictReader(s3_object_body.read().decode('utf-8').splitlines(), delimiter=self._kwargs.get('delimiter', ','))
                 s3_object_body = list(csv_data)

@@ -7,16 +7,13 @@ class CommonRecordsEvent(BaseRecordsEvent):
     def __init__(self, event, context=None, **kwargs):
         super().__init__(event, context, **kwargs)
         self._record_class = CommonRecord
-        self._records = [event]
+        self._records = event if isinstance(event, list) else [event]
 
     @property
     def raw_records(self):
         return self._records
 
     @property
-    def data_classes(self):
-        return [self.data_class(record=record) for record in self._records]
-
-    @property
     def records(self):
-        return self._records
+        self._records = [self._record_class(record) for record in self.raw_records]
+        return self.data_classes if self.data_class is not None else self._records
