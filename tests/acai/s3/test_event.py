@@ -48,32 +48,32 @@ class S3EventTest(unittest.TestCase):
     def tearDown(self):
         self.mock_s3.stop()
 
-    def test_records_accepts_event(self):
+    def test_event_accepts_event(self):
         event = Event(self.basic_event)
         self.assertEqual(event.context, None)
         self.assertEqual(event.data_class, None)
         self.assertDictEqual(event.event, self.basic_event)
         self.assertEqual(len(event.records), len(self.basic_event['Records']))
 
-    def test_records_returns_record_event(self):
+    def test_event_returns_record_event(self):
         event = Event(self.basic_event)
         self.assertTrue(isinstance(event.records[0], Record))
 
-    def test_records_returns_data_class(self):
+    def test_event_returns_data_class(self):
         event = Event(self.basic_event)
         event.data_class = MockS3DataClass
         self.assertTrue(isinstance(event.records[0], MockS3DataClass))
         self.assertTrue(isinstance(event.records[0].record, Record))
 
-    def test_records_can_get_json_object(self):
+    def test_event_can_get_json_object(self):
         event = Event(self.basic_event, get_object=True, data_type='json')
         self.assertDictEqual(event.records[0].body, self.expected_json_data)
 
-    def test_records_can_get_csv_object(self):
+    def test_event_can_get_csv_object(self):
         event = Event(self.csv_event, get_object=True, data_type='csv')
         self.assertCountEqual(event.records[0].body, self.expected_csv_data)
 
-    def test_records_validate_record_body_with_schema_file(self):
+    def test_event_validate_record_body_with_schema_file(self):
         event = Event(
             self.basic_event,
             get_object=True,
@@ -83,7 +83,7 @@ class S3EventTest(unittest.TestCase):
         )
         self.assertDictEqual(event.records[0].body, self.expected_json_data)
 
-    def test_records_validate_record_body_with_schema_dict(self):
+    def test_event_validate_record_body_with_schema_dict(self):
         schema = {
             '$id': 'https://example.com/person.schema.json',
             '$schema': 'https://json-schema.org/draft/2020-12/schema',
@@ -113,7 +113,7 @@ class S3EventTest(unittest.TestCase):
         )
         self.assertDictEqual(event.records[0].body, self.expected_json_data)
 
-    def test_records_errors_record_body_with_schema_dict(self):
+    def test_event_errors_record_body_with_schema_dict(self):
         schema = {
             '$id': 'https://example.com/person.schema.json',
             '$schema': 'https://json-schema.org/draft/2020-12/schema',
@@ -143,12 +143,12 @@ class S3EventTest(unittest.TestCase):
             raise_body_error=True
         )
         try:
-            event.records
+            print(event.records)
             self.assertTrue(False)
         except RecordException as record_error:
             self.assertTrue(isinstance(record_error, RecordException))
 
-    def test_records_validate_filters_out_record_body_with_schema_file(self):
+    def test_event_validate_filters_out_record_body_with_schema_file(self):
         event = Event(
             self.basic_event,
             get_object=True,
@@ -158,7 +158,7 @@ class S3EventTest(unittest.TestCase):
         )
         self.assertEqual(len(event.records), 0)
 
-    def test_records_validate_errors_out_record_body_with_schema_file(self):
+    def test_event_validate_errors_out_record_body_with_schema_file(self):
         event = Event(
             self.basic_event,
             get_object=True,
@@ -168,16 +168,16 @@ class S3EventTest(unittest.TestCase):
             raise_body_error=True
         )
         try:
-            event.records
+            print(event.records)
             self.assertTrue(False)
         except RecordException as record_error:
             self.assertTrue(isinstance(record_error, RecordException))
 
-    def test_records_raw_records(self):
+    def test_event_raw_records(self):
         event = Event(self.basic_event)
         self.assertCountEqual(event.raw_records, self.basic_event['Records'])
 
-    def test_records_print(self):
+    def test_event_print(self):
         event = Event(self.basic_event)
         try:
             print(event)

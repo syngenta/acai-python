@@ -1,0 +1,61 @@
+openapi: 3.0.0
+paths:
+components:
+    schemas:
+        v1-ddb-body:
+            type: object
+            required:
+                - example_id
+                - note
+                - active
+                - personal
+                - transportation
+            properties:
+                example_id:
+                    type: string
+                note:
+                    type: string
+                active:
+                    type: boolean
+                personal:
+                    type: object
+                    properties:
+                        gender:
+                            type: string
+                        first_name:
+                            type: string
+                        last_name:
+                            type: string
+                transportation:
+                    type: array
+                    items:
+                        type: string
+        v1-ddb-body-wrong:
+            type: object
+            required:
+                - example_id
+                - note_wrong
+                - active
+                - personal
+                - transportation
+            properties:
+                example_id:
+                    type: string
+                note_wrong:
+                    type: string
+                active:
+                    type: boolean
+                personal:
+                    type: object
+                    properties:
+                        gender:
+                            type: string
+                        first_name:
+                            type: string
+                        last_name:
+                            type: string
+                transportation:
+                    type: array
+                    items:
+                        type: string
+
