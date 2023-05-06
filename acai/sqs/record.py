@@ -61,7 +61,7 @@ class Record(BaseRecord):
             'message_attributes': self.message_attributes,
             'attributes': self.attributes,
             'region': self.region,
-            'subscription_arn': self.subscription_arn,
+            'source_arn': self.source_arn,
             'source': self.source,
             'md5_of_body': self.md5_of_body
         })
