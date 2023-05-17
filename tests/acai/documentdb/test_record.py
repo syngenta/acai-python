@@ -25,7 +25,7 @@ class DocumentDBRecordTest(unittest.TestCase):
     def test_record_fails_operation_gracefully(self):
         record = Record(self.unknown_record)
         self.assertEqual(record.operation, record.UNKNOWN)
-    
+
     def test_record_prints(self):
         try:
             record = Record(self.basic_record)
