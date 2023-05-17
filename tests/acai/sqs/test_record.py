@@ -32,7 +32,9 @@ class SQSRecordTest(unittest.TestCase):
 
     def test_record_prints(self):
         try:
-            record = Record(self.created_record)
+            record = Record(self.basic_record)
             print(record)
+            self.assertTrue(True)
         except Exception as error:
             print(error)
+            self.assertTrue(False)

@@ -58,5 +58,7 @@ class DynamoDBRecordTest(unittest.TestCase):
         try:
             record = Record(self.created_record)
             print(record)
+            self.assertTrue(True)
         except Exception as error:
             print(error)
+            self.assertTrue(False)
