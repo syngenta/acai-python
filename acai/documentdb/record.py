@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from acai.common.json_helper import JsonHelper
 from acai.common import logger
 from acai.base.record import BaseRecord
 
