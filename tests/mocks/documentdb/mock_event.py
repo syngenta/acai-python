@@ -1,4 +1,4 @@
-def get_basic():
+def get_basic(operation='insert'):
     return {
         'eventSourceArn': 'arn:aws:rds:us-east-1:123456789012:cluster:canaryclusterb2a659a2-qo5tcmqkcl03',
         'events': [
@@ -31,7 +31,7 @@ def get_basic():
                         'db': 'test_database',
                         'coll': 'test_collection'
                     },
-                    'operationType': 'insert'
+                    'operationType': operation
                 }
             }
         ],

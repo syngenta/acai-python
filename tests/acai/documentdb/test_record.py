@@ -8,6 +8,7 @@ from tests.mocks.documentdb import mock_event
 
 class DocumentDBRecordTest(unittest.TestCase):
     basic_record = mock_event.get_basic()['events'][0]
+    unknown_record = mock_event.get_basic('unknown')['events'][0]
 
     def test_record_accepts_event(self):
         record = Record(self.basic_record)
@@ -21,6 +22,10 @@ class DocumentDBRecordTest(unittest.TestCase):
         self.assertEqual(record.db, event.get('ns', {}).get('db'))
         self.assertEqual(record.collection, event.get('ns', {}).get('coll'))
 
+    def test_record_fails_operation_gracefully(self):
+        record = Record(self.unknown_record)
+        self.assertEqual(record.operation, record.UNKNOWN)
+    
     def test_record_prints(self):
         try:
             record = Record(self.basic_record)
