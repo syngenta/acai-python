@@ -1,0 +1,36 @@
+openapi: 3.0.0
+paths:
+components:
+    schemas:
+        v1-kinesis-body:
+            type: object
+            required:
+                - lang
+                - sms
+                - email
+                - push
+            properties:
+                lang:
+                    type: string
+                sms:
+                    type: boolean
+                email:
+                    type: boolean
+                push:
+                    type: boolean
+        v1-kinesis-body-wrong:
+            type: object
+            required:
+                - lang
+                - sms
+                - email
+                - push
+            properties:
+                lang:
+                    type: integer
+                sms:
+                    type: boolean
+                email:
+                    type: boolean
+                push:
+                    type: boolean
