@@ -1,5 +1,5 @@
 from acai.base.event import BaseRecordsEvent
-from acai.documentdb.record import Record
+from acai.mq.record import Record
 
 
 class Event(BaseRecordsEvent):
@@ -9,14 +9,9 @@ class Event(BaseRecordsEvent):
         self._record_class = Record
 
     @property
-    def raw_events(self):
-        return self._event.get('events', [])
+    def raw_messages(self):
+        return self._event.get('messages', [])
 
     @property
     def raw_records(self):
-        return self.raw_events
-
-    @property
-    def events(self):
-        return self.records
-
+        return self.raw_messages
