@@ -1,6 +1,7 @@
 import inspect
 
 from acai.common import logger
+from acai.common.records.exception import EventException
 from acai.common.records.event import CommonRecordsEvent
 from acai.documentdb.event import Event as DocumentDBEvent
 from acai.dynamodb.event import Event as DynamoDBEvent
@@ -21,7 +22,7 @@ def requirements(**kwargs):
             return event['Records'][0]['eventSource']
         if event.get('Records') and event['Records'][0].get('EventSource'):
             return event['Records'][0]['EventSource']
-        return 'unknown'
+        raise EventException(message='no known record event source found')
 
     def __determine_event_type(event, context):
         event_clients = {
