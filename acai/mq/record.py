@@ -15,6 +15,11 @@ class Record(BaseRecord):
         return self._record.get('messageType')
 
     @property
+    def data(self):
+        b64_decoded = base64.b64decode(self._record.get('data')).decode('utf-8')
+        return JsonHelper.decode(b64_decoded)
+
+    @property
     def delivery_mode(self):
         return self._record.get('deliveryMode')
 
@@ -63,17 +68,12 @@ class Record(BaseRecord):
         return self._record.get('brokerOutTime')
 
     @property
-    def data(self):
-        b64_decoded = base64.b64decode(self._record.get('data')).decode('utf-8')
-        return JsonHelper.decode(b64_decoded)
+    def operation(self):
+        return self.UNKNOWN
 
     @property
     def body(self):
         return self.data
-
-    @property
-    def operation(self):
-        return self.UNKNOWN
 
     def __str__(self):
         return str({

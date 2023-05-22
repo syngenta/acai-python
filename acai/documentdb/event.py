@@ -19,4 +19,3 @@ class Event(BaseRecordsEvent):
     @property
     def events(self):
         return self.records
-
