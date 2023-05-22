@@ -2,20 +2,38 @@ import inspect
 
 from acai.common import logger
 from acai.common.records.event import CommonRecordsEvent
-from acai.s3.event import Event as S3Event
+from acai.documentdb.event import Event as DocumentDBEvent
 from acai.dynamodb.event import Event as DynamoDBEvent
+from acai.firehose.event import Event as FirehoseEvent
+from acai.s3.event import Event as S3Event
+from acai.sns.event import Event as SNSEvent
+from acai.sqs.event import Event as SQSEvent
 
 
 def requirements(**kwargs):
 
+    def __find_event_source(event):
+        if event.get('eventSource'):
+            return event['eventSource']
+        if event.get('deliveryStreamArn'):
+            return event['deliveryStreamArn']
+        if event.get('Records') and event['Records'][0].get('eventSource'):
+            return event['Records'][0]['eventSource']
+        if event.get('Records') and event['Records'][0].get('EventSource'):
+            return event['Records'][0]['EventSource']
+
     def __determine_event_type(event, context):
         event_clients = {
             'unknown': CommonRecordsEvent,
+            'aws:docdb': DocumentDBEvent,
+            'aws:dynamodb': DynamoDBEvent,
+            'aws:lambda:events': FirehoseEvent,
             'aws:s3': S3Event,
-            'aws:dynamodb': DynamoDBEvent
+            'aws:sns': SNSEvent,
+            'aws:sqs': SQSEvent
         }
         try:
-            source = event['Records'][0]['eventSource']
+            source = __find_event_source(event)
             return event_clients[source](event, context, **kwargs)
         except Exception as error:
             if kwargs.get('verbose'):

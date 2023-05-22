@@ -9,12 +9,12 @@ from tests.mocks.documentdb.mock_functions import mock_documentdb_full, before_c
 class DocumentDBRequirementsTest(unittest.TestCase):
     basic_event = mock_event.get_basic()
 
-    def test_ddb_decorator_with_basic_requirements(self):
+    def test_documentdb_decorator_with_basic_requirements(self):
         expected = {'documentdb_full': [True]}
         result = mock_documentdb_full(self.basic_event, None)
         self.assertDictEqual(result, expected)
 
-    def test_ddb_decorator_with_full_requirements(self):
+    def test_documentdb_decorator_with_full_requirements(self):
         expected = {'documentdb_full': [True]}
         result = mock_documentdb_full(self.basic_event, None)
         self.assertDictEqual(result, expected)

@@ -9,13 +9,13 @@ from tests.mocks.sns.mock_functions import mock_sns_full, before_call, after_cal
 class SNSRequirementsTest(unittest.TestCase):
     basic_event = mock_event.get_basic()
 
-    def test_ddb_decorator_with_basic_requirements(self):
+    def test_sns_decorator_with_basic_requirements(self):
         expected = {'sns_full': [True]}
         result = mock_sns_full(self.basic_event, None)
         print(result)
         self.assertDictEqual(result, expected)
 
-    def test_ddb_decorator_with_full_requirements(self):
+    def test_sns_decorator_with_full_requirements(self):
         expected = {'sns_full': [True]}
         result = mock_sns_full(self.basic_event, None)
         self.assertDictEqual(result, expected)
