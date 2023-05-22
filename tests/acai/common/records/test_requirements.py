@@ -2,7 +2,7 @@ import unittest
 
 from acai.common.records.exception import RecordException
 
-from tests.mocks.common.mock_functions import mock_func, mock_func_verbose
+from tests.mocks.common.mock_functions import mock_func_verbose
 
 
 class CommonRequirementsTest(unittest.TestCase):
