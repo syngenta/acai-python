@@ -21,6 +21,7 @@ def requirements(**kwargs):
             return event['Records'][0]['eventSource']
         if event.get('Records') and event['Records'][0].get('EventSource'):
             return event['Records'][0]['EventSource']
+        return 'unknown'
 
     def __determine_event_type(event, context):
         event_clients = {
