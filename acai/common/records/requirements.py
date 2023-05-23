@@ -2,11 +2,12 @@ import inspect
 
 from acai.common import logger
 from acai.common.records.exception import EventException
-from acai.common.records.event import CommonRecordsEvent
+from acai.common.records.event import Event as CommonEvent
 from acai.documentdb.event import Event as DocumentDBEvent
 from acai.dynamodb.event import Event as DynamoDBEvent
 from acai.firehose.event import Event as FirehoseEvent
 from acai.kinesis.event import Event as KinesisEvent
+from acai.msk.event import Event as MskEvent
 from acai.s3.event import Event as S3Event
 from acai.sns.event import Event as SNSEvent
 from acai.sqs.event import Event as SQSEvent
@@ -27,10 +28,11 @@ def requirements(**kwargs):
 
     def __determine_event_type(event, context):
         event_clients = {
-            'unknown': CommonRecordsEvent,
+            'unknown': CommonEvent,
             'aws:docdb': DocumentDBEvent,
             'aws:dynamodb': DynamoDBEvent,
             'aws:lambda:events': FirehoseEvent,
+            'aws:kafka': MskEvent,
             'aws:kinesis': KinesisEvent,
             'aws:s3': S3Event,
             'aws:sns': SNSEvent,

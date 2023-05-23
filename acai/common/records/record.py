@@ -2,7 +2,7 @@ from acai.common.json_helper import JsonHelper
 from acai.base.record import BaseRecord
 
 
-class CommonRecord(BaseRecord):
+class Record(BaseRecord):
 
     @property
     def body(self):
