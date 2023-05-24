@@ -7,7 +7,7 @@ from acai.documentdb.event import Event as DocumentDBEvent
 from acai.dynamodb.event import Event as DynamoDBEvent
 from acai.firehose.event import Event as FirehoseEvent
 from acai.kinesis.event import Event as KinesisEvent
-from acai.msk.event import Event as MskEvent
+from acai.msk.event import Event as MSKEvent
 from acai.mq.event import Event as MQEvent
 from acai.s3.event import Event as S3Event
 from acai.sns.event import Event as SNSEvent
@@ -33,7 +33,7 @@ def requirements(**kwargs):
             'aws:docdb': DocumentDBEvent,
             'aws:dynamodb': DynamoDBEvent,
             'aws:lambda:events': FirehoseEvent,
-            'aws:kafka': MskEvent,
+            'aws:kafka': MSKEvent,
             'aws:mq': MQEvent,
             'aws:kinesis': KinesisEvent,
             'aws:s3': S3Event,
