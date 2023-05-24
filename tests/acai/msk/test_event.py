@@ -20,10 +20,12 @@ class MSKEventTest(unittest.TestCase):
 
     def test_event_accepts_event(self):
         event = Event(self.basic_event)
+        topics = [topic for topic in self.basic_event['records']]
         self.assertEqual(event.context, None)
         self.assertEqual(event.data_class, None)
         self.assertDictEqual(event.event, self.basic_event)
         self.assertEqual(len(event.records), len(self.basic_event['records']))
+        self.assertListEqual(event.topics, topics)
 
     def test_event_raw_records(self):
         event = Event(self.basic_event)

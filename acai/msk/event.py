@@ -21,3 +21,7 @@ class Event(BaseRecordsEvent):
         self._validate_operations()
         self._validate_record_body()
         return self.data_classes if self.data_class is not None else self._records
+
+    @property
+    def topics(self):
+        return [topic for topic in self.raw_records]

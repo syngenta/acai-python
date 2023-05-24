@@ -3,10 +3,7 @@ import unittest
 from acai.common.records.event import Event
 from acai.common.records.record import Record
 
-class MockDataClass:
-
-    def __init__(self, record):
-        self.record = record
+from tests.mocks.common.mock_data_class import MockDataClass
 
 
 class CommonRecordsTest(unittest.TestCase):
