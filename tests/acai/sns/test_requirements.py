@@ -12,7 +12,6 @@ class SNSRequirementsTest(unittest.TestCase):
     def test_sns_decorator_with_basic_requirements(self):
         expected = {'sns_full': [True]}
         result = mock_sns_full(self.basic_event, None)
-        print(result)
         self.assertDictEqual(result, expected)
 
     def test_sns_decorator_with_full_requirements(self):

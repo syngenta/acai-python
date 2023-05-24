@@ -12,7 +12,6 @@ class SQSRequirementsTest(unittest.TestCase):
     def test_sqs_decorator_with_basic_requirements(self):
         expected = {'sqs_full': [True]}
         result = mock_sqs_full(self.basic_event, None)
-        print(result)
         self.assertDictEqual(result, expected)
 
     def test_sqs_decorator_with_full_requirements(self):

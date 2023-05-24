@@ -12,7 +12,6 @@ class MQRequirementsTest(unittest.TestCase):
     def test_mq_decorator_with_basic_requirements(self):
         expected = {'mq_full': [True]}
         result = mock_mq_full(self.basic_event, None)
-        print(result)
         self.assertDictEqual(result, expected)
 
     def test_mq_decorator_with_full_requirements(self):

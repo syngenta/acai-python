@@ -12,7 +12,6 @@ class KinesisRequirementsTest(unittest.TestCase):
     def test_msk_decorator_with_basic_requirements(self):
         expected = {'msk_full': [True]}
         result = mock_msk_full(self.basic_event, None)
-        print(result)
         self.assertDictEqual(result, expected)
 
     def test_msk_decorator_with_full_requirements(self):

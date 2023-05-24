@@ -12,7 +12,6 @@ class FirehoseRequirementsTest(unittest.TestCase):
     def test_firehose_decorator_with_basic_requirements(self):
         expected = {'firehose_full': [True]}
         result = mock_firehose_full(self.basic_event, None)
-        print(result)
         self.assertDictEqual(result, expected)
 
     def test_firehose_decorator_with_full_requirements(self):
