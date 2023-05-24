@@ -41,9 +41,9 @@ def requirements(**kwargs):
         try:
             source = __find_event_source(event)
             return event_clients[source](event, context, **kwargs)
-        except Exception as error:
+        except EventException as event_error:
             if kwargs.get('verbose'):
-                logger.log(level='ERROR', log={'event': event, 'context': context, 'error': error})
+                logger.log(level='ERROR', log={'event': event, 'context': context, 'error': event_error})
             return event_clients['unknown'](event, context, **kwargs)
 
     def decorator_func(func):
