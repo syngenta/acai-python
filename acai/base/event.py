@@ -1,5 +1,6 @@
 from acai.common.records.exception import RecordException
-from acai.base.placeholder_classes import NoDataClass, PlaceHolderRecordClass
+from acai.base.no_data import NoDataClass
+from acai.base.record import BaseRecord
 from acai.common.validator import Validator
 
 
@@ -10,9 +11,9 @@ class BaseRecordsEvent:
         self._context = context
         self._kwargs = kwargs
         self._records = []
-        self._data_class = NoDataClass
-        self._record_class = PlaceHolderRecordClass
-        self._validator = Validator(**kwargs)
+        self._record_class = BaseRecord
+        self.__data_class = NoDataClass
+        self.__validator = Validator(**kwargs)
 
     @property
     def event(self):
@@ -28,13 +29,13 @@ class BaseRecordsEvent:
 
     @property
     def data_class(self):
-        if issubclass(self._data_class, NoDataClass):
+        if issubclass(self.__data_class, NoDataClass):
             return None
-        return self._data_class
+        return self.__data_class
 
     @data_class.setter
     def data_class(self, data_class):
-        self._data_class = data_class
+        self.__data_class = data_class
 
     @property
     def data_classes(self):
@@ -63,7 +64,7 @@ class BaseRecordsEvent:
             return
         validated = []
         for record in self._records:
-            errors = self._validator.validate_record_body(record.body, self._kwargs.get('required_body'))
+            errors = self.__validator.validate_record_body(record.body, self._kwargs.get('required_body'))
             if len(errors) != 0 and self._kwargs.get('raise_body_error'):
                 raise RecordException(record=record, message=f'record did not meet body requirement; errors: {errors}')
             if len(errors) == 0:

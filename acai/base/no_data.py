@@ -1,0 +1,2 @@
+class NoDataClass:
+    pass
