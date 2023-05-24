@@ -25,6 +25,7 @@ class DocumentDBEventTest(unittest.TestCase):
         self.assertEqual(event.data_class, None)
         self.assertDictEqual(event.event, self.basic_event)
         self.assertEqual(len(event.records), len(self.basic_event['events']))
+        self.assertEqual(len(event.events), len(self.basic_event['events']))
 
     def test_event_raw_records(self):
         event = Event(self.basic_event)
