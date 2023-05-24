@@ -24,4 +24,4 @@ class Event(BaseRecordsEvent):
 
     @property
     def topics(self):
-        return self.raw_records.keys()
+        return list(self.raw_records.keys())
