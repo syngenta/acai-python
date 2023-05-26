@@ -19,7 +19,7 @@ def requirements(**kwargs):
             generic_event = Event(event, context)
             run_before(generic_event)
             if kwargs.get('data_class') and inspect.isclass(kwargs['data_class']):
-                generic_event.data_class = kwargs['data_class']
+                generic_event = kwargs['data_class'](event=generic_event)
             result = func(generic_event)
             run_after(generic_event, result)
             return result

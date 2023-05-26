@@ -1,5 +1,7 @@
 from acai.generic.requirements import requirements
 
+from tests.mocks.generic.mock_class import MockDataClass
+
 call_list = []
 
 def before_call(records, reqs):
@@ -19,5 +21,12 @@ def after_call(records, result, reqs):
     before=before_call,
     after=after_call
 )
-def mock_generic_full(event):
-    return {'generic_full': event.body}
+def mock_generic(event):
+    return {'generic': event.body}
+
+
+@requirements(
+    data_class=MockDataClass
+)
+def mock_generic_dc(data_class):
+    return data_class
