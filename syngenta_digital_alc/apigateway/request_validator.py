@@ -2,7 +2,7 @@ import json
 import jsonref
 from jsonschema import Draft7Validator
 import yaml
-
+import functools
 
 class RequestValidator:
 
@@ -59,9 +59,8 @@ class RequestValidator:
 
     def _get_combined_schema(self, schema):
         combined_schema = {}
-        swagger = self._get_api_doc()
-        definitions = jsonref.loads(json.dumps(swagger))['components']['schemas']
-        definition_schema = definitions[schema]
+        schema_definitions = self.openapi_to_resolved_json(path_openapi=self.schema_path)
+        definition_schema = schema_definitions[schema]
         json_schemas = definition_schema['allOf'] if definition_schema.get('allOf') else [definition_schema]
         for json_schema in json_schemas:
             combined_schema.update(json_schema)
@@ -72,6 +71,10 @@ class RequestValidator:
         path = '.'.join(str(path) for path in error.path)
         return path if path else 'root'
 
-    def _get_api_doc(self):
-        with open(self.schema_path) as api_doc:
-            return yaml.load(api_doc, Loader=yaml.FullLoader)
+    @staticmethod
+    @functools.lru_cache
+    def openapi_to_resolved_json(path_openapi: str):
+        with open(path_openapi) as api_doc:
+            as_yaml = yaml.load(api_doc, Loader=yaml.FullLoader)
+            definitions = jsonref.loads(json.dumps(as_yaml))['components']['schemas']
+            return definitions
