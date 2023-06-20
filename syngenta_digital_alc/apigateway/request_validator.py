@@ -78,8 +78,3 @@ class RequestValidator:
             as_yaml = yaml.load(api_doc, Loader=yaml.FullLoader)
             definitions = jsonref.loads(json.dumps(as_yaml))['components']['schemas']
             return definitions
-
-
-
-
-
