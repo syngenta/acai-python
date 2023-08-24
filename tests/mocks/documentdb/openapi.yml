@@ -1,0 +1,40 @@
+openapi: 3.0.0
+paths:
+components:
+    schemas:
+        v1-documentdb-body:
+            type: object
+            required:
+                - lang
+                - sms
+                - email
+                - push
+            properties:
+                id:
+                    type: string
+                lang:
+                    type: string
+                sms:
+                    type: boolean
+                email:
+                    type: boolean
+                push:
+                    type: boolean
+        v1-documentdb-body-wrong:
+            type: object
+            required:
+                - lang
+                - sms
+                - email
+                - push
+            properties:
+                id:
+                    type: string
+                lang:
+                    type: integer
+                sms:
+                    type: boolean
+                email:
+                    type: boolean
+                push:
+                    type: boolean

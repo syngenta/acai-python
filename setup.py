@@ -5,22 +5,23 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(
-    name='syngenta_digital_alc',
+    name='acai',
     version=os.getenv('CIRCLE_TAG'),
-    url='https://github.com/syngenta-digital/alc-python.git',
-    author='Paul Cruse III, Technical Lead, Syngenta Digital',
-    author_email='paul.cruse@syngenta.com',
-    description='DRY approach to working with AWS Lambdas',
+    url='https://github.com/syngenta/acai-python.git',
+    author='Paul Cruse III',
+    author_email='paulcruse3@gmail.com',
+    description='DRY, configurable, opinionated, minimalist API framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=find_packages(),
     python_requires='>=3.0',
     install_requires=[
         'dynamodb_json',
-        'jsonschema',
         'jsonpickle',
         'jsonref',
-        'pyyaml'
+        'jsonschema',
+        'pyyaml',
+        'xmltodict'
     ],
     classifiers=[
         'Environment :: Web Environment',

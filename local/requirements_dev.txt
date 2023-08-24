@@ -1,0 +1,15 @@
+boto3
+dynamodb_json
+jsonpickle
+jsonref
+jsonschema
+pyyaml
+simplejson
+xmltodict
+autopep8
+moto
+pytest
+pytest-html
+pytest-cov
+pylint
+pylint-quotes

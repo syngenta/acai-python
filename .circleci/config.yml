@@ -1,37 +1,30 @@
 version: 2.1
-orbs:
-    sonarcloud: sonarsource/sonarcloud@1.0.2
 commands:
     python-install:
         steps:
-            - run: pip install pipenv
-            - run: pipenv install
+            - run: ln -s local/requirements.txt requirements.txt
+            - run: pip install -r requirements.txt
     python-test-install:
         steps:
-            - restore_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - run: pip install pipenv
-            - run: pipenv install --dev
-            - save_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-                paths:
-                    - ".venv"
+            - run: ln -s local/requirements_dev.txt requirements.txt
+            - run: pip install -r requirements.txt
+    setup-artifacts:
+        steps:
+            - run: mkdir reports && mkdir reports/unit-tests && mkdir reports/tests || exit 0
     python-lint:
         steps:
-            - run: mkdir coverage && mkdir coverage/lint || exit 0
-            - run: python3 -m pipenv run lint | python3 -m pipenv run pylint_report.py > ./coverage/lint/report.html || exit 0
-            - store_artifacts:
-                path: ./coverage/lint/report.html
+            - run: pylint acai
     python-test:
+        # if tests get too long to run consider switching to pytest and use test splitting (see: https://circleci.com/docs/troubleshoot-test-splitting/)
         steps:
-            - run: pipenv run test
+            - run: RUN_MODE=unittest STAGE=local LOG_LEVEL=INFO python -m unittest discover
     python-report:
         steps:
-            - run: pipenv run coverage
+            - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./reports/tests/xunit.xml --html=./reports/unit-test/index.html --self-contained-html --cov-report html:./reports -p no:warnings -o log_cli=true
             - store_test_results:
-                path: ./coverage/reports
+                path: ./reports/tests
             - store_artifacts:
-                path: ./coverage
+                path: ./reports
     pypi-setup:
         steps:
             - run: echo -e "[pypi]" >> ~/.pypirc
@@ -43,29 +36,20 @@ commands:
             - run: python3 setup.py sdist bdist_wheel
             - run: python3 -m pip install --user --upgrade twine
             - run: python3 -m twine upload dist/*
-    slack-status:
-        steps:
-            - slack/status:
-                mentions: '${CIRCLE_USERNAME}, version=$CIRCLE_TAG'
-    slack-error:
-        steps:
-            - slack/status:
-                fail_only: true
-                mentions: '${CIRCLE_USERNAME}'
 jobs:
     install-build-test:
         docker:
-            - image: cimg/python:3.8.9
+            - image: cimg/python:3.9
         steps:
             - checkout
             - python-test-install
+            - setup-artifacts
             - python-lint
             - python-test
             - python-report
-            - sonarcloud/scan
     install-build-deploy:
         docker:
-            - image: cimg/python:3.8.9
+            - image: cimg/python:3.9
         steps:
             - checkout
             - python-install
@@ -75,9 +59,6 @@ workflows:
     install-build-deploy:
         jobs:
             - install-build-deploy:
-                context:
-                    - pypi-token
-                    - sonarcloud-token
                 filters:
                     tags:
                         only: /.*/
@@ -86,11 +67,6 @@ workflows:
     install-build-test:
         jobs:
             - install-build-test:
-                context:
-                    - shared-pypi-token
-                    - shared-sonarcloud-token
                 filters:
                     tags:
                         ignore: /.*/
-                    branches:
-                        ignore: /dependabot.*/
