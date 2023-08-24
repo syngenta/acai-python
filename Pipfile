@@ -10,20 +10,23 @@ python_version = "3.9"
 allow_prereleases = true
 
 [packages]
+boto3 = "*"
 dynamodb_json = "*"
 jsonpickle = "*"
 jsonref = "*"
 jsonschema = "*"
 pyyaml = "*"
+simplejson = "*"
 xmltodict = "*"
 
 [dev-packages]
 autopep8 = "*"
+moto = "*"
 pylint = "*"
+pylint-quotes = "*"
 pytest = "*"
 pytest-html = "*"
 pytest-cov = "*"
-pylint-quotes = "*"
 
 [scripts]
 test = "python -m unittest discover"
