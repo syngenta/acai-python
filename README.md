@@ -30,7 +30,7 @@ Installation is done using the
 
 ```bash
 $ pip install acai
-# $ pipenv install acai
+# pipenv install acai
 # poetry add acai
 ```
 ## Documentation & Examples
