@@ -64,7 +64,7 @@ jobs:
             - pypi-setup
             - pypi-deploy
 workflows:
-    install-build-deploy:
+    install-build-deploy-workflow:
         jobs:
             - install-build-deploy:
                 filters:
@@ -72,7 +72,7 @@ workflows:
                         only: /.*/
                     branches:
                         ignore: /.*/
-    install-build-test:
+    install-build-test-workflow:
         jobs:
             - install-build-test:
                 filters:
