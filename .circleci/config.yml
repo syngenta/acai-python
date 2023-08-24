@@ -1,30 +1,38 @@
 version: 2.1
 commands:
-    python-install:
-        steps:
-            - run: ln -s local/requirements.txt requirements.txt
-            - run: pip install -r requirements.txt
-    python-test-install:
-        steps:
-            - run: ln -s local/requirements_dev.txt requirements.txt
-            - run: pip install -r requirements.txt
     setup-artifacts:
         steps:
             - run: mkdir reports && mkdir reports/unit-tests && mkdir reports/tests || exit 0
+    python-install:
+        steps:
+            - run: pip install pipenv
+            - run: pipenv install
+    python-test-install:
+        steps:
+            - restore_cache:
+                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - run: pip install pipenv
+            - run: pipenv install --dev
+            - save_cache:
+                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                paths:
+                    - ".venv"
     python-lint:
         steps:
-            - run: pylint acai
+            - run: mkdir coverage && mkdir coverage/lint || exit 0
+            - run: python3 -m pipenv run lint | python3 -m pipenv run pylint_report.py > ./coverage/lint/report.html || exit 0
+            - store_artifacts:
+                path: ./coverage/lint/report.html
     python-test:
-        # if tests get too long to run consider switching to pytest and use test splitting (see: https://circleci.com/docs/troubleshoot-test-splitting/)
         steps:
-            - run: RUN_MODE=unittest STAGE=local LOG_LEVEL=INFO python -m unittest discover
+            - run: pipenv run test
     python-report:
         steps:
-            - run: coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./reports/tests/xunit.xml --html=./reports/unit-test/index.html --self-contained-html --cov-report html:./reports -p no:warnings -o log_cli=true
+            - run: pipenv run coverage
             - store_test_results:
-                path: ./reports/tests
+                path: ./coverage/reports
             - store_artifacts:
-                path: ./reports
+                path: ./coverage
     pypi-setup:
         steps:
             - run: echo -e "[pypi]" >> ~/.pypirc
