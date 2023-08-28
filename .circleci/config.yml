@@ -43,7 +43,7 @@ commands:
             - run: python3 -m pip install --user --upgrade setuptools wheel
             - run: python3 setup.py sdist bdist_wheel
             - run: python3 -m pip install --user --upgrade twine
-            - run: python3 -m twine upload dist/*
+            - run: python3 -m twine upload dist/* --verbose
 jobs:
     install-build-test:
         docker:
