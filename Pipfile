@@ -27,5 +27,5 @@ pylint-quotes = "*"
 
 [scripts]
 test = "python -m unittest discover"
-coverage = "coverage run --source syngenta_digital_alc/ -m  pytest tests/syngenta_digital_alc --cov=syngenta_digital_alc --junitxml ./coverage/reports/xunit.xml --cov-report xml:./coverage/reports/coverage.xml --html=./coverage/unit-test/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true"
-lint = "pylint syngenta_digital_alc"
+coverage = "coverage run --source acai/ -m  pytest tests/acai --cov=acai --junitxml ./coverage/reports/xunit.xml --cov-report xml:./coverage/reports/coverage.xml --html=./coverage/unit-test/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true"
+lint = "pylint acai"
