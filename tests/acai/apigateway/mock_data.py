@@ -92,7 +92,7 @@ def apigateway_event_form_encoded():
 
 def apigateway_route(fail=''):
     return {
-        'path': '/unit-tests/syngenta_digital_alc/mock-handler{}'.format(fail),
+        'path': '/unit-tests/acai/mock-handler{}'.format(fail),
         'httpMethod': 'GET'
     }
 
