@@ -1,4 +1,4 @@
-# Acai
+# Acai AWS
 DRY, configurable, declarative node library for working with Amazon Web Service Lambdas.
 
 ## Features
@@ -29,9 +29,9 @@ Installation is done using the
 [`pip install`](https://packaging.python.org/tutorials/installing-packages/) command:
 
 ```bash
-$ pip install acai
-# pipenv install acai
-# poetry add acai
+$ pip install acai_aws
+# pipenv install acai_aws
+# poetry add acai_aws
 ```
 ## Documentation & Examples
 
