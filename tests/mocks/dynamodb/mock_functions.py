@@ -1,4 +1,4 @@
-from acai.dynamodb.requirements import requirements
+from acai_aws.dynamodb.requirements import requirements
 
 call_list = []
 

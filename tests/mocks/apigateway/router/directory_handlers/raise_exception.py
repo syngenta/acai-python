@@ -1,5 +1,5 @@
-from acai.apigateway.exception import ApiException
-from acai.apigateway.requirements import requirements
+from acai_aws.apigateway.exception import ApiException
+from acai_aws.apigateway.requirements import requirements
 
 
 @requirements()

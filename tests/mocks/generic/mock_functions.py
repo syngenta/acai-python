@@ -1,4 +1,4 @@
-from acai.generic.requirements import requirements
+from acai_aws.generic.requirements import requirements
 
 from tests.mocks.generic.mock_class import MockDataClass
 

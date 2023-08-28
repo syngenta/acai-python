@@ -1,4 +1,4 @@
-from acai.sns.requirements import requirements
+from acai_aws.sns.requirements import requirements
 
 call_list = []
 

@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(
-    name='acai',
+    name='acai_aws',
     version=os.getenv('CIRCLE_TAG'),
     url='https://github.com/syngenta/acai-python.git',
     author='Paul Cruse III',

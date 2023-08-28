@@ -1,4 +1,4 @@
-from acai.kinesis.requirements import requirements
+from acai_aws.kinesis.requirements import requirements
 
 call_list = []
 

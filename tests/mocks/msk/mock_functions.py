@@ -1,4 +1,4 @@
-from acai.msk.requirements import requirements
+from acai_aws.msk.requirements import requirements
 
 call_list = []
 

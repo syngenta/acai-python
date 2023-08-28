@@ -1,4 +1,4 @@
-from acai.apigateway.requirements import requirements
+from acai_aws.apigateway.requirements import requirements
 
 @requirements(
     required_headers=['content-type'],

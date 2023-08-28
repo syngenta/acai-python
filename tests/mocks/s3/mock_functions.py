@@ -1,4 +1,4 @@
-from acai.s3.requirements import requirements
+from acai_aws.s3.requirements import requirements
 
 call_list = []
 

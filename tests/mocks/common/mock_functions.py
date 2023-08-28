@@ -1,4 +1,4 @@
-from acai.common.records.requirements import requirements
+from acai_aws.common.records.requirements import requirements
 
 
 @requirements(verbose=True)

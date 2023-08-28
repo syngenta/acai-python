@@ -1,4 +1,4 @@
-from acai.documentdb.requirements import requirements
+from acai_aws.documentdb.requirements import requirements
 
 call_list = []
 

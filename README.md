@@ -1,4 +1,4 @@
-# Acai
+# Acai AWS
 DRY, configurable, declarative node library for working with Amazon Web Service Lambdas.
 
 ## Features

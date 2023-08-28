@@ -1,4 +1,4 @@
-from acai.firehose.requirements import requirements
+from acai_aws.firehose.requirements import requirements
 
 call_list = []
 
