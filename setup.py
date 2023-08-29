@@ -10,7 +10,7 @@ setup(
     url='https://github.com/syngenta/acai-python.git',
     author='Paul Cruse III',
     author_email='paulcruse3@gmail.com',
-    description='DRY, configurable, opinionated, minimalist API framework',
+    description='DRY, configurable, opinionated, minimalist framework for use with AWS Serverless Lambdas',
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=find_packages(),
