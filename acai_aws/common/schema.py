@@ -44,17 +44,8 @@ class Schema:
         return self.spec
 
     def __get_spec_from_file(self):
-        abs_schema_path = self.__get_abs_spec_path()
-        with open(abs_schema_path, encoding='utf-8') as schema_file:
-            return yaml.load(schema_file, Loader=yaml.FullLoader)
-
-    def __get_abs_spec_path(self):
-        path = os.path.normpath(self.__schema)
-        schema_root = path.split(os.sep)[0]
-        dirty_root_path = os.getcwd().split(schema_root)[0]
-        clean_root_path = dirty_root_path.strip(os.sep)
-        asb_schema_path = f'{os.sep}' + clean_root_path + f'{os.sep}' + self.__schema.strip(os.sep)
-        return asb_schema_path
+        with open(self.__schema, encoding='utf-8') as schema_file:
+            return yaml.load(schema_file, Loader=yaml.FullLoader)    
 
     def __combine_all_of_spec(self, spec):
         combined = copy.deepcopy(spec)
