@@ -2,7 +2,7 @@ version: 2.1
 commands:
     setup-artifacts:
         steps:
-            - run: mkdir reports && mkdir reports/unit-tests && mkdir reports/tests || exit 0
+            - run: mkdir coverage && mkdir coverage/lint && mkdir coverage/reports || exit 0
     python-install:
         steps:
             - run: pip install pipenv
@@ -19,7 +19,6 @@ commands:
                     - ".venv"
     python-lint:
         steps:
-            - run: mkdir coverage && mkdir coverage/lint || exit 0
             - run: python3 -m pipenv run lint | python3 -m pipenv run pylint_report.py > ./coverage/lint/report.html || exit 0
             - store_artifacts:
                 path: ./coverage/lint/report.html
