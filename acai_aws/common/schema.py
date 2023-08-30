@@ -37,7 +37,7 @@ class Schema:
         return self.__get_route_spec(route, method)
 
     def __get_full_spec(self):
-        if not self.spec:
+        if not self.spec and self.__schema:
             unresolved_spec = self.__get_spec_from_file()
             resolved_spec = jsonref.loads(json.dumps(unresolved_spec), jsonschema=True, merge_props=True)
             self.__spec = self.__combine_all_of_spec(resolved_spec)
