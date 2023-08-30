@@ -36,7 +36,7 @@ class S3EventTest(unittest.TestCase):
         self.s3_csv_key = self.csv_event['Records'][0]['s3']['object']['key']
         s3 = boto3.resource('s3')
         bucket = s3.Bucket(self.bucket_name)
-        bucket.create()
+        bucket.create(CreateBucketConfiguration={'LocationConstraint': 'us-east-2'})
         json_data = jsonpickle.dumps(self.expected_json_data, unpicklable=False, use_decimal=True)
         json_data = bytes(json_data.encode('UTF-8'))
         s3_json_object = s3.Object(self.bucket_name, self.s3_json_key)
