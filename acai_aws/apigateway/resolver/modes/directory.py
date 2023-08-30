@@ -10,13 +10,12 @@ class DirectoryModeResolver(BaseModeResolver):
 
     def _get_file_and_import_path(self, request_path):
         split_path = self.get_request_path_as_list(request_path)
-        relative_path = self.__get_relative_path(split_path)
-        relative_file_path = self.__handler_path + self.importer.file_separator + relative_path
-        abs_file_path = self.get_abs_file_path(relative_file_path)
-        abs_import_path = self.get_abs_import_path(relative_file_path)
-        return abs_file_path, abs_import_path
+        route_path = self.__get_route_path(split_path)
+        file_path = self.__handler_path + self.importer.file_separator + route_path
+        import_path = self.get_import_path(file_path)
+        return file_path, import_path
 
-    def __get_relative_path(self, split_path):
+    def __get_route_path(self, split_path):
         file_tree = self.importer.get_handlers_file_tree()
         self.__get_import_path_file_tree(split_path, 0, file_tree)
         return f'{self.importer.file_separator}'.join(self.import_path)

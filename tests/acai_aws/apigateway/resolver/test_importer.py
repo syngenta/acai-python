@@ -62,10 +62,6 @@ class ResolverImporterTest(unittest.TestCase):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
         self.assertEqual(importer.clean_path('/dirty/path/'), 'dirty/path')
 
-    def test_project_root(self):
-        importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertTrue(os.sep in importer.get_project_root())
-
     def test_clean_handlers(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
         self.assertEqual(importer.handlers, self.handler_path)
@@ -74,22 +70,6 @@ class ResolverImporterTest(unittest.TestCase):
         dirty_path = '/tests/mocks/apigateway/importer/directory_handlers/'
         importer = ResolverImporter(handlers=dirty_path, mode='directory')
         self.assertEqual(importer.handlers, self.handler_path)
-
-    def test_handlers_root_directory_handlers(self):
-        importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertEqual(importer.get_handlers_root(), 'tests/mocks/apigateway/importer/directory_handlers')
-
-    def test_handlers_root_pattern_handlers(self):
-        importer = ResolverImporter(handlers=self.handler_pattern, mode='pattern')
-        self.assertEqual(importer.get_handlers_root(), 'tests/mocks/apigateway/importer/pattern_handlers')
-
-    def test_handlers_path_abs_directory_mode(self):
-        importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        self.assertTrue('/tests/mocks/apigateway/importer/directory_handlers' in importer.get_handlers_path_abs())
-
-    def test_handlers_path_abs_pattern_mode(self):
-        importer = ResolverImporter(handlers=self.handler_pattern, mode='pattern')
-        self.assertTrue('/tests/mocks/apigateway/importer/pattern_handlers' in importer.get_handlers_path_abs())
 
     def test_handlers_file_tree_directory_mode(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
@@ -122,7 +102,7 @@ class ResolverImporterTest(unittest.TestCase):
 
     def test_import_module_from_file(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.importer.directory_handlers.basic'
         handler_module = importer.import_module_from_file(file_path, import_path)
         self.assertTrue(hasattr(handler_module, 'post'))

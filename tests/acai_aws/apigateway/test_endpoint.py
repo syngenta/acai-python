@@ -10,7 +10,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_initializes(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'post')
@@ -18,7 +18,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_has_requirements(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'post')
@@ -26,7 +26,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_has_no_requirements(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'patch')
@@ -34,7 +34,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_requires_auth(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'get')
@@ -42,7 +42,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_has_required_response(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'search')
@@ -50,7 +50,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_has_required_route(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'delete')
@@ -59,7 +59,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_supports_custom_requirements(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'put')
@@ -68,7 +68,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_runs_empty_requirements(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'post')
@@ -78,7 +78,7 @@ class EndpointTest(unittest.TestCase):
 
     def test_endpoint_runs_no_requirements(self):
         importer = ResolverImporter(handlers=self.handler_path, mode='directory')
-        file_path = f'/{importer.get_handlers_path_abs()}/basic.py'
+        file_path = f'{self.handler_path}/basic.py'
         import_path = 'tests.mocks.apigateway.endpoint.directory_handlers.basic'
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'patch')

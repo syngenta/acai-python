@@ -13,7 +13,7 @@ class MappingModeResolver(BaseModeResolver):
         path_list = self.__get_request_path_as_list(request_path)
         mapping_path_key = self.__get_matching_path_from_mapping(path_list)
         mapping_file_path = self.__try_get_mapping_file_path(mapping_path_key)
-        file_path = self.__get_abs_file_path(mapping_file_path)
+        file_path = self.importer.clean_path(mapping_file_path)
         import_path = self.importer.clean_path(mapping_file_path).replace(self.importer.file_separator, '.').replace('.py', '')
         return file_path, import_path
 
@@ -26,13 +26,6 @@ class MappingModeResolver(BaseModeResolver):
         if not mapping_file_path:
             mapping_file_path = self.__handler_mapping.get(f'/{self.base_path}/{mapping_path_key}')
         return mapping_file_path
-
-    def __get_abs_file_path(self, mapping_file_path):
-        clean_path = self.importer.clean_path(mapping_file_path)
-        base_dir = clean_path.split(self.importer.file_separator)[0]
-        project_root = self.importer.get_project_root().split(base_dir)[0]
-        join_list = ['', self.importer.clean_path(project_root), self.importer.clean_path(mapping_file_path)]
-        return f'{self.importer.file_separator}'.join(join_list)
 
     def __get_request_path_as_list(self, request_path):
         base_path = request_path.replace(self.base_path, '')
