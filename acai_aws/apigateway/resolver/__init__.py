@@ -37,7 +37,7 @@ class Resolver:
         endpoint = Endpoint(endpoint_module, request.method)
         self.__assign_normalized_route(request, endpoint)
         self.__check_dynamic_route_and_apply_params(request, endpoint)
-        self.__cacher.put(request.path, endpoint_module, self.__resolver.has_dynamic_route)
+        self.__cacher.put(request.path, endpoint_module,self.__resolver.has_dynamic_route, self.__resolver.dynamic_parts)
         self.__resolver.reset()
         return endpoint
 
@@ -49,7 +49,10 @@ class Resolver:
         return self.DIRECTORY_MODE
 
     def __get_endpoint_module(self, request):
-        endpoint_module = self.__cacher.get(request.path)
+        cached = self.__cacher.get(request.path)
+        endpoint_module = cached.get('endpoint')
+        self.__resolver.has_dynamic_route = cached.get('is_dynamic_route', self.__resolver.has_dynamic_route)
+        self.__resolver.dynamic_parts = cached.get('dynamic_parts', self.__resolver.dynamic_parts)
         if endpoint_module is None:
             self.__cache_misses += 1
             endpoint_module = self.__resolver.get_endpoint_module(request)
@@ -67,21 +70,35 @@ class Resolver:
         if not self.__resolver.has_dynamic_route:
             return
         if self.__resolver.has_dynamic_route and not endpoint.has_required_route:
-            raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does have required_route configured')
-        clean_request_path = [rp for rp in request.path.split('/') if rp and rp not in self.__resolver.base_path.split('/')]
-        clean_endpoint_route = [er for er in endpoint.required_route.split('/') if er and er not in self.__resolver.base_path.split('/')]
+            raise ApiException(
+                code=404, 
+                key_path=request.path, 
+                message='no route found; endpoint does have required_route configured'
+            )
+        clean_request_path = [rp for rp in request.path.split(
+            '/') if rp and rp not in self.__resolver.base_path.split('/')]
+        clean_endpoint_route = [er for er in endpoint.required_route.split(
+            '/') if er and er not in self.__resolver.base_path.split('/')]
         self.__check_dynamic_route(request, clean_request_path, clean_endpoint_route)
         self.__apply_dynamic_route_params(request, clean_endpoint_route)
 
     def __check_dynamic_route(self, request, clean_request_path, clean_endpoint_route):
         for index, _ in enumerate(clean_request_path):
             if clean_request_path[index] != clean_endpoint_route[index] and index not in list(self.__resolver.dynamic_parts.keys()):
-                raise ApiException(code=404, key_path=request.path, message='no route found; requested dynamic route does not match endpoint route definition')
+                raise ApiException(
+                    code=404, 
+                    key_path=request.path, 
+                    message='no route found; requested dynamic route does not match endpoint route definition'
+                )
 
     def __apply_dynamic_route_params(self, request, required_route_parts):
         for part in list(self.__resolver.dynamic_parts.keys()):
             variable_name = required_route_parts[part]
             if not variable_name.startswith('{') or not variable_name.endswith('}'):
-                raise ApiException(code=404, key_path=request.path, message='no route found; endpoint does not have proper variables in required_route')
+                raise ApiException(
+                    code=404, 
+                    key_path=request.path,
+                    message='no route found; endpoint does not have proper variables in required_route'
+                )
             dynamic_name = variable_name.strip('{').strip('}')
             request.path_params = dynamic_name, self.__resolver.dynamic_parts[part]
