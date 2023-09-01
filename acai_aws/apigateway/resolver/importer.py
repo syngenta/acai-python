@@ -9,9 +9,7 @@ class ResolverImporter:
 
     def __init__(self, **kwargs):
         self.__handlers = self.clean_path(kwargs['handlers'])
-        self.__handlers_root = None
         self.__handlers_tree = {}
-        self.__project_root = None
 
     @staticmethod
     def import_module_from_file(file_path, import_path):

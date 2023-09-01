@@ -75,10 +75,8 @@ class Resolver:
                 key_path=request.path, 
                 message='no route found; endpoint does have required_route configured'
             )
-        clean_request_path = [rp for rp in request.path.split(
-            '/') if rp and rp not in self.__resolver.base_path.split('/')]
-        clean_endpoint_route = [er for er in endpoint.required_route.split(
-            '/') if er and er not in self.__resolver.base_path.split('/')]
+        clean_request_path = [rp for rp in request.path.split('/') if rp and rp not in self.__resolver.base_path.split('/')]
+        clean_endpoint_route = [er for er in endpoint.required_route.split('/') if er and er not in self.__resolver.base_path.split('/')]
         self.__check_dynamic_route(request, clean_request_path, clean_endpoint_route)
         self.__apply_dynamic_route_params(request, clean_endpoint_route)
 
