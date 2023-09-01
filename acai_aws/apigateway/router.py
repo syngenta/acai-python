@@ -17,6 +17,7 @@ class Router:
         self.__after_all = kwargs.get('after_all')
         self.__with_auth = kwargs.get('with_auth')
         self.__on_error = kwargs.get('on_error')
+        self.__output_error = kwargs.get('output_error', False)
         self.__verbose = kwargs.get('verbose_logging', False)
         self.__auto_validate = kwargs.get('auto_validate', False)
         self.__validate_response = kwargs.get('validate_response', False)
@@ -37,7 +38,8 @@ class Router:
             kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
             self.__handle_error(request, response, **kwargs)
         except Exception as error:
-            kwargs = {'code': 500, 'key_path': 'unknown', 'message': str(error), 'error': error}
+            output = str(error) if self.__output_error else 'internal service error'
+            kwargs = {'code': 500, 'key_path': 'unknown', 'message': output, 'error': error}
             self.__handle_error(request, response, **kwargs)
         self.__log_verbose(title='request-processed', log={'request': request, 'response': response})
         return response.full

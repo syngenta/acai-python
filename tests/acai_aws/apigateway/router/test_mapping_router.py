@@ -85,7 +85,8 @@ class RouterMappingTest(unittest.TestCase):
         router = Router(
             base_path=self.base_path,
             handlers=self.handler_mapping,
-            schema=self.schema_path
+            schema=self.schema_path,
+            output_error=True
         )
         result = router.route(self.raise_exception_event, None)
         json_dict_response = json.loads(result['body'])
@@ -98,7 +99,8 @@ class RouterMappingTest(unittest.TestCase):
         router = Router(
             base_path=self.base_path,
             handlers=self.handler_mapping,
-            schema=self.schema_path
+            schema=self.schema_path,
+            output_error=True
         )
         result = router.route(self.unhandled_exception_event, None)
         json_dict_response = json.loads(result['body'])
