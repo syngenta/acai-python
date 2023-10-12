@@ -11,10 +11,10 @@ class Request:
     def __init__(self, event, lambda_context=None):
         self.lambda_context = lambda_context
         self.__event = event
-        self.__body = event.get('body', {})
-        self.__route = event.get('path', '')
-        self.__path_params = event.get('pathParameters', '')
-        self.__request_context = event.get('requestContext', {})
+        self.__body = event['body'] if event.get('body') is not None else {}
+        self.__route = event['path'] if event.get('path') is not None else ''
+        self.__path_params = event['pathParameters'] if event.get('pathParameters') is not None else ''
+        self.__request_context = event['requestContext'] if event.get('requestContext') is not None else {}
         self.__domain = event.get('requestContext', {}).get('domainName', '')
         self.__stage = event.get('requestContext', {}).get('stage', '')
         self.__context = {}
@@ -62,15 +62,21 @@ class Request:
 
     @property
     def method(self):
-        return self.__event.get('httpMethod', '').lower()
+        if self.__event.get('httpMethod') is not None:
+            return self.__event['httpMethod'].lower()
+        return ''
 
     @property
     def resource(self):
-        return self.__event.get('resource', '')
+        if self.__event.get('resource') is not None:
+            return self.__event['resource']
+        return ''
 
     @property
     def path(self):
-        return self.__event.get('path', '')
+        if self.__event.get('path') is not None:
+            return self.__event['path']
+        return ''
 
     @property
     def route(self):
@@ -84,7 +90,7 @@ class Request:
 
     @property
     def authorizer(self):
-        if self.__event.get('isOffline'):
+        if self.__event.get('isOffline') is not None:
             return self.headers
         return self.__request_context.get('authorizer', self.headers)
 
@@ -134,7 +140,9 @@ class Request:
 
     @property
     def query_params(self):
-        return self.__event.get('queryStringParameters', {})
+        if self.__event.get('queryStringParameters') is not None:
+            return self.__event['queryStringParameters']
+        return {}
 
     @property
     def path_params(self):
