@@ -320,7 +320,7 @@ class RouterMappingTest(unittest.TestCase):
                     'test_id': 'unit-test',
                     'email': 'unit@email.com'
                 },
-                'path_params': {'proxy': 'nested/abc-123'}
+                'path_params': {'proxy': 'nested/abc-123', 'nested_id': 'abc-123'}
             },
             json_dict_response
         )

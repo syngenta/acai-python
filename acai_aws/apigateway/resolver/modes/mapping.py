@@ -57,6 +57,9 @@ class MappingModeResolver(BaseModeResolver):
             for index, _ in enumerate(path_list):
                 if path_list[index] == route[index] or route[index].startswith('{') and route[index].endswith('}'):
                     matching.append(route[index])
+                    if route[index].startswith('{') and route[index].endswith('}'):
+                        self.has_dynamic_route = True
+                        self.dynamic_parts[index] = path_list[index]
                 else:
                     matching = []
         return matching
