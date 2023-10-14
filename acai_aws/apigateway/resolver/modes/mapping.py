@@ -62,4 +62,5 @@ class MappingModeResolver(BaseModeResolver):
                         self.dynamic_parts[index] = path_list[index]
                 else:
                     matching = []
+                    break
         return matching
