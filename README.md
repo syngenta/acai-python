@@ -48,5 +48,6 @@ If you would like to contribute please make sure to follow the established patte
 
 To run unit test, enter command:
 ```bash
-pipenv run test
+$ pipenv install
+$ pipenv run test
 ```
