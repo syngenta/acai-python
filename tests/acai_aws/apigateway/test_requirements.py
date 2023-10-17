@@ -1,10 +1,11 @@
 import unittest
 
+from acai_aws.apigateway.exception import ApiTimeOutException
 from acai_aws.apigateway.request import Request
 from acai_aws.apigateway.response import Response
 
 from tests.mocks.apigateway import mock_request
-from tests.mocks.apigateway.requirements.basic import post, before_call, after_call, call_order
+from tests.mocks.apigateway.requirements.basic import post, get, patch, before_call, after_call, call_order
 
 
 class ApigatewayRequirementsTest(unittest.TestCase):
@@ -51,3 +52,34 @@ class ApigatewayRequirementsTest(unittest.TestCase):
         response = Response()
         result = post(request, response)
         self.assertEqual(str(self.expected_data_class_result), str(result))
+    
+    def test_requirements_global_timeout_raises_exception(self):
+        request = Request(self.basic_request, None, 1)
+        response = Response()
+        try:
+            get(request, response)
+            self.assertTrue(False)
+        except ApiTimeOutException as error:
+            self.assertTrue(isinstance(error, ApiTimeOutException))
+        
+    def test_requirements_local_timeout_raises_exception(self):
+        event = mock_request.get_dynamic_event(method='patch')
+        request = Request(event)
+        response = Response()
+        try:
+            patch(request, response)
+            self.assertTrue(False)
+        except ApiTimeOutException as error:
+            self.assertTrue(isinstance(error, ApiTimeOutException))
+        
+    def test_requirements_local_overwrites_global_timeout_setting(self):
+        event = mock_request.get_dynamic_event(method='patch')
+        request = Request(event, None, 10)
+        response = Response()
+        try:
+            patch(request, response)
+            self.assertTrue(False)
+        except ApiTimeOutException as error:
+            self.assertTrue(isinstance(error, ApiTimeOutException))
+
+        

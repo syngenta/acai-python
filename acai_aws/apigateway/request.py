@@ -8,9 +8,10 @@ from acai_aws.common.json_helper import JsonHelper
 
 class Request:
 
-    def __init__(self, event, lambda_context=None):
-        self.lambda_context = lambda_context
+    def __init__(self, event, lambda_context=None, timeout=None):
         self.__event = event
+        self.lambda_context = lambda_context
+        self.__timeout = timeout
         self.__body = event['body'] if event.get('body') is not None else {}
         self.__route = event['path'] if event.get('path') is not None else ''
         self.__path_params = event['pathParameters'] if event.get('pathParameters') is not None else ''
@@ -164,6 +165,10 @@ class Request:
     @property
     def event(self):
         return self.__event
+
+    @property
+    def timeout(self):
+        return self.__timeout
 
     @property
     def full(self):

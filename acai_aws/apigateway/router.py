@@ -1,6 +1,6 @@
 import logging
 
-from acai_aws.apigateway.exception import ApiException
+from acai_aws.apigateway.exception import ApiException, ApiTimeOutException
 from acai_aws.apigateway.request import Request
 from acai_aws.apigateway.resolver import Resolver
 from acai_aws.apigateway.response import Response
@@ -17,6 +17,8 @@ class Router:
         self.__after_all = kwargs.get('after_all')
         self.__with_auth = kwargs.get('with_auth')
         self.__on_error = kwargs.get('on_error')
+        self.__on_timeout = kwargs.get('on_timeout')
+        self.__timeout = kwargs.get('timeout', None)
         self.__output_error = kwargs.get('output_error', False)
         self.__verbose = kwargs.get('verbose_logging', False)
         self.__auto_validate = kwargs.get('auto_validate', False)
@@ -29,14 +31,17 @@ class Router:
         self.__validator.auto_load()
 
     def route(self, event, context):
-        request = Request(event, context)
+        request = Request(event, context, self.__timeout)
         response = Response()
         try:
             self.__log_verbose(title='request-received', log={'request': request})
             self.__run_route_procedure(request, response)
+        except ApiTimeOutException as timeout_error:
+            kwargs = {'code': timeout_error.code, 'key_path': timeout_error.key_path, 'message': timeout_error.message, 'error': timeout_error}
+            self.__handle_error(request, response, self.__on_timeout, **kwargs)
         except ApiException as api_error:
             kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
-            self.__handle_error(request, response, **kwargs)
+            self.__handle_error(request, response, self.__on_error, **kwargs)
         except Exception as error:
             output = str(error) if self.__output_error else 'internal service error'
             kwargs = {'code': 500, 'key_path': 'unknown', 'message': output, 'error': error}
@@ -81,12 +86,12 @@ class Router:
         if not response.has_errors and self.__after_all and callable(self.__after_all):
             self.__after_all(request, response, endpoint.requirements)
 
-    def __handle_error(self, request, response, **kwargs):
+    def __handle_error(self, request, response, error_func=None, **kwargs):
         try:
             response.code = kwargs['code']
             response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])
-            if self.__on_error and callable(self.__on_error):
-                self.__on_error(request, response, kwargs.get('error'))
+            if error_func and callable(error_func):
+                error_func(request, response, kwargs.get('error'))
             else:
                 logger.log(level='ERROR', log={'request': request, 'response': response, 'error': kwargs})
         except Exception as exception:

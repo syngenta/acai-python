@@ -1,3 +1,5 @@
+import time
+
 from acai_aws.apigateway.requirements import requirements
 
 call_order = []
@@ -30,4 +32,17 @@ def after_call(request, response, reqs):
 )
 def post(data_class, response):
     response.body = {'requirements_basic': data_class.initialized}
+    return response
+
+
+@requirements()
+def get(_, response):
+    time.sleep(5)
+    response.body = {'timeout_basic': 'timeout'}
+    return response
+
+@requirements(timeout=1)
+def patch(_, response):
+    time.sleep(5)
+    response.body = {'timeout_basic': 'timeout'}
     return response

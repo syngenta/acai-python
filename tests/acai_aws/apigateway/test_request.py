@@ -239,3 +239,7 @@ class RequestTest(unittest.TestCase):
         self.assertEqual(request.resource, '')
         self.assertEqual(request.path, '')
         self.assertEqual(request.query_params, {})
+    
+    def test_timeout(self):
+        request = Request(self.basic_request, None, 30)
+        self.assertEqual(request.timeout, 30)

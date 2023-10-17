@@ -2,6 +2,7 @@ import unittest
 
 from acai_aws.apigateway.endpoint import Endpoint
 from acai_aws.apigateway.resolver.importer import ResolverImporter
+from acai_aws.apigateway.request import Request
 from acai_aws.apigateway.response import Response
 
 
@@ -73,7 +74,8 @@ class EndpointTest(unittest.TestCase):
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'post')
         response = Response()
-        result = endpoint.run({}, response)
+        request = Request({})
+        result = endpoint.run(request, response)
         self.assertEqual('{"endpoint_directory_basic": "post"}', result.full['body'])
 
     def test_endpoint_runs_no_requirements(self):
@@ -83,5 +85,6 @@ class EndpointTest(unittest.TestCase):
         endpoint_module = importer.import_module_from_file(file_path, import_path)
         endpoint = Endpoint(endpoint_module, 'patch')
         response = Response()
-        result = endpoint.run({}, response)
+        request = Request({})
+        result = endpoint.run(request, response)
         self.assertEqual('{"endpoint_directory_basic": "patch"}', result.full['body'])
