@@ -18,6 +18,7 @@ class RequestTest(unittest.TestCase):
     basic_raw = mock_request.get_basic_raw()
     basic_graphql = mock_request.get_basic_graphql()
     basic_graphql_variables = mock_request.basic_graphql_variables()
+    missing_inputs = mock_request.get_request_with_missing_fields()
 
     def test_method(self):
         request = Request(self.basic_request)
@@ -231,3 +232,10 @@ class RequestTest(unittest.TestCase):
             '"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, '
             '"context": {}}'
         )
+    
+    def test_defaults(self):
+        request = Request(self.missing_inputs)
+        self.assertEqual(request.method, '')
+        self.assertEqual(request.resource, '')
+        self.assertEqual(request.path, '')
+        self.assertEqual(request.query_params, {})

@@ -860,3 +860,22 @@ def get_dynamic_nested_request_get(path=''):
         'queryStringParameters': {},
         'body': {}
     }
+
+
+def get_request_with_missing_fields():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'pathParameters': {},
+        'body': {}
+    }
