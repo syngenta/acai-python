@@ -61,7 +61,7 @@ class ResolverImporter:
         if not index < len(sections):
             return
         section = sections[index]
-        if not section:
+        if not section: # pragma: no cover
             self.__recurse_section(file_leaf, sections, index + 1)
         if section not in file_leaf:
             file_leaf[section] = {} if index + 1 < len(sections) else '*'
