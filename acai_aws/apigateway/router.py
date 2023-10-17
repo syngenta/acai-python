@@ -83,11 +83,12 @@ class Router:
 
     def __handle_error(self, request, response, **kwargs):
         try:
-            logger.log(level='ERROR', log={'request': request, 'response': response, 'error': kwargs})
             response.code = kwargs['code']
             response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])
             if self.__on_error and callable(self.__on_error):
                 self.__on_error(request, response, kwargs.get('error'))
+            else:
+                logger.log(level='ERROR', log={'request': request, 'response': response, 'error': kwargs})
         except Exception as exception:
             logging.exception(exception)
 

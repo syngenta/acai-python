@@ -16,11 +16,14 @@ setup(
     packages=find_packages(),
     python_requires='>=3.0',
     install_requires=[
+        'boto3',
         'dynamodb_json',
         'jsonpickle',
         'jsonref',
         'jsonschema',
+        'icecream',
         'pyyaml',
+        'simplejson',
         'xmltodict'
     ],
     classifiers=[
