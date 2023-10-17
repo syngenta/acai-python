@@ -1,5 +1,7 @@
 import unittest
 
+from acai_aws.common.records.exception import EventTimeOutException
+
 from acai_aws.common.records.event import Event as CommonEvent
 from acai_aws.documentdb.event import Event as DocumentDBEvent
 from acai_aws.dynamodb.event import Event as DynamoDBEvent
@@ -21,7 +23,7 @@ from tests.mocks.s3 import mock_event as mock_s3
 from tests.mocks.sns import mock_event as mock_sns
 from tests.mocks.sqs import mock_event as mock_sqs
 
-from tests.mocks.common.mock_functions import mock_func_verbose
+from tests.mocks.common.mock_functions import mock_func_verbose, mock_func_timeout
 
 
 class CommonRequirementsTest(unittest.TestCase):
@@ -76,3 +78,10 @@ class CommonRequirementsTest(unittest.TestCase):
     def test_decorator_with_sqs_event(self):
         result = mock_func_verbose(self.sqs_event, self.context)
         self.assertTrue(isinstance(result, SQSEvent))
+
+    def test_decorator_with_timeout(self):
+        try:
+            mock_func_timeout(self.sqs_event, self.context)
+            self.assertTrue(False)
+        except EventTimeOutException as error:
+            self.assertTrue(isinstance(error, EventTimeOutException))

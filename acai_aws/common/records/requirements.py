@@ -1,7 +1,8 @@
 import inspect
+import signal
 
 from acai_aws.common import logger
-from acai_aws.common.records.exception import EventException
+from acai_aws.common.records.exception import EventException, EventTimeOutException
 from acai_aws.common.records.event import Event as CommonEvent
 from acai_aws.documentdb.event import Event as DocumentDBEvent
 from acai_aws.dynamodb.event import Event as DynamoDBEvent
@@ -50,6 +51,17 @@ def requirements(**kwargs):
 
     def decorator_func(func):
 
+        def raise_timeout(*_):
+            raise EventTimeOutException
+        
+        def start_timeout():
+            if kwargs.get('timeout') is not None:
+                signal.signal(signal.SIGALRM, raise_timeout)
+                signal.alarm(kwargs['timeout'])
+        
+        def end_timeout():
+            signal.alarm(0)
+
         def run_before(records_event):
             if kwargs.get('before') and callable(kwargs['before']):
                 kwargs['before'](records_event, kwargs)
@@ -63,7 +75,9 @@ def requirements(**kwargs):
             run_before(records_event)
             if kwargs.get('data_class') and inspect.isclass(kwargs['data_class']):
                 records_event.data_class = kwargs['data_class']
+            start_timeout()
             result = func(records_event)
+            end_timeout()
             run_after(records_event, result)
             return result
 

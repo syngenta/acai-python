@@ -1,3 +1,5 @@
+import time
+
 from acai_aws.generic.requirements import requirements
 
 from tests.mocks.generic.mock_class import MockDataClass
@@ -30,3 +32,9 @@ def mock_generic(event):
 )
 def mock_generic_dc(data_class):
     return data_class
+
+
+@requirements(timeout=1)
+def mock_timeout(event):
+    time.sleep(5)
+    return event
