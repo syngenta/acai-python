@@ -8,7 +8,7 @@ def requirements(**kwargs):
     def decorator_func(func):
 
         def raise_timeout(*_):
-            raise ApiTimeOutException
+            raise ApiTimeOutException()
         
         def start_timeout(timeout=None):
             if kwargs.get('timeout') is not None or timeout is not None:

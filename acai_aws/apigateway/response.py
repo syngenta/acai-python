@@ -7,10 +7,10 @@ from acai_aws.common.json_helper import JsonHelper
 
 class Response:
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.__code = 200
         self.__is_json = True
-        self.__open_cors = True
+        self.__cors = kwargs.get('cors', True)
         self.__base64_encoded = False
         self.__compress = False
         self.__content_type = ''
@@ -19,8 +19,8 @@ class Response:
 
     @property
     def headers(self):
-        if self.open_cors:
-            self.__set_open_cors()
+        if self.cors:
+            self.__set_cors()
         return self.__headers
 
     @headers.setter
@@ -39,12 +39,20 @@ class Response:
         self.__content_type = content_type
 
     @property
+    def cors(self):
+        return self.__cors
+
+    @cors.setter
+    def cors(self, access):
+        self.__cors = access
+    
+    @property
     def open_cors(self):
-        return self.__open_cors
+        return self.__cors
 
     @open_cors.setter
     def open_cors(self, access):
-        self.__open_cors = access
+        self.__cors = access
 
     @property
     def base64_encoded(self):
@@ -123,7 +131,7 @@ class Response:
             file.write(body.encode('utf-8'))
         return base64.b64encode(bytes_io.getvalue()).decode('ascii')
 
-    def __set_open_cors(self):
+    def __set_cors(self):
         self.__headers['Access-Control-Allow-Origin'] = '*'
         self.__headers['Access-Control-Allow-Headers'] = '*'
 

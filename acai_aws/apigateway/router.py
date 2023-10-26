@@ -18,6 +18,7 @@ class Router:
         self.__with_auth = kwargs.get('with_auth')
         self.__on_error = kwargs.get('on_error')
         self.__on_timeout = kwargs.get('on_timeout')
+        self.__cors = kwargs.get('cors', True)
         self.__timeout = kwargs.get('timeout', None)
         self.__output_error = kwargs.get('output_error', False)
         self.__verbose = kwargs.get('verbose_logging', False)
@@ -32,7 +33,7 @@ class Router:
 
     def route(self, event, context):
         request = Request(event, context, self.__timeout)
-        response = Response()
+        response = Response(cors=self.__cors)
         try:
             self.__log_verbose(title='request-received', log={'request': request})
             self.__run_route_procedure(request, response)
