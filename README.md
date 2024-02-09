@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/syngenta/acai-python.svg?style=shield)](https://circleci.com/gh/syngenta/acai-python)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=syngenta_acai-python&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=syngenta_acai-python)
+
 # Acai AWS
 DRY, configurable, declarative node library for working with Amazon Web Service Lambdas.
 

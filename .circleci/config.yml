@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+    sonarcloud: sonarsource/sonarcloud@2.0.0
 commands:
     setup-artifacts:
         steps:
@@ -54,6 +56,7 @@ jobs:
             - python-lint
             - python-test
             - python-report
+            - sonarcloud/scan
     install-build-deploy:
         docker:
             - image: cimg/python:3.9
@@ -74,6 +77,8 @@ workflows:
     install-build-test-workflow:
         jobs:
             - install-build-test:
+                context:
+                    - sonarcloud
                 filters:
                     tags:
                         ignore: /.*/
