@@ -31,7 +31,7 @@ commands:
         steps:
             - run: pipenv run coverage
             - store_test_results:
-                path: ./coverage/reports
+                path: ./coverage
             - store_artifacts:
                 path: ./coverage
     pypi-setup:
