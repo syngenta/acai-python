@@ -66,10 +66,9 @@ class Router:
             self.__before_all(request, response, endpoint.requirements)
 
     def __run_with_auth(self, request, response, endpoint):
-        if not response.has_errors and self.__auto_validate and self.__validator.request_has_security(request) and self.__with_auth and callable(self.__with_auth):
-            self.__with_auth(request, response, endpoint.requirements)
-        elif not response.has_errors and endpoint.requires_auth and self.__with_auth and callable(self.__with_auth):
-            self.__with_auth(request, response, endpoint.requirements)
+        if not response.has_errors and self.__with_auth and callable(self.__with_auth):
+            if (self.__auto_validate and self.__validator.request_has_security(request)) or endpoint.requires_auth:
+                self.__with_auth(request, response, endpoint.requirements)
 
     def __run_request_validation(self, request, response, endpoint):
         if not response.has_errors and self.__auto_validate:
