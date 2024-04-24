@@ -41,6 +41,7 @@ class ResponseTest(unittest.TestCase):
     def test_closed_open_cors_headers(self):
         self.response.open_cors = False
         self.assertDictEqual(self.response.headers, {})
+        self.assertFalse(self.response.open_cors)
 
     def test_header_assignment(self):
         self.response.headers = ('some-key', 'some-value')
