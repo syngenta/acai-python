@@ -7,7 +7,7 @@ name = "pypi"
 python_version = "3.9"
 
 [pipenv]
-allow_prereleases = true
+allow_prereleases = false
 
 [packages]
 boto3 = "*"

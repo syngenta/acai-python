@@ -1,5 +1,5 @@
 import unittest
-from moto import mock_s3
+from moto import mock_aws
 import boto3
 import jsonpickle
 
@@ -14,7 +14,7 @@ from tests.mocks.s3.mock_data_class import MockS3DataClass
 class S3EventTest(unittest.TestCase):
     basic_event = mock_event.get_basic()
     csv_event = mock_event.get_basic_csv()
-    mock_s3 = mock_s3()
+    mock_aws = mock_aws()
     schema_path = 'tests/mocks/s3/openapi.yml'
     starting_csv_string = ['Name,Job,Age,Income', 'Alice,Programmer,23,110000', 'Bob,Executive,34,90000', 'Carl,Sales,45,50000']
     expected_json_data = {
@@ -30,7 +30,7 @@ class S3EventTest(unittest.TestCase):
     ]
 
     def setUp(self):
-        self.mock_s3.start()
+        self.mock_aws.start()
         self.bucket_name = self.basic_event['Records'][0]['s3']['bucket']['name']
         self.s3_json_key = self.basic_event['Records'][0]['s3']['object']['key']
         self.s3_csv_key = self.csv_event['Records'][0]['s3']['object']['key']
@@ -46,7 +46,7 @@ class S3EventTest(unittest.TestCase):
         s3_csv_object.put(Body=csv_data)
 
     def tearDown(self):
-        self.mock_s3.stop()
+        self.mock_aws.stop()
 
     def test_event_accepts_event(self):
         event = Event(self.basic_event)
