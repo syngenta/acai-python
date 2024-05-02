@@ -1,8 +1,9 @@
 import copy
-import os
 import json
+import inspect
 
 import jsonref
+from pydantic import BaseModel
 import yaml
 
 
@@ -24,17 +25,19 @@ class Schema:
         return self.__get_full_spec()
 
     def get_body_spec(self, required_body=None):
-        if self.__schema and isinstance(self.__schema, dict):
+        if required_body and inspect.isclass(required_body) and issubclass(required_body, BaseModel):
+            return required_body
+        elif self.__schema and isinstance(self.__schema, dict):
             body_spec = self.__schema
         elif required_body and isinstance(required_body, dict):
             body_spec = required_body
-        else:
+        elif required_body and isinstance(required_body, str):
             body_spec = self.__get_component_spec(required_body)
         body_spec['additionalProperties'] = self.__config.get('allow_additional_properties', False)
         return body_spec
-
+    
     def get_route_spec(self, route, method):
-        return self.__get_route_spec(route, method)
+        return self.__get_route_spec(route, method)        
 
     def __get_full_spec(self):
         if not self.spec and self.__schema:

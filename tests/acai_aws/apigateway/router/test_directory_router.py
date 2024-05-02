@@ -599,12 +599,13 @@ class RouterDirectoryTest(unittest.TestCase):
             json_dict_response
         )
 
-    def test_basic_directory_routing_fails_with_response_body(self):
+    def test_basic_directory_routing_passes_with_pydantic_response_body(self):
         dynamic_event = self.mock_request.get_dynamic_event(
-            headers={'x-api-key': 'some-key'},
-            path='unit-test/v1/auto',
+            headers={'x-api-key': 'some-key', 'content-type': 'application/json'},
+            path='unit-test/v1/pydantic',
             proxy='auto',
-            method='delete'
+            method='post',
+            body={'id': 1, 'email': 'test@test.com', 'active': True, 'favorites': ['pizza'], 'notification_config': {'email': True}}
         )
         router = Router(
             base_path=self.base_path,
@@ -614,23 +615,79 @@ class RouterDirectoryTest(unittest.TestCase):
         )
         result = router.route(dynamic_event, None)
         json_dict_response = json.loads(result['body'])
-        self.assertEqual(500, result['statusCode'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual({'pydantic_pass': True}, json_dict_response)
+
+    def test_basic_directory_routing_fails_with_pydantic_response_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key', 'content-type': 'application/json'},
+            path='unit-test/v1/pydantic',
+            proxy='auto',
+            method='post',
+            body={'fails': True}
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            schema=self.schema_path,
+            validate_response=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
         self.assertDictEqual(
             {
                 'errors': [
                     {
-                        'key_path': 'root',
-                        'message': "'data' is a required property"
-                    },
+                        'key_path': 'id', 
+                        'message': 'Field required'
+                    }, 
                     {
-                        'key_path': 'root',
-                        'message': "Additional properties are not allowed ('bad-delete' was unexpected)"
-                    },
+                        'key_path': 'email', 
+                        'message': 'Field required'
+                    }, 
                     {
-                        'key_path': 'response',
-                        'message': 'There was a problem with the APIs response; does not match defined schema'
+                        'key_path': 'active', 
+                        'message': 'Field required'
+                    }, 
+                    {
+                        'key_path': 'favorites', 
+                        'message': 'Field required'
+                    }, 
+                    {
+                        'key_path': 'notification_config', 
+                        'message': 'Field required'
                     }
                 ]
-            },
+            }, 
+            json_dict_response
+        )
+    
+    def test_basic_directory_routing_fails_with_non_json_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/pydantic',
+            proxy='auto',
+            method='post',
+            body={'fails': True}
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            schema=self.schema_path,
+            validate_response=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual(
+            {
+                'errors': [
+                    {
+                        'key_path': 'body', 
+                        'message': 'Expecting JSON request body; please make sure using proper content-type headers and body string is properly encoded'
+                    }
+                ]
+            }, 
             json_dict_response
         )

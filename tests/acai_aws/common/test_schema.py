@@ -1,6 +1,9 @@
 import unittest
 
+from pydantic import BaseModel
+
 from acai_aws.common.schema import Schema
+from tests.mocks.common.mock_pydantic_class import Request
 
 
 class SchemaTest(unittest.TestCase):
@@ -172,6 +175,11 @@ class SchemaTest(unittest.TestCase):
         schema = Schema(schema=self.schema_dict)
         spec = schema.get_body_spec()
         self.assertDictEqual(self.expected_dict_from_dict, spec)
+    
+    def test_get_body_spec_from_pydantic_model(self):
+        schema = Schema(schema=self.schema_path)
+        spec = schema.get_body_spec(Request)
+        self.assertTrue(issubclass(spec, BaseModel))
 
     def test_get_spec_from_route(self):
         schema = Schema(schema=self.schema_path)

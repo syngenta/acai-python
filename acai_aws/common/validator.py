@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from jsonschema import Draft7Validator
+from pydantic import BaseModel, ValidationError
 
 from acai_aws.common.schema import Schema
 
@@ -94,11 +95,18 @@ class Validator:
 
     @staticmethod
     def check_required_body(response, schema, request_body):
-        if schema:
+        if not Validator.is_json(response, request_body):
+            return False
+        if schema and isinstance(schema, dict):
             schema_validator = Draft7Validator(schema)
             for schema_error in sorted(schema_validator.iter_errors(request_body), key=str):
                 error_key = Validator.format_schema_error_key(schema_error)
                 response.set_error(key_path=error_key, message=schema_error.message)
+        elif issubclass(schema, BaseModel):
+            try:
+                schema(**request_body)
+            except ValidationError as error:
+                [response.set_error(key_path='.'.join(error['loc']), message=error['msg']) for error in error.errors()]
 
     @staticmethod
     def combine_parameters(parameters):
@@ -118,3 +126,10 @@ class Validator:
     def format_schema_error_key(schema_error):
         error_path = '.'.join(str(path) for path in schema_error.path)
         return error_path if error_path else 'root'
+
+    @staticmethod
+    def is_json(response, request_body):
+        if not isinstance(request_body, dict):
+            response.set_error('body', 'Expecting JSON request body; please make sure using proper content-type headers and body string is properly encoded')
+            return False
+        return True

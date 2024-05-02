@@ -5,6 +5,7 @@ from acai_aws.apigateway.response import Response
 from acai_aws.common.validator import Validator
 
 from tests.mocks.apigateway import mock_request
+from tests.mocks.common.mock_pydantic_class import UserRequest
 
 
 class ValidatorTest(unittest.TestCase):
@@ -119,3 +120,22 @@ class ValidatorTest(unittest.TestCase):
         request = Request(mock_request.get_auto_validated_data())
         response = Response()
         self.validator.validate_request_with_openapi(request, response)
+    
+    def test_required_pydantic_body_pass(self):
+        request = Request(mock_request.get_basic_passing_for_required_body_validation())
+        response = Response()
+        requirements = {
+            'required_body': UserRequest
+        }
+        self.validator.validate_request(request, response, requirements)
+        self.assertFalse(response.has_errors)
+    
+    def test_required_pydantic_body_fail(self):
+        request = Request(mock_request.get_basic_failing_for_required_body_validation())
+        response = Response()
+        requirements = {
+            'required_body': UserRequest
+        }
+        self.validator.validate_request(request, response, requirements)
+        self.assertTrue(response.has_errors)
+        self.assertEqual('{"errors": [{"key_path": "id", "message": "Field required"}]}', response.body)
