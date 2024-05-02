@@ -6,7 +6,6 @@ from acai_aws.apigateway.response import Response
 
 from tests.mocks.apigateway import mock_request
 from tests.mocks.apigateway.requirements import basic
-from tests.mocks.apigateway.router.directory_handlers import pydantic
 
 
 class ApigatewayRequirementsTest(unittest.TestCase):
