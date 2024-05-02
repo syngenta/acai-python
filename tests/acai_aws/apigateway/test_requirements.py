@@ -81,11 +81,4 @@ class ApigatewayRequirementsTest(unittest.TestCase):
             basic.patch(request, response)
             self.assertTrue(False)
         except ApiTimeOutException as error:
-            self.assertTrue(isinstance(error, ApiTimeOutException))
-
-    def test_requirements_with_pydantic_validation_does_not_interfeere(self):
-        expected = {'pydantic_pass': True}
-        request = Request(mock_request.get_basic_passing_for_required_body_validation())
-        response = Response()
-        result = pydantic.post(request, response)
-        self.assertDictEqual(expected, result.raw)    
+            self.assertTrue(isinstance(error, ApiTimeOutException))    

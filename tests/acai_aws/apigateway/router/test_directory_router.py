@@ -662,3 +662,32 @@ class RouterDirectoryTest(unittest.TestCase):
             }, 
             json_dict_response
         )
+    
+    def test_basic_directory_routing_fails_with_non_json_body(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/pydantic',
+            proxy='auto',
+            method='post',
+            body={'fails': True}
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            schema=self.schema_path,
+            validate_response=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual(
+            {
+                'errors': [
+                    {
+                        'key_path': 'body', 
+                        'message': 'Expecting JSON request body; please make sure using proper content-type headers and body string is properly encoded'
+                    }
+                ]
+            }, 
+            json_dict_response
+        )
