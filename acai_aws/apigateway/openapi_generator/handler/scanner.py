@@ -5,7 +5,7 @@ import glob
 class HandlerScanner:
 
     def __init__(self, handlers):
-        self.__handlers =  self.clean_path(handlers)
+        self.__handlers = self.clean_path(handlers)
 
     @property
     def file_separator(self):

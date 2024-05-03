@@ -1,27 +1,29 @@
 class HandlerModule:
     
-    def __init__(self, file_path):
+    def __init__(self, file_path, module, method):
+        self.__module = module
         self.__file_path = file_path
+        self.__method = method
 
-    @classmethod
-    def convert_from_file_paths(cls, file_paths):
-        # SUPPORTED_METHODS = ['any', 'delete', 'get', 'head', 'options', 'patch', 'post', 'put']
-        modules = []
-        for file in file_paths:
-            modules.append(cls(file))
-        return modules
+    @property
+    def file_path(self):
+        return self.__file_path
+    
+    @property
+    def module(self):
+        return self.__module
+    
+    @property
+    def method(self):
+        return self.__method
 
     @property
     def operation_id(self):
         pass
 
     @property
-    def path(self):
+    def route_path(self):
         # required_route overwrites this logic
-        pass
-
-    @property
-    def method(self):
         pass
 
     @property
