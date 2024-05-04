@@ -11,6 +11,6 @@ if __name__ == "__main__":
     importer = HandlerImporter()
     validator.validate_arguments(inputs)
     file_paths = scanner.get_handler_file_paths()
-    results = importer.get_modules_from_file_paths(file_paths)
+    results = importer.get_modules_from_file_paths(file_paths, scanner.handlers_base, inputs.base)
     for module in results:
-        print(f'{module.method}::{module.file_path}')
+        print(f'{module.file_path} => {module.method}::{module.route_path} -> {module.operation_id}')

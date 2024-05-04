@@ -6,7 +6,7 @@ from acai_aws.apigateway.openapi_generator.handler.module import HandlerModule
 
 class HandlerImporter:
 
-    def get_modules_from_file_paths(self, file_paths):
+    def get_modules_from_file_paths(self, file_paths, handlers_base, base_path):
         SUPPORTED_METHODS = ['any', 'delete', 'get', 'head', 'options', 'patch', 'post', 'put']
         modules = []
         for file_path in file_paths:
@@ -15,7 +15,7 @@ class HandlerImporter:
                 module = self.import_module_from_file(file_path, import_path)
                 for method in dir(module):
                     if method.lower() in SUPPORTED_METHODS:
-                        modules.append(HandlerModule(file_path, module, method))
+                        modules.append(HandlerModule(handlers_base, file_path, module, method, base_path))
             except:  # noqa: E722
                 pass
         return modules

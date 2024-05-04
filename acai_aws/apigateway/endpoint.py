@@ -18,7 +18,7 @@ class Endpoint:
 
     @property
     def has_required_response(self):
-        return self.__requirements.get('required_response', False)
+        return bool(self.__requirements.get('required_response', False))
 
     @property
     def has_required_route(self):
