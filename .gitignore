@@ -130,4 +130,7 @@ Dockerfile
 .idea
 .vscode
 
+#ruff
+.ruff_cache
+
 
