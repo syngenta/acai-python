@@ -1,8 +1,9 @@
 import os
 
+from pydantic import BaseModel
+
 
 class HandlerModule:
-    
     def __init__(self, handler_base, file_path, module, method, base):
         self.__handler_base = handler_base
         self.__file_path = file_path
@@ -16,11 +17,11 @@ class HandlerModule:
     @property
     def file_path(self):
         return self.__file_path
-    
+
     @property
     def module(self):
         return self.__module
-    
+
     @property
     def method(self):
         return self.__method
@@ -59,20 +60,20 @@ class HandlerModule:
         return self.__requirements.get('available_query')
 
     @property
-    def request_body_shema_name(self): # need to generate unique schema name
-        return self.__requirements.get('request_body')
-    
+    def request_body_shema_name(self):
+        return f'{self.method}-{self.route_path.replace("/", "-").replace("_", "-").replace("{", "").replace("}", "")}-request-body'
+
     @property
-    def request_body_shema(self): # need to determine schema body; if requirements is string return nothing
-        return self.__requirements.get('request_body')
+    def request_body_shema(self):
+        return self.__get_schema_body('request_body')
 
     @property
     def response_body_shema_name(self):
-        return self.__requirements.get('required_response')
+        return f'{self.method}-{self.route_path.replace("/", "-").replace("_", "-").replace("{", "").replace("}", "")}-response-body'
 
     @property
     def response_body_shema(self):
-        return self.__requirements.get('required_response')
+        return self.__get_schema_body('required_response')
 
     def __compose_route_path(self):
         dirty_route = self.__file_path.split(self.__handler_base)[1]
@@ -86,3 +87,12 @@ class HandlerModule:
             if route:
                 clean_route.append(route)
         return '/'.join(clean_route)
+
+    def __get_schema_body(self, schema_key):
+        schema_body = self.__requirements.get(schema_key)
+        if not schema_body or isinstance(schema_body, str):
+            return None
+        elif isinstance(schema_body, dict):
+            return schema_body
+        elif issubclass(schema_body, BaseModel):
+            return schema_body.model_json_schema()

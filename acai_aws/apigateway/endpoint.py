@@ -1,5 +1,4 @@
 class Endpoint:
-
     def __init__(self, module, method):
         self.__method = getattr(module, method)
         self.__requirements = getattr(self.__method, 'requirements', {})
@@ -14,11 +13,11 @@ class Endpoint:
 
     @property
     def requires_auth(self):
-        return self.__requirements.get('auth_required', False)
+        return self.__requirements.get('auth_required')
 
     @property
     def has_required_response(self):
-        return bool(self.__requirements.get('required_response', False))
+        return bool(self.__requirements.get('required_response'))
 
     @property
     def has_required_route(self):
