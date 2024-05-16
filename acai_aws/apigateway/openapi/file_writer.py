@@ -17,6 +17,6 @@ class OpenAPIFileWriter:
 
     def __write_yml(self, doc, file_locaiton):
         with open(f'{file_locaiton}/openapi.yml', 'w') as openapi_yml:
-            yaml.dump(doc, openapi_yml, default_flow_style=False)
+            yaml.dump(doc, openapi_yml, indent=4, default_flow_style=False, sort_keys=False)
         
     

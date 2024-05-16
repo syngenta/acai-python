@@ -3,24 +3,11 @@ import yaml
 
 class OpenAPIGenerator:
 
-    def __init__(self):
-        self.__doc_dict = {
-            'openapi': '3.0.1',
-            'info': {
-                'version': '1.0.0',
-                'title': 'Acai Generator',
-                'license': {
-                    'name': 'MIT'
-                }
-            },
-            'tags': [],
-            'servers': [],
-            'paths': {},
-            'security': {},
-            'components': {
-                'schemas': {}
-            }
-        }
+    def __init__(self, file_location=None):
+        if file_location is not None:
+            self.__doc_dict = self.__read_openapi(file_location)
+        else:
+            self.__doc_dict = self.__get_default_dict()
 
     @property
     def doc(self):
@@ -51,8 +38,20 @@ class OpenAPIGenerator:
             route_method['tags'] = []
         route_method['tags'] = route_method['tags'] + module.tags
         route_method['tags'] = list(dict.fromkeys(route_method['tags']))
-        self.__doc_dict['tags'] = self.__doc_dict['tags'] + route_method['tags'] 
-        self.__doc_dict['tags'] = list(dict.fromkeys(self.__doc_dict['tags']))
+        
+        route_tags = self.__add_doc_tag(route_method['tags'])
+        doc_tags = self.__add_doc_tag(self.__doc_dict['tags']) 
+        combined_tags = route_tags + doc_tags
+        self.__doc_dict['tags'] = [dict(tag) for tag in {tuple(combined_tag.items()) for combined_tag in combined_tags}]
+        
+    def __add_doc_tag(self, tags):
+        doc_tags = []
+        for tag in tags:
+            if isinstance(tag, dict):
+                doc_tags.append({'name': tag.get('name', 'AcaiGenerated')})
+            else:
+                doc_tags.append({'name': tag})
+        return doc_tags
     
     def __set_operation_id(self, route_method, module):
         if not route_method.get('operationId'):
@@ -65,7 +64,7 @@ class OpenAPIGenerator:
     
     def __set_security(self, route_method, module):
         if not route_method.get('security') and module.requires_auth:
-            route_method['security'] = []        
+            route_method['security'] = [{'AcaiGenerated': []}]        
     
     def __set_parameters(self, route_method, module):
         route_method['parameters'] = []
@@ -103,8 +102,9 @@ class OpenAPIGenerator:
         if module.response_body_schema:
             if not route_method.get('responses'):
                 route_method['responses'] = {}
-            route_method['responses'][200] = {
-                'content':{
+            route_method['responses']['200'] = {
+                'description': 'OK',
+                'content': {
                     'application/json':{
                         'schema': {
                             '$ref': f'#/components/schemas/{module.response_body_schema_name}'
@@ -122,6 +122,31 @@ class OpenAPIGenerator:
     def __read_openapi(self, file_location):
         with open(file_location, encoding='utf-8') as schema_file:
             return yaml.load(schema_file, Loader=yaml.FullLoader)
+    
+    def __get_default_dict(self):
+        return {
+            'openapi': '3.1.0',
+            'info': {
+                'version': '1.0.0',
+                'title': 'Acai Generator',
+                'license': {
+                    'name': 'MIT'
+                }
+            },
+            'tags': [],
+            'servers': [],
+            'paths': {},
+            'components': {
+                'securitySchemes': {
+                    'AcaiGenerated': {
+                        'type': 'apiKey',
+                        'in': 'header',
+                        'name': 'CHANGE-ME'
+                    }                    
+                },
+                'schemas': {}
+            }
+        }
         
             
         
