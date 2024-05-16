@@ -23,7 +23,7 @@ class InputArguments:
         return self.__output
 
     @property
-    def format(self):
+    def formats(self):
         return self.__format.split(',')
 
     def __get_command_line_args(self):

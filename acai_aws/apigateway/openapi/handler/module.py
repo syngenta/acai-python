@@ -24,7 +24,7 @@ class HandlerModule:
 
     @property
     def method(self):
-        return self.__method
+        return self.__method.lower()
 
     @property
     def operation_id(self):
@@ -37,7 +37,19 @@ class HandlerModule:
             self.__route_path = self.__requirements['required_route']
         if not self.__route_path:
             self.__route_path = self.__compose_route_path()
-        return self.__route_path
+        return self.__route_path if self.__route_path.startswith('/') else f'/{self.__route_path}'
+    
+    @property
+    def deprecated(self):
+        return bool(self.__requirements.get('deprecated'))
+    
+    @property
+    def summary(self):
+        return self.__requirements.get('summary')
+    
+    @property
+    def tags(self):
+        return [self.__base_path.replace(os.sep, '-')]
 
     @property
     def requires_auth(self):
@@ -45,34 +57,43 @@ class HandlerModule:
 
     @property
     def required_headers(self):
-        return self.__requirements.get('required_headers')
+        return self.__requirements.get('required_headers', [])
 
     @property
     def available_headers(self):
-        return self.__requirements.get('available_headers')
+        return self.__requirements.get('available_headers', [])
 
     @property
     def required_query(self):
-        return self.__requirements.get('required_query')
+        return self.__requirements.get('required_query', [])
 
     @property
     def available_query(self):
-        return self.__requirements.get('available_query')
+        return self.__requirements.get('available_query', [])
 
     @property
-    def request_body_shema_name(self):
-        return f'{self.method}-{self.route_path.replace("/", "-").replace("_", "-").replace("{", "").replace("}", "")}-request-body'
+    def required_path_params(self):
+        path_params = []
+        for path_part in self.route_path.split('/'):
+            if '{' in path_part and '}' in path_part:
+                cleaned_part = path_part.replace('{', '').replace('}', '')
+                path_params.append(cleaned_part)
+        return path_params
 
     @property
-    def request_body_shema(self):
-        return self.__get_schema_body('request_body')
+    def request_body_schema_name(self):
+        return f'{self.method}{self.route_path.replace("/", "-").replace("_", "-").replace("{", "").replace("}", "")}-request-body'
 
     @property
-    def response_body_shema_name(self):
-        return f'{self.method}-{self.route_path.replace("/", "-").replace("_", "-").replace("{", "").replace("}", "")}-response-body'
+    def request_body_schema(self):
+        return self.__get_schema_body('required_body')
 
     @property
-    def response_body_shema(self):
+    def response_body_schema_name(self):
+        return f'{self.method}{self.route_path.replace("/", "-").replace("_", "-").replace("{", "").replace("}", "")}-response-body'
+
+    @property
+    def response_body_schema(self):
         return self.__get_schema_body('required_response')
 
     def __compose_route_path(self):

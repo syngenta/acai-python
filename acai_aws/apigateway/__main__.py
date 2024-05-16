@@ -1,9 +1,12 @@
+import pprint
 from icecream import ic
 
-from acai_aws.apigateway.openapi_generator.handler.importer import HandlerImporter
-from acai_aws.apigateway.openapi_generator.handler.scanner import HandlerScanner
-from acai_aws.apigateway.openapi_generator.input.arguments import InputArguments
-from acai_aws.apigateway.openapi_generator.input.validator import InputValidator
+from acai_aws.apigateway.openapi.handler.importer import HandlerImporter
+from acai_aws.apigateway.openapi.handler.scanner import HandlerScanner
+from acai_aws.apigateway.openapi.input.arguments import InputArguments
+from acai_aws.apigateway.openapi.input.validator import InputValidator
+from acai_aws.apigateway.openapi.generator import OpenAPIGenerator
+from acai_aws.apigateway.openapi.file_writer import OpenAPIFileWriter
 
 
 if __name__ == '__main__':
@@ -11,17 +14,14 @@ if __name__ == '__main__':
     validator = InputValidator()
     scanner = HandlerScanner(inputs.handlers)
     importer = HandlerImporter()
+    generator = OpenAPIGenerator()
+    writer = OpenAPIFileWriter()
 
     validator.validate_arguments(inputs)
     file_paths = scanner.get_handler_file_paths()
-    results = importer.get_modules_from_file_paths(file_paths, scanner.handlers_base, inputs.base)
+    modules = importer.get_modules_from_file_paths(file_paths, scanner.handlers_base, inputs.base)
 
-    for module in results:
-        module_attributes = {
-            'file_path': module.file_path,
-            'route_path': module.route_path,
-            'method': module.method,
-            'operation_id': module.operation_id,
-            'request_body_name': module.request_body_shema_name,
-        }
-        ic(module_attributes)
+    for module in modules:
+        generator.add_path_and_method(module)
+    
+    writer.write_openapi(generator.doc, inputs.output, inputs.formats)

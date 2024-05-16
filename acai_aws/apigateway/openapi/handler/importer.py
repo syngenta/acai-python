@@ -1,7 +1,7 @@
 import importlib.util
 import os
 
-from acai_aws.apigateway.openapi_generator.handler.module import HandlerModule
+from acai_aws.apigateway.openapi.handler.module import HandlerModule
 
 
 class HandlerImporter:
@@ -19,12 +19,12 @@ class HandlerImporter:
             except:  # noqa: E722
                 pass
         return modules
-    
+
     def import_module_from_file(self, file_path, import_path):
         spec = importlib.util.spec_from_file_location(import_path, file_path)
         handler_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(handler_module)
         return handler_module
-    
+
     def __get_import_path_from_file(self, file_path):
         return file_path.replace(os.sep, '.').replace('.py', '')
