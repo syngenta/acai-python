@@ -1,9 +1,11 @@
+import os
 import yaml
 
 
 class OpenAPIGenerator:
 
-    def __init__(self, file_location=None):
+    def __init__(self, output_location):
+        file_location = self.__determine_if_openapi_exists(output_location)
         if file_location is not None:
             self.__doc_dict = self.__read_openapi(file_location)
         else:
@@ -118,6 +120,14 @@ class OpenAPIGenerator:
             self.__doc_dict['components']['schemas'][module.request_body_schema_name] = module.request_body_schema
         if module.response_body_schema:
             self.__doc_dict['components']['schemas'][module.response_body_schema_name] = module.response_body_schema
+        
+    def __determine_if_openapi_exists(self, output_locaiton):
+        file_locaiton = None
+        if os.path.isfile(f'{output_locaiton}/openapi.yml'):
+            file_locaiton = f'{output_locaiton}/openapi.yml'
+        elif os.path.isfile(f'{output_locaiton}/openapi.json'):
+            file_locaiton = f'{output_locaiton}/openapi.json'
+        return file_locaiton
 
     def __read_openapi(self, file_location):
         with open(file_location, encoding='utf-8') as schema_file:

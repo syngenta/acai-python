@@ -14,7 +14,7 @@ if __name__ == '__main__':
     validator = InputValidator()
     scanner = HandlerScanner(inputs.handlers)
     importer = HandlerImporter()
-    generator = OpenAPIGenerator(validator.existing_openapi_location)
+    generator = OpenAPIGenerator(inputs.output)
     writer = OpenAPIFileWriter()
 
     validator.validate_arguments(inputs)
