@@ -9,7 +9,7 @@ from acai_aws.apigateway.openapi.generator import OpenAPIGenerator
 from acai_aws.apigateway.openapi.file_writer import OpenAPIFileWriter
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     inputs = InputArguments()
     validator = InputValidator()
     scanner = HandlerScanner(inputs.handlers)

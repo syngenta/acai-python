@@ -133,4 +133,7 @@ Dockerfile
 #ruff
 .ruff_cache
 
+#test outputs
+tests/outputs
+
 
