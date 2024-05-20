@@ -4,19 +4,19 @@ from acai_aws.apigateway.openapi.input.validator import InputValidator
 
 
 class MockInputArguments:
-    
+
     def __init__(self):
         self.base = 'acai_aws/example'
         self.handlers = 'tests/mocks/apigateway/openapi/**/*.py'
-        self.output = 'tests/outputs'
+        self.output = 'tests/mocks'
         self.format = 'json,yml'
 
 
 class InputValidatorTest(unittest.TestCase):
-    
+
     def setUp(self):
         self.validator = InputValidator()
-    
+
     def test_validate_arguments_all_pass(self):
         try:
             inputs = MockInputArguments()
@@ -24,7 +24,7 @@ class InputValidatorTest(unittest.TestCase):
             self.assertTrue(True)
         except:
             self.assertTrue(False)
-    
+
     def test_validate_arguments_glob_fails(self):
         try:
             inputs = MockInputArguments()
@@ -34,7 +34,7 @@ class InputValidatorTest(unittest.TestCase):
         except Exception as error:
             self.assertTrue(True)
             self.assertTrue('needs to be a glob pattern containing a "*.py"' in repr(error))
-        
+
     def test_validate_arguments_directory_fails(self):
         try:
             inputs = MockInputArguments()
@@ -44,4 +44,3 @@ class InputValidatorTest(unittest.TestCase):
         except Exception as error:
             self.assertTrue(True)
             self.assertTrue('is not a valid directory path' in repr(error))
-            

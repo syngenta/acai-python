@@ -8,6 +8,7 @@ class HandlerScannerTest(unittest.TestCase):
     handler_path = 'tests/mocks/apigateway/openapi/**/*.py'
 
     def setUp(self):
+        self.maxDiff = None
         self.scanner = HandlerScanner(self.handler_path)
 
     def test_file_separator(self):
