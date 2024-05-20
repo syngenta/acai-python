@@ -32,7 +32,6 @@ pytest-cov = "*"
 
 [scripts]
 test = "python -m unittest discover"
-generate = "python -m acai_aws.apigateway generate-openapi --base=acai_aws/example --handlers=tests/mocks/apigateway/openapi_generator/**/*.py --output=tests/outputs --format=json,yml"
 help = "python -m acai_aws.apigateway -h"
 coverage = "coverage run --source acai_aws/ -m pytest tests/acai_aws --cov=acai_aws --junitxml ./coverage/reports/xunit.xml --cov-report xml:./coverage/reports/coverage.xml --html=./coverage/reports/index.html --self-contained-html --cov-report html:./coverage -p no:warnings -o log_cli=true"
 lint = "pylint acai_aws --recursive=y --load-plugins pylint_quotes --fail-under 10 --output-format=text:coverage/lint/report.txt,json:coverage/lint/report.json,parseable,colorized"

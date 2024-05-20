@@ -8,7 +8,7 @@ class InputArguments:
         self.__base = args.base
         self.__handlers = args.handlers
         self.__output = args.output or args.handlers
-        self.__format = args.format or 'yml'
+        self.__formats = args.format or 'yml'
 
     @property
     def base(self):
@@ -24,7 +24,7 @@ class InputArguments:
 
     @property
     def formats(self):
-        return self.__format.split(',')
+        return self.__formats.split(',')
 
     def __get_command_line_args(self):
         parser = argparse.ArgumentParser(prog='Acai AWS: OpenApi Generator', description='Will generate an openapi yml file based on your api project')
