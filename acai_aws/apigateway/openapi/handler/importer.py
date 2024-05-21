@@ -16,7 +16,7 @@ class HandlerImporter:
                 for method in dir(module):
                     if method.lower() in SUPPORTED_METHODS:
                         modules.append(HandlerModule(handlers_base, file_path, module, method, base_path))
-            except:  # noqa: E722
+            except:  # noqa: E722 pragma: no cover
                 pass
         return modules
 

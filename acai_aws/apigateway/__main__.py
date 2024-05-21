@@ -9,7 +9,7 @@ from acai_aws.apigateway.openapi.generator import OpenAPIGenerator
 from acai_aws.apigateway.openapi.file_writer import OpenAPIFileWriter
 
 
-if __name__ == '__main__': # pragma: no cover
+def generate_openapi():
     inputs = InputArguments()
     validator = InputValidator()
     scanner = HandlerScanner(inputs.handlers)
@@ -23,5 +23,9 @@ if __name__ == '__main__': # pragma: no cover
 
     for module in modules:
         generator.add_path_and_method(module)
-    
+
     writer.write_openapi(generator.doc, inputs.output, inputs.formats)
+
+
+if __name__ == '__main__':  # pragma: no cover
+    generate_openapi()
