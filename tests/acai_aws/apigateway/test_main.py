@@ -7,6 +7,12 @@ from acai_aws.apigateway.__main__ import generate_openapi
 
 class MainTest(unittest.TestCase):
 
+    def setUp(self):
+        try:
+            os.mkdir('tests/outputs')
+        except:
+            pass
+
     @patch('sys.argv', [
         '__main__',
         'generate-openapi',
