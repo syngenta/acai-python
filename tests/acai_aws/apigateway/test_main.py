@@ -24,7 +24,8 @@ class MainTest(unittest.TestCase):
         '--base=acai_aws/example',
         '--handlers=tests/mocks/apigateway/openapi/**/*.py',
         '--output=tests/outputs/main',
-        '--format=json,yml'
+        '--format=json,yml',
+        '--delete'
     ])
     def test_main(self):
         generate_openapi()
