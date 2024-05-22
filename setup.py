@@ -22,6 +22,7 @@ setup(
         'jsonref',
         'jsonschema',
         'icecream',
+        'pydantic',
         'pyyaml',
         'simplejson',
         'xmltodict'
