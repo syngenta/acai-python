@@ -12,11 +12,11 @@ class OpenAPIFileWriterTest(unittest.TestCase):
 
     def setUp(self):
         self.writer = OpenAPIFileWriter()
-    
+
     @mock.patch('builtins.open', mock_open)
     def test_write_openapi(self):
         try:
-            self.writer.write_openapi({'test': True}, 'tests/outputs', ['json','yml'])
+            self.writer.write_openapi({'test': True}, 'tests/outputs/file_writer', ['json', 'yml'])
             self.assertTrue(True)
         except:
             self.assertTrue(False)
