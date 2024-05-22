@@ -7,6 +7,7 @@ DRY, configurable, declarative node library for working with Amazon Web Service 
 ## Features
 * Highly configurable apigateway internal router
 * Openapi schema adherence for all event types
+* Generate OpenAPI docs from code base
 * Extensible and customizable middleware for validation and other tasks
 * DRY coding interfaces without the need of boilerplate
 * Ease-of-use with the [serverless framework](https://www.serverless.com/)
