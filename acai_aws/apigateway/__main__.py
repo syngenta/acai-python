@@ -24,6 +24,9 @@ def generate_openapi():
     for module in modules:
         generator.add_path_and_method(module)
 
+    if inputs.delete:
+        generator.delete_unused_paths()
+
     writer.write_openapi(generator.doc, inputs.output, inputs.formats)
 
 

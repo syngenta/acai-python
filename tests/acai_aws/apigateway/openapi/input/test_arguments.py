@@ -12,7 +12,8 @@ class InputArgumentsTest(unittest.TestCase):
         '--base=acai_aws/example',
         '--handlers=tests/mocks/apigateway/openapi/**/*.py',
         '--output=tests/outputs/arguments',
-        '--format=json,yml'
+        '--format=json,yml',
+        '--delete'
     ])
     def test_full_class(self):
         input_args = InputArguments()
@@ -20,3 +21,4 @@ class InputArgumentsTest(unittest.TestCase):
         self.assertEqual('tests/mocks/apigateway/openapi/**/*.py', input_args.handlers)
         self.assertEqual('tests/outputs/arguments', input_args.output)
         self.assertListEqual(['json', 'yml'], input_args.formats)
+        self.assertTrue(input_args.delete)
