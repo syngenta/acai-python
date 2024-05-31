@@ -21,7 +21,7 @@ class Request:
         self.__context = {}
         self.__parsers = {
             'application/json': 'json',
-            'application/graphql': 'json',
+            'application/graphql': 'graphql',
             'application/x-www-form-urlencoded': 'form',
             'multipart/form-data': 'raw',
             'application/xml': 'xml',
