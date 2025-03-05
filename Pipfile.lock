@@ -99,12 +99,12 @@
         },
         "jsonpickle": {
             "hashes": [
-                "sha256:2973c0b0d988c6792ed6c446fa582c48352e79c2880fa2c013f1abde15905555",
-                "sha256:b5336144d902958b92cb08bc1e76bfa47199b8afd454303693894defd2fa50c5"
+                "sha256:3e650b9853adcdab9d9d62a88412b6d36e9a59ba423b01cacf0cd4ee80733aca",
+                "sha256:cd3c90d32a68dcaa7f0e4b918bda7d4bb61f3c03b182d82dae2caf9ded0ab6b3"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==4.0.1"
+            "version": "==4.0.2"
         },
         "jsonref": {
             "hashes": [
