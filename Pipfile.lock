@@ -75,19 +75,19 @@
         },
         "executing": {
             "hashes": [
-                "sha256:11387150cad388d62750327a53d3339fad4888b39a6fe233c3afbb54ecffd3aa",
-                "sha256:5d108c028108fe2551d1a7b2e8b713341e2cb4fc0aa7dcf966fa4327a5226755"
+                "sha256:3632cc370565f6648cc328b32435bd120a1e4ebb20c77e3fdde9a13cd1e533c4",
+                "sha256:760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==2.2.0"
+            "version": "==2.2.1"
         },
         "icecream": {
             "hashes": [
-                "sha256:14d21e3383326a69a8c1a3bcf11f83283459f0d269ece5af83fce2c0d663efec",
-                "sha256:c020917c5cb180a528dbba170250ccd8b74ebc75f2a7a8e839819bf959b9f80c"
+                "sha256:936df053e65ff3c7a219fa79311b32bdae19aad83dd2e23d153ab8864b78acd9",
+                "sha256:b52cdd40cb5080279c4534fcd77aa510b1e7397a687e9d4daf2f8d2028bd738c"
             ],
             "index": "pypi",
-            "version": "==2.1.5"
+            "version": "==2.1.7"
         },
         "jmespath": {
             "hashes": [
