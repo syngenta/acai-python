@@ -9,13 +9,13 @@ def requirements(**kwargs):
 
         def raise_timeout(*_):
             raise ApiTimeOutException()
-        
+
         def start_timeout(timeout=None):
             if kwargs.get('timeout') is not None or timeout is not None:
                 countdown = kwargs['timeout'] if kwargs.get('timeout') is not None else timeout
                 signal.signal(signal.SIGALRM, raise_timeout)
                 signal.alarm(countdown)
-        
+
         def end_timeout():
             signal.alarm(0)
 

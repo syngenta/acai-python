@@ -1,6 +1,3 @@
-import pprint
-from icecream import ic
-
 from acai_aws.apigateway.openapi.handler.importer import HandlerImporter
 from acai_aws.apigateway.openapi.handler.scanner import HandlerScanner
 from acai_aws.apigateway.openapi.input.arguments import InputArguments

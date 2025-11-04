@@ -4,6 +4,8 @@ import signal
 from acai_aws.generic.event import Event
 from acai_aws.common.records.exception import EventTimeOutException
 
+# pylint: disable=duplicate-code
+
 
 def requirements(**kwargs):
 
@@ -11,12 +13,12 @@ def requirements(**kwargs):
 
         def raise_timeout(*_):
             raise EventTimeOutException
-        
+
         def start_timeout():
             if kwargs.get('timeout') is not None:
                 signal.signal(signal.SIGALRM, raise_timeout)
                 signal.alarm(kwargs['timeout'])
-        
+
         def end_timeout():
             signal.alarm(0)
 

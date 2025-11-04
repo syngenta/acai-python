@@ -12,7 +12,7 @@ class BaseModeResolver(abc.ABC):
         self.file_tree_climbed = True
         self.dynamic_parts = {}
         self.import_path = []
-    
+
     @abc.abstractmethod
     def _get_file_and_import_path(self, request_path):
         raise NotImplementedError
@@ -28,7 +28,7 @@ class BaseModeResolver(abc.ABC):
         return relative_file_path.replace(self.importer.file_separator, '.').replace('.py', '')
 
     def get_request_path_as_list(self, request_path):
-        base_path = request_path.replace(self.base_path, '').replace('-', '_')
+        base_path = request_path.replace(self.base_path, '')
         clean_base = self.importer.clean_path(base_path)
         return clean_base.split('/')
 

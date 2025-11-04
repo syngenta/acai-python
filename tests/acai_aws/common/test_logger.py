@@ -27,7 +27,7 @@ class LoggerTest(TestCase):
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local'})
     def test_logger_logs_simple_local_json(self):
         logger.log(level='ERROR', log={'error': 'test-simple'})
-    
+
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'INFO', 'LOG_FORMAT': 'INLINE'})
     def test_logger_logs_simple_local_inline(self):
         logger.log(level='INFO', log={'error': 'test-simple'})
@@ -46,7 +46,7 @@ class LoggerTest(TestCase):
             raise Exception('error-object')
         except Exception as error:
             logger.log(level='ERROR', log=error)
-        
+
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'INLINE'})
     def test_logger_logs_error_inline(self):
         try:
@@ -92,7 +92,7 @@ class LoggerTest(TestCase):
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'ERROR'})
     def test_logger_handles_bad_level(self):
         logger.log(level='BAD', log={'INFO': 'ignore'})
-    
+
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'ERROR', 'LOG_FORMAT': 'BAD'})
     def test_logger_handles_bad_format(self):
         logger.log(level='INFO', log={'INFO': 'ignore'})

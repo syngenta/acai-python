@@ -35,7 +35,7 @@ class Response:
         return self.__content_type if self.__content_type else self.headers.get('content-type', self.headers.get('Content-Type', ''))
 
     @content_type.setter
-    def content_type(self, content_type ):
+    def content_type(self, content_type):
         self.__content_type = content_type
 
     @property
@@ -45,7 +45,7 @@ class Response:
     @cors.setter
     def cors(self, access):
         self.__cors = access
-    
+
     @property
     def open_cors(self):
         return self.__cors

@@ -380,10 +380,54 @@ class RouterDirectoryTest(unittest.TestCase):
         self.assertDictEqual(
             {
                 'router_nested_directory_dynamic': {'test_id': 'unit-test', 'email': 'unit@email.com'},
-                'path_params': {'proxy': 'nested/abc-123', 'nested_id': 'abc_123'}
+                'path_params': {'proxy': 'nested/abc-123', 'nested_id': 'abc-123'}
             },
             json_dict_response
         )
+
+    def test_dynamic_route_preserves_hyphenated_param_value(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/abc-123',
+            proxy='nested/abc-123',
+            method='patch',
+            body={
+                'test_id': 'unit-test',
+                'email': 'unit@email.com'
+            }
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+
+        nested_id = json_dict_response['path_params']['nested_id']
+        self.assertEqual('abc-123', nested_id)
+
+    def test_dynamic_route_does_not_convert_hyphenated_param(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/abc-123',
+            proxy='nested/abc-123',
+            method='patch',
+            body={
+                'test_id': 'unit-test',
+                'email': 'unit@email.com'
+            }
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+
+        nested_id = json_dict_response['path_params']['nested_id']
+        self.assertNotEqual('abc_123', nested_id)
 
     def test_requirements_decorator_works_and_fails_improper_dynamic_route_request(self):
         dynamic_event = self.mock_request.get_dynamic_event(
@@ -639,30 +683,30 @@ class RouterDirectoryTest(unittest.TestCase):
             {
                 'errors': [
                     {
-                        'key_path': 'id', 
+                        'key_path': 'id',
                         'message': 'Field required'
-                    }, 
+                    },
                     {
-                        'key_path': 'email', 
+                        'key_path': 'email',
                         'message': 'Field required'
-                    }, 
+                    },
                     {
-                        'key_path': 'active', 
+                        'key_path': 'active',
                         'message': 'Field required'
-                    }, 
+                    },
                     {
-                        'key_path': 'favorites', 
+                        'key_path': 'favorites',
                         'message': 'Field required'
-                    }, 
+                    },
                     {
-                        'key_path': 'notification_config', 
+                        'key_path': 'notification_config',
                         'message': 'Field required'
                     }
                 ]
-            }, 
+            },
             json_dict_response
         )
-    
+
     def test_basic_directory_routing_fails_with_non_json_body(self):
         dynamic_event = self.mock_request.get_dynamic_event(
             headers={'x-api-key': 'some-key'},
@@ -684,10 +728,10 @@ class RouterDirectoryTest(unittest.TestCase):
             {
                 'errors': [
                     {
-                        'key_path': 'body', 
+                        'key_path': 'body',
                         'message': 'Expecting JSON request body; please make sure using proper content-type headers and body string is properly encoded'
                     }
                 ]
-            }, 
+            },
             json_dict_response
         )

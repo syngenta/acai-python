@@ -326,10 +326,54 @@ class RouterPatternTest(unittest.TestCase):
         self.assertDictEqual(
             {
                 'router_nested_pattern_dynamic': {'test_id': 'unit-test', 'email': 'unit@email.com'},
-                'path_params': {'proxy': 'nested/abc-123', 'nested_id': 'abc_123'}
+                'path_params': {'proxy': 'nested/abc-123', 'nested_id': 'abc-123'}
             },
             json_dict_response
         )
+
+    def test_pattern_dynamic_route_preserves_hyphenated_param_value(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/abc-123',
+            proxy='nested/abc-123',
+            method='patch',
+            body={
+                'test_id': 'unit-test',
+                'email': 'unit@email.com'
+            }
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_pattern,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+
+        nested_id = json_dict_response['path_params']['nested_id']
+        self.assertEqual('abc-123', nested_id)
+
+    def test_pattern_dynamic_route_does_not_convert_hyphenated_param(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'content-type': 'application/json'},
+            path='unit-test/v1/nested/abc-123',
+            proxy='nested/abc-123',
+            method='patch',
+            body={
+                'test_id': 'unit-test',
+                'email': 'unit@email.com'
+            }
+        )
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_pattern,
+            schema=self.schema_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+
+        nested_id = json_dict_response['path_params']['nested_id']
+        self.assertNotEqual('abc_123', nested_id)
 
     def test_requirements_decorator_works_and_fails_improper_dynamic_route_request(self):
         dynamic_event = self.mock_request.get_dynamic_event(

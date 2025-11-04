@@ -120,7 +120,7 @@ class ValidatorTest(unittest.TestCase):
         request = Request(mock_request.get_auto_validated_data())
         response = Response()
         self.validator.validate_request_with_openapi(request, response)
-    
+
     def test_required_pydantic_body_pass(self):
         request = Request(mock_request.get_basic_passing_for_required_body_validation())
         response = Response()
@@ -129,7 +129,7 @@ class ValidatorTest(unittest.TestCase):
         }
         self.validator.validate_request(request, response, requirements)
         self.assertFalse(response.has_errors)
-    
+
     def test_required_pydantic_body_fail(self):
         request = Request(mock_request.get_basic_failing_for_required_body_validation())
         response = Response()

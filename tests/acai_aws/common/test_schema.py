@@ -175,7 +175,7 @@ class SchemaTest(unittest.TestCase):
         schema = Schema(schema=self.schema_dict)
         spec = schema.get_body_spec()
         self.assertDictEqual(self.expected_dict_from_dict, spec)
-    
+
     def test_get_body_spec_from_pydantic_model(self):
         schema = Schema(schema=self.schema_path)
         spec = schema.get_body_spec(Request)

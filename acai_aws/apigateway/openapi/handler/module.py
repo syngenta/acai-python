@@ -38,15 +38,15 @@ class HandlerModule:
         if not self.__route_path:
             self.__route_path = self.__compose_route_path()
         return self.__route_path if self.__route_path.startswith('/') else f'/{self.__route_path}'
-    
+
     @property
     def deprecated(self):
         return bool(self.__requirements.get('deprecated'))
-    
+
     @property
     def summary(self):
         return self.__requirements.get('summary')
-    
+
     @property
     def tags(self):
         return [self.__base_path.replace(os.sep, '-')]

@@ -1176,14 +1176,6 @@
             "index": "pypi",
             "version": "==3.1.0"
         },
-        "pylint-quotes": {
-            "hashes": [
-                "sha256:2d6bb3fa8a1a85af3af8a0ca875a719ac5bcdb735c45756284699d809c109c95",
-                "sha256:89decd985d3c019314da630f5e3fe0e0df951c2310525fbd6e710bca329c810e"
-            ],
-            "index": "pypi",
-            "version": "==0.2.3"
-        },
         "pytest": {
             "hashes": [
                 "sha256:2a8386cfc11fa9d2c50ee7b2a57e7d898ef90470a7a34c4b949ff59662bb78b7",

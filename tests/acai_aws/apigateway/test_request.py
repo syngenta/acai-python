@@ -232,14 +232,14 @@ class RequestTest(unittest.TestCase):
             '"query": {"name": "me"}, "path": {"proxy": "hello"}}, "body": {"body_key": "body_value"}, '
             '"context": {}}'
         )
-    
+
     def test_defaults(self):
         request = Request(self.missing_inputs)
         self.assertEqual(request.method, '')
         self.assertEqual(request.resource, '')
         self.assertEqual(request.path, '')
         self.assertEqual(request.query_params, {})
-    
+
     def test_timeout(self):
         request = Request(self.basic_request, None, 30)
         self.assertEqual(request.timeout, 30)

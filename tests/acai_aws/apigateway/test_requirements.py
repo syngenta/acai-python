@@ -52,7 +52,7 @@ class ApigatewayRequirementsTest(unittest.TestCase):
         response = Response()
         result = basic.post(request, response)
         self.assertEqual(str(self.expected_data_class_result), str(result))
-    
+
     def test_requirements_global_timeout_raises_exception(self):
         request = Request(self.basic_request, None, 1)
         response = Response()
@@ -61,7 +61,7 @@ class ApigatewayRequirementsTest(unittest.TestCase):
             self.assertTrue(False)
         except ApiTimeOutException as error:
             self.assertTrue(isinstance(error, ApiTimeOutException))
-        
+
     def test_requirements_local_timeout_raises_exception(self):
         event = mock_request.get_dynamic_event(method='patch')
         request = Request(event)
@@ -71,7 +71,7 @@ class ApigatewayRequirementsTest(unittest.TestCase):
             self.assertTrue(False)
         except ApiTimeOutException as error:
             self.assertTrue(isinstance(error, ApiTimeOutException))
-        
+
     def test_requirements_local_overwrites_global_timeout_setting(self):
         event = mock_request.get_dynamic_event(method='patch')
         request = Request(event, None, 10)
@@ -80,4 +80,4 @@ class ApigatewayRequirementsTest(unittest.TestCase):
             basic.patch(request, response)
             self.assertTrue(False)
         except ApiTimeOutException as error:
-            self.assertTrue(isinstance(error, ApiTimeOutException))    
+            self.assertTrue(isinstance(error, ApiTimeOutException))

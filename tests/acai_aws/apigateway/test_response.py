@@ -37,7 +37,7 @@ class ResponseTest(unittest.TestCase):
     def test_closed_cors_headers(self):
         self.response.cors = False
         self.assertDictEqual(self.response.headers, {})
-    
+
     def test_closed_open_cors_headers(self):
         self.response.open_cors = False
         self.assertDictEqual(self.response.headers, {})

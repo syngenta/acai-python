@@ -28,7 +28,7 @@ class RouterTimeoutTest(TestCase):
         )
         response = router.route(dynamic_event, None)
         self.assertEqual(408, response['statusCode'])
-        
+
     def test_local_timeout_works(self):
         dynamic_event = self.mock_request.get_dynamic_event(
             path='unit-test/v1/timeout',
@@ -41,7 +41,7 @@ class RouterTimeoutTest(TestCase):
         )
         response = router.route(dynamic_event, None)
         self.assertEqual(408, response['statusCode'])
-    
+
     def test_global_timeout_with_middleware_works(self):
         dynamic_event = self.mock_request.get_dynamic_event(
             path='unit-test/v1/timeout',
@@ -57,7 +57,7 @@ class RouterTimeoutTest(TestCase):
         response = router.route(dynamic_event, None)
         self.assertEqual(408, response['statusCode'])
         self.assertTrue(mock_middleware.mock_on_timeout.has_been_called)
-    
+
     def test_local_timeout_with_middleware_works(self):
         dynamic_event = self.mock_request.get_dynamic_event(
             path='unit-test/v1/timeout',
@@ -72,4 +72,4 @@ class RouterTimeoutTest(TestCase):
         response = router.route(dynamic_event, None)
         self.assertEqual(408, response['statusCode'])
         self.assertTrue(mock_middleware.mock_on_timeout.has_been_called)
-        
+

@@ -1,3 +1,4 @@
+import inspect
 from collections import defaultdict
 
 from jsonschema import Draft7Validator
@@ -96,17 +97,18 @@ class Validator:
     @staticmethod
     def check_required_body(response, schema, request_body):
         if not Validator.is_json(response, request_body):
-            return False
+            return
         if schema and isinstance(schema, dict):
             schema_validator = Draft7Validator(schema)
             for schema_error in sorted(schema_validator.iter_errors(request_body), key=str):
                 error_key = Validator.format_schema_error_key(schema_error)
                 response.set_error(key_path=error_key, message=schema_error.message)
-        elif issubclass(schema, BaseModel):
+        elif inspect.isclass(schema) and issubclass(schema, BaseModel):
             try:
                 schema(**request_body)
             except ValidationError as error:
-                [response.set_error(key_path='.'.join(error['loc']), message=error['msg']) for error in error.errors()]
+                for validation_error in error.errors():
+                    response.set_error(key_path='.'.join(validation_error['loc']), message=validation_error['msg'])
 
     @staticmethod
     def combine_parameters(parameters):

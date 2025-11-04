@@ -14,14 +14,14 @@ class HandlerScanner:
     @property
     def handlers(self):
         return self.__handlers
-    
+
     @property
     def handlers_base(self):
         return self.clean_path(self.__handlers.split('*')[0])
-    
+
     def clean_path(self, dirty_path):
         return dirty_path.strip(self.file_separator)
-    
+
     def get_handler_file_paths(self):
         glob_pattern = self.__get_glob_pattern()
         return glob.glob(glob_pattern, recursive=True)

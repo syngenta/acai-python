@@ -26,7 +26,7 @@ class GenericRequirementsTest(unittest.TestCase):
     def test_generic_decorator_with_data_class(self):
         result = mock_generic_dc(self.basic_event, None)
         self.assertTrue(isinstance(result, MockDataClass))
-    
+
     def test_decorator_with_timeout(self):
         try:
             mock_timeout(self.basic_event, None)

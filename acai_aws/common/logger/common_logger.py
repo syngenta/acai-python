@@ -20,15 +20,15 @@ class CommonLogger:
             'ERROR': 3
         }
         if self.__format not in ['JSON', 'INLINE']:
-            raise Exception(f'LOG_FORMAT ENV must be either `JSON` or `INLINE`, recieved: {self.__format}')
+            raise ValueError(f'LOG_FORMAT ENV must be either `JSON` or `INLINE`, recieved: {self.__format}')
 
     def log(self, **kwargs):
         default_log = {'level': kwargs.get('level', 'INFO'), 'log': kwargs.get('log', {})}
         if self.__should_log(default_log['level']) and self.__format == 'JSON':
             self.__log_json(**kwargs)
         elif self.__should_log(default_log['level']) and self.__format == 'INLINE':
-            self.__log_inline(**kwargs)            
-        
+            self.__log_inline(**kwargs)
+
     def __get_traceback(self):
         trace = traceback.format_exc()
         if str(trace) != 'NoneType: None\n':

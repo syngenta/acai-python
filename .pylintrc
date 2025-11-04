@@ -2,7 +2,6 @@
 ignore=tests,openapi.yml
 ignore-patterns=test.*?py
 persistent=no
-load-plugins=pylint_quotes
 unsafe-load-any-extension=no
 
 [MESSAGES CONTROL]
@@ -84,9 +83,6 @@ max-attributes=7
 min-public-methods=0
 max-public-methods=20
 max-bool-expr=5
-string-quote=single
-triple-quote=double
-docstring-quote=double
 
 [CLASSES]
 defining-attr-methods=__init__,__new__,setUp

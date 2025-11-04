@@ -53,12 +53,12 @@ def requirements(**kwargs):
 
         def raise_timeout(*_):
             raise EventTimeOutException
-        
+
         def start_timeout():
             if kwargs.get('timeout') is not None:
                 signal.signal(signal.SIGALRM, raise_timeout)
                 signal.alarm(kwargs['timeout'])
-        
+
         def end_timeout():
             signal.alarm(0)
 

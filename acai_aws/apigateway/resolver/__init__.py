@@ -71,8 +71,8 @@ class Resolver:
             return
         if self.__resolver.has_dynamic_route and not endpoint.has_required_route:
             raise ApiException(
-                code=404, 
-                key_path=request.path, 
+                code=404,
+                key_path=request.path,
                 message='no route found; endpoint does have required_route configured'
             )
         clean_request_path = [rp for rp in request.path.split('/') if rp and rp not in self.__resolver.base_path.split('/')]
@@ -84,8 +84,8 @@ class Resolver:
         for index, _ in enumerate(clean_request_path):
             if clean_request_path[index] != clean_endpoint_route[index] and index not in list(self.__resolver.dynamic_parts.keys()):
                 raise ApiException(
-                    code=404, 
-                    key_path=request.path, 
+                    code=404,
+                    key_path=request.path,
                     message='no route found; requested dynamic route does not match endpoint route definition'
                 )
 
@@ -94,7 +94,7 @@ class Resolver:
             variable_name = required_route_parts[part]
             if not variable_name.startswith('{') or not variable_name.endswith('}'):
                 raise ApiException(
-                    code=404, 
+                    code=404,
                     key_path=request.path,
                     message='no route found; endpoint does not have proper variables in required_route'
                 )
