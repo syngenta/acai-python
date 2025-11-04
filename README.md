@@ -1,6 +1,6 @@
 # 🫐 Acai AWS
 
-**Auto-loading, self-validating, minimalist Python framework for Amazon Web Service Lambdas**
+## Auto-loading, self-validating, minimalist Python framework for Amazon Web Service Lambdas
 
 [![CircleCI](https://circleci.com/gh/syngenta/acai-python.svg?style=shield)](https://circleci.com/gh/syngenta/acai-python)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=syngenta_acai-python&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=syngenta_acai-python)
@@ -112,7 +112,7 @@ from acai_aws.apigateway.requirements import requirements
 
 @requirements(
     auth_required=True,
-    required_body={
+    required_body={ # can be a dataclass or reference to a schema in openapi.yml
         'type': 'object',
         'required': ['email', 'name'],
         'properties': {
