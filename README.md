@@ -84,14 +84,23 @@ pip install acai_aws
 # app.py (entry point for your Lambda)
 from acai_aws.apigateway.router import Router
 
+
+def authenticate(request, response, requirements):
+    if request.headers.get('x-api-key') != 'secret-key':
+        response.code = 401
+        response.set_error('auth', 'Unauthorized')
+
+
 router = Router(
     base_path='api/v1',
     handlers='handlers',            # directory mode
     schema='openapi.yml',           # optional OpenAPI document
     auto_validate=True,
     validate_response=True,
-    before_all=lambda request, response, _: request.context.update({'trace_id': request.headers.get('trace-id')})
+    with_auth=authenticate
 )
+router.auto_load()
+
 
 def handler(event, context):
     return router.route(event, context)
@@ -101,14 +110,8 @@ def handler(event, context):
 # handlers/users.py
 from acai_aws.apigateway.requirements import requirements
 
-def authenticate(request, response, _requirements):
-    if request.headers.get('x-api-key') != 'secret':
-        response.code = 401
-        response.set_error('auth', 'Unauthorized')
-
 @requirements(
     auth_required=True,
-    before=authenticate,
     required_body={
         'type': 'object',
         'required': ['email', 'name'],
@@ -179,31 +182,129 @@ pipenv run generate
 
 ## 🔄 Event Processing
 
-Acai AWS provides consistent event objects for AWS stream and queue services. Decorate your handler with `acai_aws.common.records.requirements.requirements` to auto-detect the source and normalize each record.
+Acai AWS provides consistent event objects for AWS stream and queue services. Decorate your handler with `acai_aws.common.records.requirements.requirements` to auto-detect the source and wrap records.
 
 ```python
 from acai_aws.dynamodb.requirements import requirements
 
+class ProductRecord:
+    def __init__(self, record):
+        self.id = record.body['id']
+        self.payload = record.body
+
 @requirements(
     operations=['created', 'updated'],
     timeout=10,
-    data_class=lambda record: record.body
+    data_class=ProductRecord
 )
-def handler(event):
-    for record in event.records:
-        process(record)  # record is dict from the stream, filtered and validated
-    return {'processed': len(event.records)}
+def handler(records):
+    for record in records.records:
+        process_product(record.id, record.payload)
+    return {'processed': len(records.records)}
 ```
 
 Supported services include:
 
-- **DynamoDB Streams** (`acai_aws.dynamodb.event.Event`)
-- **SQS** (`acai_aws.sqs.event.Event`)
-- **SNS** (`acai_aws.sns.event.Event`)
-- **S3** (optional `get_object` helper to pull objects)
-- **Kinesis**, **Firehose**, **MSK**, **MQ**, **DocumentDB**
+**DynamoDB Streams**
 
-Each record exposes intuitive properties like `record.operation`, `record.body`, `record.headers`, or service-specific fields.
+```python
+from acai_aws.dynamodb.requirements import requirements as ddb_requirements
+
+@ddb_requirements()
+def dynamodb_handler(records):
+    for record in records.records:
+        handle_ddb_change(record.operation, record.body)
+```
+
+**Amazon SQS**
+
+```python
+from acai_aws.sqs.requirements import requirements as sqs_requirements
+
+@sqs_requirements()
+def sqs_handler(records):
+    for record in records.records:
+        handle_message(record.body, record.attributes)
+```
+
+**Amazon SNS**
+
+```python
+from acai_aws.sns.requirements import requirements as sns_requirements
+
+@sns_requirements()
+def sns_handler(records):
+    for record in records.records:
+        handle_notification(record.body, record.subject)
+```
+
+**Amazon S3**
+
+```python
+from acai_aws.s3.requirements import requirements as s3_requirements
+
+@s3_requirements(get_object=True, data_type='json')
+def s3_handler(records):
+    for record in records.records:
+        handle_object(record.bucket, record.key, record.body)
+```
+
+**Amazon Kinesis**
+
+```python
+from acai_aws.kinesis.requirements import requirements as kinesis_requirements
+
+@kinesis_requirements()
+def kinesis_handler(records):
+    for record in records.records:
+        handle_stream_event(record.partition_key, record.body)
+```
+
+**Amazon Firehose**
+
+```python
+from acai_aws.firehose.requirements import requirements as firehose_requirements
+
+@firehose_requirements()
+def firehose_handler(records):
+    for record in records.records:
+        handle_delivery(record.record_id, record.body)
+```
+
+**Amazon MSK**
+
+```python
+from acai_aws.msk.requirements import requirements as msk_requirements
+
+@msk_requirements()
+def msk_handler(records):
+    for record in records.records:
+        handle_msk_message(record.topic, record.body)
+```
+
+**Amazon MQ**
+
+```python
+from acai_aws.mq.requirements import requirements as mq_requirements
+
+@mq_requirements()
+def mq_handler(records):
+    for record in records.records:
+        handle_mq_message(record.message_id, record.body)
+```
+
+**Amazon DocumentDB Change Streams**
+
+```python
+from acai_aws.documentdb.requirements import requirements as docdb_requirements
+
+@docdb_requirements()
+def docdb_handler(records):
+    for record in records.records:
+        handle_docdb_change(record.operation, record.full_document)
+```
+
+Each record exposes intuitive properties like `record.operation`, `record.body`, or service-specific metadata (bucket, partition, headers, etc.).
 
 ---
 
