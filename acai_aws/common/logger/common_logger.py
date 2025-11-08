@@ -52,5 +52,5 @@ class CommonLogger:
         trace = self.__get_traceback()
         prefix = f"{trace}{kwargs['level']}|"
         log = kwargs['log']
-        ic.configureOutput(prefix=prefix)
+        ic.configureOutput(prefix=prefix, outputFunction=print)
         ic(log)
