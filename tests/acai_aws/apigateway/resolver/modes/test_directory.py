@@ -60,6 +60,25 @@ class DirectoryModeResolverTest(unittest.TestCase):
         self.assertTrue('tests/mocks/apigateway/resolver/directory_handlers/home/__init__.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.home.__init__', import_path)
 
+    def test_base_path_get_file_and_import_path(self):
+        base_path_request = mock_request.get_basic()
+        base_path_request['path'] = self.base_path
+        request = Request(base_path_request)
+        file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
+        self.assertTrue('tests/mocks/apigateway/resolver/directory_handlers/__init__.py' in file_path)
+        self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.__init__', import_path)
+
+    def test_base_path_raises_without_init_file(self):
+        handler_path = 'tests/mocks/apigateway/resolver/directory_handlers_no_root_init'
+        base_path_request = mock_request.get_basic()
+        base_path_request['path'] = self.base_path
+        request = Request(base_path_request)
+        directory_resolver = DirectoryModeResolver(base_path=self.base_path, handlers=handler_path)
+        with self.assertRaises(ApiException) as resolver_error:
+            directory_resolver._get_file_and_import_path(request.path)
+        self.assertEqual(resolver_error.exception.code, 404)
+        self.assertEqual(resolver_error.exception.message, 'route not found')
+
     def test_dynamic_get_file_and_import_path(self):
         request = Request(self.dynamic_request)
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
@@ -102,4 +121,3 @@ class DirectoryModeResolverTest(unittest.TestCase):
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/apigateway/resolver/directory_handlers/user/_user_id/item/_item_id.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.user._user_id.item._item_id', import_path)
-

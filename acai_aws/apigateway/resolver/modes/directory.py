@@ -23,8 +23,12 @@ class DirectoryModeResolver(BaseModeResolver):
     def __get_import_path_file_tree(self, split_path, split_index, file_tree):
         if split_index < len(split_path):
             part = split_path[split_index]
-            possible_directory = part.replace('-', '_')
-            possible_file = f'{possible_directory}.py'
+            if part == '':
+                possible_directory = None
+                possible_file = '__init__.py'
+            else:
+                possible_directory = part.replace('-', '_')
+                possible_file = f'{possible_directory}.py'
             if possible_directory in file_tree:
                 self.__handle_directory_path_part(possible_directory, split_path, split_index, file_tree)
             elif possible_file in file_tree:
