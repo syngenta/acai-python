@@ -121,3 +121,10 @@ class DirectoryModeResolverTest(unittest.TestCase):
         file_path, import_path = self.directory_resolver._get_file_and_import_path(request.path)
         self.assertTrue('tests/mocks/apigateway/resolver/directory_handlers/user/_user_id/item/_item_id.py' in file_path)
         self.assertEqual('tests.mocks.apigateway.resolver.directory_handlers.user._user_id.item._item_id', import_path)
+
+    def test_repeated_directory_request_resets_import_path(self):
+        request = Request(self.init_request)
+        first_file_path, first_import_path = self.directory_resolver._get_file_and_import_path(request.path)
+        second_file_path, second_import_path = self.directory_resolver._get_file_and_import_path(request.path)
+        self.assertEqual(first_file_path, second_file_path)
+        self.assertEqual(first_import_path, second_import_path)
