@@ -10,7 +10,8 @@ class CommonLogger:
 
     def __init__(self):
         self.__json = jsonpickle
-        self.__format = os.getenv('LOG_FORMAT', 'JSON')
+        env_format = os.getenv('LOG_FORMAT', 'JSON') or 'JSON'
+        self.__format = env_format.strip().upper()
         self.__log_level = os.getenv('LOG_LEVEL', 'INFO')
         self.__json.set_encoder_options('simplejson', use_decimal=True)
         self.__json.set_preferred_backend('simplejson')
