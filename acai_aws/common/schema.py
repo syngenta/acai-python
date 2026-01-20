@@ -80,7 +80,8 @@ class Schema:
             if isinstance(all_of, dict) and all_of.get('required'):
                 combined['required'] += all_of['required']
         if combined['properties']:
-            del combined_spec['allOf']
+            if 'allOf' in combined_spec:
+                del combined_spec['allOf']
             combined_spec.update(combined)
 
     def __iter_spec_list(self, spec, spec_key, combined_spec):
