@@ -28,11 +28,11 @@ class Record(BaseRecord):
     def attributes(self):
         self._attributes = self._record.get('attributes', {}).copy()
         for key in self.message_attributes:
-            value = None
-            if self.message_attributes[key].get('StringValue'):
-                value = self.message_attributes[key]['StringValue']
-            if self.message_attributes[key].get('BinaryValue'):
-                value = self.message_attributes[key]['BinaryValue']
+            attr = self.message_attributes[key]
+            # Support both camelCase (AWS Lambda) and PascalCase (LocalStack/SDKs)
+            value = attr.get('stringValue') or attr.get('StringValue')
+            if not value:
+                value = attr.get('binaryValue') or attr.get('BinaryValue')
             self._attributes[key] = value
         return self._attributes
 
