@@ -1,4 +1,7 @@
+import io
+import json
 import os
+from contextlib import redirect_stdout
 from unittest import TestCase, mock
 
 from acai_aws.common import logger
@@ -54,6 +57,29 @@ class LoggerTest(TestCase):
         except Exception as error:
             logger.log(level='ERROR', log=error)
 
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': ' inline '})
+    def test_logger_logs_error_inline_with_messy_env(self):
+        logger.log(level='INFO', log={'message': 'inline-format'})
+
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'JSON'})
+    def test_logger_json_output(self):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='WARN', log={'json': True})
+        log_output = buffer.getvalue().strip()
+        parsed = json.loads(log_output)
+        self.assertEqual('WARN', parsed['level'])
+        self.assertEqual({'json': True}, parsed['log'])
+
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'INLINE'})
+    def test_logger_inline_output(self):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='INFO', log={'inline': True})
+        log_output = buffer.getvalue().strip()
+        self.assertTrue(log_output.startswith('INFO|'))
+        self.assertIn("inline': True", log_output)
+
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local'})
     def test_logger_logs_error_as_object(self):
         try:
@@ -96,4 +122,3 @@ class LoggerTest(TestCase):
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'ERROR', 'LOG_FORMAT': 'BAD'})
     def test_logger_handles_bad_format(self):
         logger.log(level='INFO', log={'INFO': 'ignore'})
-

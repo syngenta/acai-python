@@ -3,14 +3,14 @@ import os
 import traceback
 
 import jsonpickle
-from icecream import ic
 
 
 class CommonLogger:
 
     def __init__(self):
         self.__json = jsonpickle
-        self.__format = os.getenv('LOG_FORMAT', 'JSON')
+        env_format = os.getenv('LOG_FORMAT', 'JSON') or 'JSON'
+        self.__format = env_format.strip().upper()
         self.__log_level = os.getenv('LOG_LEVEL', 'INFO')
         self.__json.set_encoder_options('simplejson', use_decimal=True)
         self.__json.set_preferred_backend('simplejson')
@@ -44,13 +44,17 @@ class CommonLogger:
         print(self.__json.encode({
             'level': kwargs['level'],
             'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            'error_trace': [trace.strip() for trace in self.__get_traceback().split('\n') if trace],
+            'trace': [trace.strip() for trace in self.__get_traceback().split('\n') if trace],
             'log': kwargs['log']
         }, indent=4))
 
     def __log_inline(self, **kwargs):
-        trace = self.__get_traceback()
-        prefix = f"{trace}{kwargs['level']}|"
-        log = kwargs['log']
-        ic.configureOutput(prefix=prefix, outputFunction=print)
-        ic(log)
+        timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        trace = self.__get_traceback().strip().replace('\n', ' | ')
+        log_value = kwargs['log']
+        if not isinstance(log_value, str):
+            log_value = str(log_value)
+        inline_message = f"{kwargs['level']}|time={timestamp} log={log_value}"
+        if trace:
+            inline_message = f"{inline_message} trace={trace}"
+        print(inline_message)
