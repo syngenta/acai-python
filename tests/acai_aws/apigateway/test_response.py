@@ -107,6 +107,20 @@ class ResponseTest(unittest.TestCase):
         self.response.headers = ('Content-Type', 'text/html')
         self.assertEqual('text/html', self.response.content_type)
 
+    def test_has_errors_with_none_body(self):
+        self.response.body = None
+        self.assertEqual(self.response.has_errors, False)
+        self.assertDictEqual(self.response.raw, {})
+
+    def test_has_errors_with_empty_string_body(self):
+        self.response.body = ''
+        self.assertEqual(self.response.has_errors, False)
+        self.assertDictEqual(self.response.raw, {})
+
+    def test_has_errors_with_non_iterable_body(self):
+        self.response.body = 12345
+        self.assertEqual(self.response.has_errors, False)
+
     def test_raw(self):
         self.response.body = {'raw': True}
         self.assertDictEqual({'raw': True}, self.response.raw)

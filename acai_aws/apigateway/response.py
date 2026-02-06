@@ -88,7 +88,13 @@ class Response:
 
     @property
     def has_errors(self):
-        return 'errors' in self.__body
+        if self.__body is None or self.__body == '':
+            self.__body = {}
+            return False
+        try:
+            return 'errors' in self.__body
+        except TypeError:
+            return False
 
     @property
     def body(self):
