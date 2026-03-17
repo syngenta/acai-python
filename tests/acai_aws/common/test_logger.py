@@ -67,6 +67,18 @@ class LoggerTest(TestCase):
         with redirect_stdout(buffer):
             logger.log(level='WARN', log={'json': True})
         log_output = buffer.getvalue().strip()
+        self.assertNotIn('\n', log_output)
+        parsed = json.loads(log_output)
+        self.assertEqual('WARN', parsed['level'])
+        self.assertEqual({'json': True}, parsed['log'])
+
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'PRETTY'})
+    def test_logger_pretty_output(self):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='WARN', log={'json': True})
+        log_output = buffer.getvalue().strip()
+        self.assertIn('\n', log_output)
         parsed = json.loads(log_output)
         self.assertEqual('WARN', parsed['level'])
         self.assertEqual({'json': True}, parsed['log'])

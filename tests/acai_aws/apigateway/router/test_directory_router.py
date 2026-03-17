@@ -70,6 +70,45 @@ class RouterDirectoryTest(unittest.TestCase):
         self.assertDictEqual(self.expected_open_headers, result['headers'])
         self.assertDictEqual({'directory_user_id': {'proxy': 'user', 'user_id': '1'}}, json_dict_response)
 
+    def test_basic_directory_routing_works_with_single_dynamic_route_when_path_parameters_is_none(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/user/auth0|12312490845',
+            proxy='user',
+            method='get'
+        )
+        dynamic_event['pathParameters'] = None
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path,
+            output_error=True
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'directory_user_id': {'user_id': 'auth0|12312490845'}}, json_dict_response)
+
+    def test_basic_directory_routing_decodes_encoded_dynamic_route_values(self):
+        dynamic_event = self.mock_request.get_dynamic_event(
+            headers={'x-api-key': 'some-key'},
+            path='unit-test/v1/user/auth0%7C12312490845',
+            proxy='user',
+            method='get'
+        )
+        dynamic_event['pathParameters'] = {}
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_path
+        )
+        result = router.route(dynamic_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertFalse(result['isBase64Encoded'])
+        self.assertEqual(200, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertDictEqual({'directory_user_id': {'user_id': 'auth0|12312490845'}}, json_dict_response)
+
     def test_basic_directory_routing_works_with_double_dynamic_route(self):
         dynamic_event = self.mock_request.get_dynamic_event(
             headers={'x-api-key': 'some-key'},

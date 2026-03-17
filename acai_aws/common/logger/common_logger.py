@@ -19,13 +19,15 @@ class CommonLogger:
             'WARN': 2,
             'ERROR': 3
         }
-        if self.__format not in ['JSON', 'INLINE']:
-            raise ValueError(f'LOG_FORMAT ENV must be either `JSON` or `INLINE`, recieved: {self.__format}')
+        if self.__format not in ['JSON', 'PRETTY', 'INLINE']:
+            raise ValueError(f'LOG_FORMAT ENV must be either `JSON`, `PRETTY`, or `INLINE`, recieved: {self.__format}')
 
     def log(self, **kwargs):
         default_log = {'level': kwargs.get('level', 'INFO'), 'log': kwargs.get('log', {})}
         if self.__should_log(default_log['level']) and self.__format == 'JSON':
             self.__log_json(**kwargs)
+        elif self.__should_log(default_log['level']) and self.__format == 'PRETTY':
+            self.__log_json(pretty=True, **kwargs)
         elif self.__should_log(default_log['level']) and self.__format == 'INLINE':
             self.__log_inline(**kwargs)
 
@@ -40,13 +42,13 @@ class CommonLogger:
         log_level_setting = self.log_levels[self.__log_level]
         return current_log_level >= log_level_setting
 
-    def __log_json(self, **kwargs):
+    def __log_json(self, pretty=False, **kwargs):
         print(self.__json.encode({
             'level': kwargs['level'],
             'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'trace': [trace.strip() for trace in self.__get_traceback().split('\n') if trace],
             'log': kwargs['log']
-        }, indent=4))
+        }, indent=4 if pretty else None))
 
     def __log_inline(self, **kwargs):
         timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()

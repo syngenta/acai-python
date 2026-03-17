@@ -14,7 +14,7 @@ class Request:
         self.__timeout = timeout
         self.__body = event['body'] if event.get('body') is not None else {}
         self.__route = event['path'] if event.get('path') is not None else ''
-        self.__path_params = event['pathParameters'] if event.get('pathParameters') is not None else ''
+        self.__path_params = event['pathParameters'] if isinstance(event.get('pathParameters'), dict) else {}
         self.__request_context = event['requestContext'] if event.get('requestContext') is not None else {}
         self.__domain = event.get('requestContext', {}).get('domainName', '')
         self.__stage = event.get('requestContext', {}).get('stage', '')
@@ -152,6 +152,8 @@ class Request:
     @path_params.setter
     def path_params(self, path_params):
         key, value = path_params
+        if not isinstance(self.__path_params, dict):
+            self.__path_params = {}
         self.__path_params[key] = value
 
     @property
