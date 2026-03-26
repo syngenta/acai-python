@@ -155,7 +155,8 @@ class OpenAPIGenerator:
                 'version': '1.0.0',
                 'title': 'Acai Generator',
                 'license': {
-                    'name': 'MIT'
+                    'name': 'MIT',
+                    'identifier': 'MIT'
                 }
             },
             'tags': [],
