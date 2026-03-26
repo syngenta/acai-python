@@ -1,3 +1,4 @@
+import copy
 import os
 
 from pydantic import BaseModel
@@ -116,4 +117,22 @@ class HandlerModule:
         elif isinstance(schema_body, dict):
             return schema_body
         elif issubclass(schema_body, BaseModel):
-            return schema_body.model_json_schema()
+            return self.__inline_defs(schema_body.model_json_schema())
+
+    @staticmethod
+    def __inline_defs(schema):
+        defs = schema.pop('$defs', None)
+        if not defs:
+            return schema
+
+        def resolve(obj):
+            if isinstance(obj, dict):
+                if '$ref' in obj and obj['$ref'].startswith('#/$defs/'):
+                    name = obj['$ref'].split('/')[-1]
+                    return resolve(copy.deepcopy(defs[name])) if name in defs else obj
+                return {k: resolve(v) for k, v in obj.items()}
+            if isinstance(obj, list):
+                return [resolve(item) for item in obj]
+            return obj
+
+        return resolve(schema)
