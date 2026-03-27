@@ -9,8 +9,8 @@ class InputValidator:
 
     def __check_glob_pattern(self, handlers):
         if '*.py' not in handlers:
-            raise Exception(f'{handlers} needs to be a glob pattern containing a "*.py" or valid directory location')
+            raise ValueError(f'{handlers} needs to be a glob pattern containing a "*.py" or valid directory location')
 
     def __check_directory(self, possible_dir):
         if not os.path.exists(possible_dir):
-            raise Exception(f'{possible_dir} is not a valid directory path')
+            raise ValueError(f'{possible_dir} is not a valid directory path')

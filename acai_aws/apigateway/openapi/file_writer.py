@@ -12,10 +12,9 @@ class OpenAPIFileWriter:
                 self.__write_yml(doc, file_location)
 
     def __write_json(self, doc, file_locaiton):
-        with open(f'{file_locaiton}/openapi.json', 'w') as openapi_json:
+        with open(f'{file_locaiton}/openapi.json', 'w', encoding='utf-8') as openapi_json:
             openapi_json.write(json.dumps(doc, indent=4))
 
     def __write_yml(self, doc, file_locaiton):
-        with open(f'{file_locaiton}/openapi.yml', 'w') as openapi_yml:
+        with open(f'{file_locaiton}/openapi.yml', 'w', encoding='utf-8') as openapi_yml:
             yaml.dump(doc, openapi_yml, indent=4, default_flow_style=False, sort_keys=False)
-

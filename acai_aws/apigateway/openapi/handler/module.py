@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 class HandlerModule:
-    def __init__(self, handler_base, file_path, module, method, base):
+    def __init__(self, handler_base, file_path, module, method, base):  # pylint: disable=too-many-positional-arguments
         self.__handler_base = handler_base
         self.__file_path = file_path
         self.__module = module
@@ -118,10 +118,11 @@ class HandlerModule:
         schema_body = self.__requirements.get(schema_key)
         if not schema_body or isinstance(schema_body, str):
             return None
-        elif isinstance(schema_body, dict):
+        if isinstance(schema_body, dict):
             return schema_body
-        elif issubclass(schema_body, BaseModel):
+        if issubclass(schema_body, BaseModel):
             return self.__inline_defs(schema_body.model_json_schema())
+        return None
 
     @staticmethod
     def __inline_defs(schema):
