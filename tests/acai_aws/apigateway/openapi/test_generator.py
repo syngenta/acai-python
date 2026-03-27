@@ -10,7 +10,7 @@ class OpenAPIGeneratorTest(unittest.TestCase):
     def setUp(self):
         self.non_existing_expected = {
             'openapi': '3.1.0',
-            'info': {'version': '1.0.0', 'title': 'Acai Generator', 'license': {'name': 'MIT'}},
+            'info': {'version': '1.0.0', 'title': 'Acai Generator', 'license': {'name': 'MIT', 'identifier': 'MIT'}},
             'tags': [{'name': 'acai_aws-unit_test'}],
             'servers': [],
             'paths': {
@@ -38,7 +38,8 @@ class OpenAPIGeneratorTest(unittest.TestCase):
                 "version": "1.0.0",
                 "title": "Acai Generator",
                 "license": {
-                    "name": "MIT"
+                    "name": "MIT",
+                    "identifier": "MIT"
                 }
             },
             "tags": [
@@ -130,3 +131,40 @@ class OpenAPIGeneratorTest(unittest.TestCase):
         generator.add_path_and_method(module)
         generator.delete_unused_paths()
         self.assertDictEqual(self.deleted_existed_expected, generator.doc)
+
+    def test_response_codes_without_schema(self):
+        importer = HandlerImporter()
+        generator = OpenAPIGenerator('tests/mocks_outputs')
+        modules = importer.get_modules_from_file_paths(
+            ['tests/mocks/apigateway/openapi/response_codes.py'],
+            'tests/mocks/apigateway/openapi',
+            'acai_aws/unit_test'
+        )
+        get_module = [m for m in modules if m.method == 'get'][0]
+        generator.add_path_and_method(get_module)
+        responses = generator.doc['paths'][get_module.route_path]['get']['responses']
+        self.assertEqual(responses['200'], {'description': 'User exists'})
+        self.assertEqual(responses['204'], {'description': 'User does not exist'})
+
+    def test_response_codes_with_schema(self):
+        importer = HandlerImporter()
+        generator = OpenAPIGenerator('tests/mocks_outputs')
+        modules = importer.get_modules_from_file_paths(
+            ['tests/mocks/apigateway/openapi/response_codes.py'],
+            'tests/mocks/apigateway/openapi',
+            'acai_aws/unit_test'
+        )
+        post_module = [m for m in modules if m.method == 'post'][0]
+        generator.add_path_and_method(post_module)
+        responses = generator.doc['paths'][post_module.route_path]['post']['responses']
+        self.assertEqual(responses['200'], {
+            'description': 'Resource found',
+            'content': {
+                'application/json': {
+                    'schema': {
+                        '$ref': f'#/components/schemas/{post_module.response_body_schema_name}'
+                    }
+                }
+            }
+        })
+        self.assertEqual(responses['204'], {'description': 'Resource not found'})

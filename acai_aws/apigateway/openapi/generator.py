@@ -116,7 +116,21 @@ class OpenAPIGenerator:
             }
 
     def __set_responses(self, route_method, module):
-        if module.response_body_schema:
+        if module.response_codes:
+            if not route_method.get('responses'):
+                route_method['responses'] = {}
+            for code, description in module.response_codes.items():
+                response_entry = {'description': description}
+                if code != 204 and module.response_body_schema:
+                    response_entry['content'] = {
+                        'application/json': {
+                            'schema': {
+                                '$ref': f'#/components/schemas/{module.response_body_schema_name}'
+                            }
+                        }
+                    }
+                route_method['responses'][str(code)] = response_entry
+        elif module.response_body_schema:
             if not route_method.get('responses'):
                 route_method['responses'] = {}
             route_method['responses']['200'] = {

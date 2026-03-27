@@ -14,6 +14,14 @@ class HandlerModuleTest(unittest.TestCase):
         spec.loader.exec_module(handler_module)
         self.module = HandlerModule('tests/mocks/apigateway/openapi', file_path, handler_module, 'post', 'acai_aws/example')
 
+        rc_file_path = 'tests/mocks/apigateway/openapi/response_codes.py'
+        rc_import_path = 'tests.mocks.apigateway.openapi.response_codes'
+        rc_spec = importlib.util.spec_from_file_location(rc_import_path, rc_file_path)
+        rc_handler_module = importlib.util.module_from_spec(rc_spec)
+        rc_spec.loader.exec_module(rc_handler_module)
+        self.rc_module_get = HandlerModule('tests/mocks/apigateway/openapi', rc_file_path, rc_handler_module, 'get', 'acai_aws/example')
+        self.rc_module_post = HandlerModule('tests/mocks/apigateway/openapi', rc_file_path, rc_handler_module, 'post', 'acai_aws/example')
+
     def test_file_path(self):
         assert self.module.file_path == 'tests/mocks/apigateway/openapi/basic.py'
 
@@ -98,5 +106,16 @@ class HandlerModuleTest(unittest.TestCase):
         }
         self.assertDictEqual(expected, self.module.request_body_schema)
 
-    def test_request_body_schema(self):
+    def test_response_body_schema_none(self):
         assert self.module.response_body_schema is None
+
+    def test_response_codes_empty_when_not_set(self):
+        self.assertDictEqual({}, self.module.response_codes)
+
+    def test_response_codes_when_set(self):
+        expected = {200: 'User exists', 204: 'User does not exist'}
+        self.assertDictEqual(expected, self.rc_module_get.response_codes)
+
+    def test_response_codes_with_response_schema(self):
+        expected = {200: 'Resource found', 204: 'Resource not found'}
+        self.assertDictEqual(expected, self.rc_module_post.response_codes)

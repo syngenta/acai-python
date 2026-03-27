@@ -97,6 +97,10 @@ class HandlerModule:
     def response_body_schema(self):
         return self.__get_schema_body('required_response')
 
+    @property
+    def response_codes(self):
+        return self.__requirements.get('response_codes', {})
+
     def __compose_route_path(self):
         dirty_route = self.__file_path.split(self.__handler_base)[1]
         no_py_route = dirty_route.replace('.py', '')
