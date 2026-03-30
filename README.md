@@ -28,7 +28,7 @@ Building Lambda functions shouldn’t require boilerplate or ad-hoc validation. 
 - **🚀 Zero Boilerplate** – Auto-discover handlers based on directory, glob, or mapping modes
 - **✅ Built-in Validation** – OpenAPI schema enforcement or Pydantic models with no extra glue code
 - **🛡️ Declarative Requirements** – Decorators to plug in auth, before/after hooks, timeouts, and schema rules
-- **🔄 Event Processing** – Consistent abstractions for DynamoDB Streams, SQS, S3, SNS, Kinesis, Firehose, MSK, MQ, and DocumentDB
+- **🔄 Event Processing** – Consistent abstractions for DynamoDB Streams, SQS, S3, SNS, Kinesis, Firehose, MSK, MQ, DocumentDB, and ALB
 - **🧪 Easy Testing** – Lightweight objects make unittest/pytest straightforward
 - **⚙️ IDE-Friendly** – Intuitive, type-friendly request/response objects for a better developer experience
 
@@ -302,6 +302,17 @@ from acai_aws.documentdb.requirements import requirements as docdb_requirements
 def docdb_handler(records):
     for record in records.records:
         handle_docdb_change(record.operation, record.full_document)
+```
+
+**Application Load Balancer (ALB)**
+
+```python
+from acai_aws.alb.requirements import requirements as alb_requirements
+
+@alb_requirements()
+def alb_handler(records):
+    for record in records.records:
+        handle_request(record.http_method, record.body, record.source_ip)
 ```
 
 Each record exposes intuitive properties like `record.operation`, `record.body`, or service-specific metadata (bucket, partition, headers, etc.).
