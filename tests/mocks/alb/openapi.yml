@@ -1,0 +1,28 @@
+openapi: 3.0.0
+paths:
+components:
+    schemas:
+        v1-alb-body:
+            type: object
+            required:
+                - business_id
+                - decision
+            properties:
+                business_id:
+                    type: string
+                decision:
+                    type: string
+                completed:
+                    type: string
+        v1-alb-body-wrong:
+            type: object
+            required:
+                - business_id
+                - decision
+            properties:
+                business_id:
+                    type: integer
+                decision:
+                    type: string
+                completed:
+                    type: string

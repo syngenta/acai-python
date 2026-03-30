@@ -3,6 +3,7 @@ import signal
 
 from acai_aws.common import logger
 from acai_aws.common.records.exception import EventException, EventTimeOutException
+from acai_aws.alb.event import Event as ALBEvent
 from acai_aws.common.records.event import Event as CommonEvent
 from acai_aws.documentdb.event import Event as DocumentDBEvent
 from acai_aws.dynamodb.event import Event as DynamoDBEvent
@@ -18,6 +19,8 @@ from acai_aws.sqs.event import Event as SQSEvent
 def requirements(**kwargs):
 
     def __find_event_source(event):
+        if event.get('requestContext', {}).get('elb'):
+            return 'aws:elb'
         if event.get('eventSource'):
             return event['eventSource']
         if event.get('deliveryStreamArn'):
@@ -33,6 +36,7 @@ def requirements(**kwargs):
             'unknown': CommonEvent,
             'aws:docdb': DocumentDBEvent,
             'aws:dynamodb': DynamoDBEvent,
+            'aws:elb': ALBEvent,
             'aws:lambda:events': FirehoseEvent,
             'aws:kafka': MSKEvent,
             'aws:mq': MQEvent,
