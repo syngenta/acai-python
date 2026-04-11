@@ -1,6 +1,5 @@
 import copy
 import json
-import logging
 import unittest
 from unittest.mock import patch
 
@@ -10,6 +9,10 @@ from acai_aws.base.event import BaseRecordsEvent, FailureMode
 from acai_aws.common.records.exception import RecordException
 from acai_aws.common.records.requirements import requirements, _merge_batch_item_failures
 from acai_aws.common.validator import Validator
+from acai_aws.dynamodb.record import Record as DynamoDBRecord
+from acai_aws.kinesis.record import Record as KinesisRecord
+from acai_aws.msk.record import Record as MSKRecord
+from acai_aws.common.records.record import Record as CommonRecord
 from acai_aws.sqs.event import Event as SQSEvent
 
 from tests.mocks.sqs import mock_event as sqs_mock_event
@@ -127,6 +130,13 @@ class FailureModeDispatchTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             sqs_event.validate()
 
+    def test_validate_is_idempotent(self):
+        sqs_event = SQSEvent(self.event, required_body=NotificationPreferences)
+        sqs_event.validate()
+        first_records = list(sqs_event.records)
+        sqs_event.validate()
+        self.assertEqual(first_records, list(sqs_event.records))
+
     def test_deprecated_raise_body_error_still_raises(self):
         BaseRecordsEvent._deprecation_logged = False
         sqs_event = SQSEvent(
@@ -163,6 +173,39 @@ class BatchItemIdentifierTest(unittest.TestCase):
             sqs_event.batch_item_failures(),
             [{'itemIdentifier': 'bad-message-id'}],
         )
+
+    def test_dynamodb_identifier_uses_sequence_number(self):
+        record = DynamoDBRecord({
+            'dynamodb': {'SequenceNumber': '42', 'NewImage': {'id': {'S': 'a'}}}
+        })
+        self.assertEqual(record.batch_item_identifier, {'itemIdentifier': '42'})
+
+    def test_dynamodb_identifier_returns_none_when_missing(self):
+        record = DynamoDBRecord({'dynamodb': {}})
+        self.assertIsNone(record.batch_item_identifier)
+
+    def test_kinesis_identifier_uses_sequence_number(self):
+        record = KinesisRecord({'kinesis': {'sequenceNumber': 'abc-99'}})
+        self.assertEqual(record.batch_item_identifier, {'itemIdentifier': 'abc-99'})
+
+    def test_kinesis_identifier_returns_none_when_missing(self):
+        record = KinesisRecord({'kinesis': {}})
+        self.assertIsNone(record.batch_item_identifier)
+
+    def test_msk_identifier_composes_topic_partition_offset(self):
+        record = MSKRecord({'topic': 'orders', 'partition': 3, 'offset': 10007})
+        self.assertEqual(
+            record.batch_item_identifier,
+            {'itemIdentifier': 'orders-3-10007'},
+        )
+
+    def test_msk_identifier_returns_none_when_any_part_missing(self):
+        self.assertIsNone(MSKRecord({'topic': 'orders', 'partition': 3}).batch_item_identifier)
+        self.assertIsNone(MSKRecord({'topic': 'orders', 'offset': 0}).batch_item_identifier)
+        self.assertIsNone(MSKRecord({'partition': 0, 'offset': 0}).batch_item_identifier)
+
+    def test_common_record_default_identifier_is_none(self):
+        self.assertIsNone(CommonRecord({'any': 'dict'}).batch_item_identifier)
 
 
 class MergeBatchItemFailuresTest(unittest.TestCase):
@@ -267,6 +310,21 @@ class DecoratorIntegrationTest(unittest.TestCase):
         event = _sqs_event_with_bad_and_good_records()
         result = handler(event, context=None)
         self.assertEqual(result, {'processed': 1})
+
+
+class ValidatorRequestHasSecurityTest(unittest.TestCase):
+
+    def test_request_has_security_returns_false_without_security_block(self):
+        validator = Validator()
+        request = type('Req', (), {'route': '/thing', 'method': 'get'})()
+        with patch('acai_aws.common.schema.Schema.get_route_spec', return_value={'responses': {}}):
+            self.assertFalse(validator.request_has_security(request))
+
+    def test_request_has_security_returns_true_with_security_block(self):
+        validator = Validator()
+        request = type('Req', (), {'route': '/thing', 'method': 'get'})()
+        with patch('acai_aws.common.schema.Schema.get_route_spec', return_value={'security': [{'api_key': []}]}):
+            self.assertTrue(validator.request_has_security(request))
 
 
 class ALBDecoratorTest(unittest.TestCase):

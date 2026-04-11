@@ -24,9 +24,9 @@ class HandlerScannerTest(unittest.TestCase):
 
     def test_get_handler_file_paths(self):
         paths = self.scanner.get_handler_file_paths()
-        assert len(paths) == 9
+        assert len(paths) == 10
 
     def test_get_handler_file_no_directory(self):
         scanner = HandlerScanner('tests/mocks/apigateway/openapi')
         paths = scanner.get_handler_file_paths()
-        assert len(paths) == 9
+        assert len(paths) == 10

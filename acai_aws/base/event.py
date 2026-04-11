@@ -174,9 +174,5 @@ class BaseRecordsEvent:
             return FailureMode.RAISE_ERROR
         return FailureMode.SILENT_IGNORE
 
-    def _reset_records(self, validated):
-        self._records.clear()
-        self._records = validated
-
     def __str__(self):
         return str([str(record) for record in self.records])
