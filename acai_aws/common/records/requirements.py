@@ -1,6 +1,8 @@
 import inspect
+import json
 import signal
 
+from acai_aws.base.event import FailureMode
 from acai_aws.common import logger
 from acai_aws.common.records.exception import EventException, EventTimeOutException
 from acai_aws.alb.event import Event as ALBEvent
@@ -80,11 +82,37 @@ def requirements(**kwargs):
             if kwargs.get('data_class') and inspect.isclass(kwargs['data_class']):
                 records_event.data_class = kwargs['data_class']
             start_timeout()
+            records_event.validate()
+            short_circuit = records_event.build_short_circuit_response()
+            if short_circuit is not None:
+                end_timeout()
+                return short_circuit
             result = func(records_event)
             end_timeout()
             run_after(records_event, result)
+            if records_event.resolve_failure_mode() == FailureMode.RETURN_FAILURE:
+                result = _merge_batch_item_failures(result, records_event)
             return result
 
         return run_function
 
     return decorator_func
+
+
+def _merge_batch_item_failures(result, records_event):
+    framework_failures = records_event.batch_item_failures()
+    if not framework_failures:
+        return result
+    key = records_event.batch_failure_response_key
+    existing = []
+    if isinstance(result, dict) and isinstance(result.get(key), list):
+        existing = list(result[key])
+    seen = {json.dumps(item, sort_keys=True) for item in existing if isinstance(item, dict)}
+    merged = list(existing)
+    for failure in framework_failures:
+        if json.dumps(failure, sort_keys=True) not in seen:
+            merged.append(failure)
+            seen.add(json.dumps(failure, sort_keys=True))
+    if isinstance(result, dict):
+        return {**result, key: merged}
+    return {key: merged}

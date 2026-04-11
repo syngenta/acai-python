@@ -9,6 +9,11 @@ class Record(BaseRecord):
         return self._record.get('messageId')
 
     @property
+    def batch_item_identifier(self):
+        message_id = self.message_id
+        return {'itemIdentifier': message_id} if message_id is not None else None
+
+    @property
     def receipt_handle(self):
         return self._record.get('receiptHandle')
 

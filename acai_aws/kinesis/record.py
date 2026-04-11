@@ -51,6 +51,11 @@ class Record(BaseRecord):
         return self._record.get('kinesis', {}).get('sequenceNumber')
 
     @property
+    def batch_item_identifier(self):
+        sequence_number = self.sequence_number
+        return {'itemIdentifier': sequence_number} if sequence_number is not None else None
+
+    @property
     def data(self):
         b64_decoded = base64.b64decode(self._record.get('kinesis', {}).get('data')).decode('utf-8')
         return JsonHelper.decode(b64_decoded)

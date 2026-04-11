@@ -47,6 +47,12 @@ class Record(BaseRecord):
     def body(self):
         return self.value
 
+    @property
+    def batch_item_identifier(self):
+        if self.topic is None or self.partition is None or self.offset is None:
+            return None
+        return {'itemIdentifier': f'{self.topic}-{self.partition}-{self.offset}'}
+
     def __str__(self):
         return str({
             'topic': self.topic,

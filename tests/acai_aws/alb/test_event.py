@@ -1,8 +1,8 @@
+import json
 import unittest
 
 from acai_aws.alb.event import Event
 from acai_aws.alb.record import Record
-from acai_aws.common.records.exception import RecordException
 
 from tests.mocks.alb import mock_event
 from tests.mocks.alb.mock_data_class import MockALBDataClass
@@ -55,13 +55,20 @@ class ALBEventTest(unittest.TestCase):
         event = Event(self.basic_event, schema=self.schema_path, required_body='v1-alb-body-wrong')
         self.assertEqual(len(event.records), 0)
 
-    def test_event_validate_raises_exception_record_body_with_schema_file(self):
-        try:
-            event = Event(self.basic_event, schema=self.schema_path, required_body='v1-alb-body-wrong', raise_body_error=True)
-            print(event.records)
-            self.assertTrue(False)
-        except RecordException as record_error:
-            self.assertTrue(isinstance(record_error, RecordException))
+    def test_event_validate_invalid_body_builds_http_400_response(self):
+        event = Event(self.basic_event, schema=self.schema_path, required_body='v1-alb-body-wrong')
+        event.validate()
+        response = event.build_short_circuit_response()
+        self.assertIsNotNone(response)
+        self.assertEqual(response['statusCode'], 400)
+        self.assertEqual(response['headers']['Content-Type'], 'application/json')
+        self.assertFalse(response['isBase64Encoded'])
+        body = json.loads(response['body'])
+        self.assertIn('errors', body)
+        self.assertTrue(len(body['errors']) > 0)
+        for error in body['errors']:
+            self.assertIn('key_path', error)
+            self.assertIn('message', error)
 
     def test_event_validate_record_body_with_schema_dict(self):
         schema = {
@@ -84,7 +91,7 @@ class ALBEventTest(unittest.TestCase):
         event = Event(self.basic_event, schema=self.schema_path, required_body=schema)
         self.assertDictEqual(event.records[0].body, self.expected_body)
 
-    def test_event_validate_raises_error_record_body_with_schema_dict(self):
+    def test_event_validate_invalid_body_with_dict_schema_builds_http_400(self):
         schema = {
             '$id': 'https://example.com/alb.schema.json',
             '$schema': 'https://json-schema.org/draft/2020-12/schema',
@@ -99,12 +106,25 @@ class ALBEventTest(unittest.TestCase):
                 }
             }
         }
-        try:
-            event = Event(self.basic_event, schema=self.schema_path, required_body=schema, raise_body_error=True)
-            print(event.records)
-            self.assertTrue(False)
-        except RecordException as record_error:
-            self.assertTrue(isinstance(record_error, RecordException))
+        event = Event(self.basic_event, schema=self.schema_path, required_body=schema)
+        event.validate()
+        response = event.build_short_circuit_response()
+        self.assertIsNotNone(response)
+        self.assertEqual(response['statusCode'], 400)
+        body = json.loads(response['body'])
+        self.assertIn('errors', body)
+        self.assertTrue(len(body['errors']) > 0)
+
+    def test_event_validate_valid_body_no_short_circuit(self):
+        event = Event(self.basic_event, schema=self.schema_path, required_body='v1-alb-body')
+        event.validate()
+        self.assertIsNone(event.build_short_circuit_response())
+        self.assertEqual(len(event.validation_errors), 0)
+
+    def test_event_validate_no_required_body_no_short_circuit(self):
+        event = Event(self.basic_event)
+        event.validate()
+        self.assertIsNone(event.build_short_circuit_response())
 
     def test_event_validate_filters_out_record_body_with_schema_dict(self):
         schema = {

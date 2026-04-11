@@ -62,10 +62,23 @@ class Validator:
 
     def validate_record_body(self, body, schema):
         errors = []
-        schema_validator = Draft7Validator(self.__schema.get_body_spec(schema))
+        resolved = self.__schema.get_body_spec(schema)
+        if inspect.isclass(resolved) and issubclass(resolved, BaseModel):
+            try:
+                resolved(**body)
+            except ValidationError as error:
+                for validation_error in error.errors():
+                    errors.append({
+                        'key_path': '.'.join(str(loc) for loc in validation_error['loc']),
+                        'message': validation_error['msg'],
+                    })
+            return errors
+        schema_validator = Draft7Validator(resolved)
         for schema_error in sorted(schema_validator.iter_errors(body), key=str):
-            error_key = Validator.format_schema_error_key(schema_error)
-            errors.append({'key': error_key, 'message': schema_error.message})
+            errors.append({
+                'key_path': Validator.format_schema_error_key(schema_error),
+                'message': schema_error.message,
+            })
         return errors
 
     @staticmethod

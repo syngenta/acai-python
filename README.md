@@ -317,6 +317,102 @@ def alb_handler(records):
 
 Each record exposes intuitive properties like `record.operation`, `record.body`, or service-specific metadata (bucket, partition, headers, etc.).
 
+### Validating Record Bodies with Pydantic or JSON Schema
+
+Records events (SQS, Kinesis, DynamoDB, SNS, S3, MSK, MQ, Firehose, DocumentDB, ALB) accept the same `required_body` validation as API Gateway — either a JSON Schema dict, an OpenAPI component name string, or a Pydantic `BaseModel` subclass.
+
+```python
+from pydantic import BaseModel
+from acai_aws.sqs.requirements import requirements
+
+class OrderEvent(BaseModel):
+    order_id: str
+    amount: float
+
+@requirements(required_body=OrderEvent)
+def handler(event):
+    for record in event.records:  # invalid records filtered before this loop
+        process(record.body)
+```
+
+### Controlling Validation Failure Behavior with `failure_mode`
+
+By default, invalid records are silently filtered out of `event.records` — preserving existing behavior. Opt into louder modes with `failure_mode` (also controls the `operations=[...]` filter).
+
+```python
+from acai_aws.base.event import FailureMode
+```
+
+| Mode | Behavior |
+|---|---|
+| `FailureMode.SILENT_IGNORE` (default) | Invalid records dropped silently. Handler receives only valid records. |
+| `FailureMode.LOG_WARN` | Invalid records dropped **and** each failure emitted as a structured WARN log entry. |
+| `FailureMode.RAISE_ERROR` | First invalid record raises `RecordException` immediately, before the handler runs. Replaces the deprecated `raise_body_error=True` / `raise_operation_error=True` booleans. |
+| `FailureMode.RETURN_FAILURE` | Invalid records collected on `event.invalid_records`. After the handler returns, the decorator auto-merges framework-detected failures into the response's `batchItemFailures` list (SQS/Kinesis/DynamoDB) — compatible with AWS Lambda partial batch response. |
+
+#### Auto-hydrated `batchItemFailures` for SQS, Kinesis, DynamoDB
+
+When `failure_mode=FailureMode.RETURN_FAILURE` is set on a source that supports partial batch response, the framework merges its detected failures into whatever your handler returns — letting the event-source mapping retry malformed messages correctly instead of silently dropping them.
+
+```python
+from pydantic import BaseModel
+from acai_aws.base.event import FailureMode
+from acai_aws.sqs.requirements import requirements
+
+class OrderEvent(BaseModel):
+    order_id: str
+    amount: float
+
+@requirements(required_body=OrderEvent, failure_mode=FailureMode.RETURN_FAILURE)
+def handler(event):
+    handler_failures = []
+    for record in event.records:  # only valid records
+        try:
+            process(record.body)
+        except TransientError:
+            handler_failures.append({'itemIdentifier': record.message_id})
+    return {'batchItemFailures': handler_failures}
+    # Framework appends validation failures to batchItemFailures automatically.
+    # SQS retries both kinds. No silent data loss.
+```
+
+Per-source identifiers used by the auto-merge:
+
+| Source | `itemIdentifier` |
+|---|---|
+| SQS | `record.message_id` |
+| Kinesis | `record.sequence_number` |
+| DynamoDB Streams | `record.sequence_number` |
+| MSK | `f'{record.topic}-{record.partition}-{record.offset}'` |
+
+Sources without partial-batch support (SNS, S3, Firehose, MQ, DocumentDB) fall back to `SILENT_IGNORE` semantics for `RETURN_FAILURE` — use `LOG_WARN` for those instead.
+
+#### ALB: Automatic HTTP 400 on Invalid Body
+
+ALB is synchronous HTTP — partial-batch semantics don't apply. When `required_body` is set on an ALB handler and the body fails validation, the framework **short-circuits the handler** and returns an HTTP 400 response in the same shape API Gateway produces:
+
+```json
+{
+  "statusCode": 400,
+  "headers": {"Content-Type": "application/json"},
+  "body": "{\"errors\": [{\"key_path\": \"amount\", \"message\": \"Input should be a valid number\"}]}",
+  "isBase64Encoded": false
+}
+```
+
+```python
+from acai_aws.alb.requirements import requirements
+
+@requirements(required_body=OrderEvent)
+def alb_handler(event):
+    # Only runs when the body validates. Otherwise framework returns 400.
+    return {'statusCode': 200, 'body': '{"ok": true}'}
+```
+
+#### Deprecation: `raise_body_error` / `raise_operation_error`
+
+The old `raise_body_error=True` and `raise_operation_error=True` kwargs still work and translate to `failure_mode=FailureMode.RAISE_ERROR`, but emit a deprecation warning. Prefer the unified enum going forward.
+
 ---
 
 ## 🧰 Tooling & Development Experience

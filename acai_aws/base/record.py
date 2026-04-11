@@ -22,3 +22,7 @@ class BaseRecord(abc.ABC):
     @abc.abstractmethod
     def operation(self):
         raise NotImplementedError
+
+    @property
+    def batch_item_identifier(self):
+        return None

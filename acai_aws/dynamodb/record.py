@@ -38,6 +38,11 @@ class Record(BaseRecord):
         return self._record['dynamodb'].get('SequenceNumber')
 
     @property
+    def batch_item_identifier(self):
+        sequence_number = self.sequence_number
+        return {'itemIdentifier': sequence_number} if sequence_number is not None else None
+
+    @property
     def size_bytes(self):
         return self._record['dynamodb'].get('SizeBytes')
 

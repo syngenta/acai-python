@@ -13,13 +13,8 @@ class Event(BaseRecordsEvent):
         super().__init__(event, context, **kwargs)
         self._record_class = Record
 
-    @property
-    def records(self):
-        self._records = [self._record_class(record) for record in self._event.get('Records', [])]
-        self._validate_operations()
+    def _post_operation_hook(self):
         self.__get_objects()
-        self._validate_record_body()
-        return self.data_classes if self.data_class is not None else self._records
 
     def __get_objects(self):
         if not self._kwargs.get('get_object'):

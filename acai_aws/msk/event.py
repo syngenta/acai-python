@@ -12,15 +12,11 @@ class Event(BaseRecordsEvent):
     def raw_records(self):
         return self._event.get('records', {})
 
-    @property
-    def records(self):
+    def _build_records(self):
         self._records = []
         for topic in self.raw_records:
             for msk_record in self.raw_records[topic]:
                 self._records.append(self._record_class(msk_record))
-        self._validate_operations()
-        self._validate_record_body()
-        return self.data_classes if self.data_class is not None else self._records
 
     @property
     def topics(self):
