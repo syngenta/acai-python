@@ -64,6 +64,9 @@ class Validator:
         errors = []
         resolved = self.__schema.get_body_spec(schema)
         if inspect.isclass(resolved) and issubclass(resolved, BaseModel):
+            if not isinstance(body, dict):
+                errors.append({'key_path': 'body', 'message': 'Expected JSON object body'})
+                return errors
             try:
                 resolved(**body)
             except ValidationError as error:
