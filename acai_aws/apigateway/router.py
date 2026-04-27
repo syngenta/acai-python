@@ -10,6 +10,8 @@ from acai_aws.common import logger
 
 
 class Router:
+    request_class = Request
+    response_class = Response
 
     def __init__(self, **kwargs):
         ConfigValidator.validate(**kwargs)
@@ -32,8 +34,8 @@ class Router:
         self.__validator.auto_load()
 
     def route(self, event, context):
-        request = Request(event, context, self.__timeout)
-        response = Response(cors=self.__cors)
+        request = self.request_class(event, context, self.__timeout)
+        response = self.response_class(cors=self.__cors)
         try:
             self.__log_verbose(title='request-received', log={'request': request})
             self.__run_route_procedure(request, response)
