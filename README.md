@@ -171,6 +171,31 @@ The router automatically maps file structure to routes (see the table in the [do
                 │---📜_field_id.py  | /farm/{farm_id}/field/{field_id}
 ```
 
+### ALB Router
+
+`acai_aws.alb.Router` provides the same routing, validation, and middleware as the API Gateway router for Lambda functions invoked by an Application Load Balancer. It subclasses `apigateway.Router` and reuses the same handler files, `@requirements` decorator, OpenAPI auto-validation, and directory/mapping/pattern resolution — only the request/response transport differs.
+
+```python
+from acai_aws.alb.router import Router
+
+router = Router(
+    base_path='api/v1',
+    handlers='handlers',
+)
+router.auto_load()
+
+def handler(event, context):
+    return router.route(event, context)
+```
+
+ALB-specific behavior layered on top of the apigateway router:
+
+- **Base64 bodies** — when the ALB target group sends `isBase64Encoded: true`, `request.body` is transparently decoded.
+- **`statusDescription`** — every response includes the `statusDescription` field ALB expects (e.g. `"200 OK"`, `"404 Not Found"`).
+- **Request extras** — `request.target_group_arn` and `request.source_ip` (read from `x-forwarded-for`).
+
+For records-style ALB processing (treating each invocation as a batch event rather than HTTP routing), see the [ALB section](#-event-processing) below.
+
 ### Auto-Loading OpenAPI Documents
 
 ```bash
