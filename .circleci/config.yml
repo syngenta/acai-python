@@ -9,7 +9,7 @@ commands:
         steps:
             - run: pip install pipenv
             - run: pipenv install
-    python-test-install:
+    pipenv-install-dev:
         steps:
             - restore_cache:
                 key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
@@ -19,21 +19,6 @@ commands:
                 key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
                 paths:
                     - ".venv"
-    python-lint:
-        steps:
-            - run: python3 -m pipenv run lint | python3 -m pipenv run pylint_report.py > ./coverage/lint/report.html || exit 0
-            - store_artifacts:
-                path: ./coverage/lint/report.html
-    python-test:
-        steps:
-            - run: pipenv run test
-    python-report:
-        steps:
-            - run: pipenv run coverage
-            - store_test_results:
-                path: ./coverage
-            - store_artifacts:
-                path: ./coverage
     pypi-setup:
         steps:
             - run: echo -e "[pypi]" >> ~/.pypirc
@@ -46,17 +31,55 @@ commands:
             - run: python3 -m pip install --user --upgrade twine
             - run: python3 -m twine upload dist/*
 jobs:
-    install-build-test:
+    install:
         docker:
             - image: cimg/python:3.9
         steps:
             - checkout:
                 method: full
-            - python-test-install
+            - pipenv-install-dev
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .venv
+    lint:
+        docker:
+            - image: cimg/python:3.9
+        steps:
+            - checkout
+            - attach_workspace:
+                at: .
+            - run: pip install pipenv
             - setup-artifacts
-            - python-lint
-            - python-test
-            - python-report
+            - run: python3 -m pipenv run lint | python3 -m pipenv run pylint_report.py > ./coverage/lint/report.html || exit 0
+            - store_artifacts:
+                path: ./coverage/lint/report.html
+    test:
+        docker:
+            - image: cimg/python:3.9
+        steps:
+            - checkout
+            - attach_workspace:
+                at: .
+            - run: pip install pipenv
+            - setup-artifacts
+            - run: pipenv run test
+            - run: pipenv run coverage
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - coverage
+            - store_test_results:
+                path: ./coverage
+            - store_artifacts:
+                path: ./coverage
+    sonarcloud-scan:
+        docker:
+            - image: cimg/python:3.9
+        steps:
+            - checkout
+            - attach_workspace:
+                at: .
             - sonarcloud/scan
     install-build-deploy:
         docker:
@@ -77,9 +100,27 @@ workflows:
                         ignore: /.*/
     install-build-test-workflow:
         jobs:
-            - install-build-test:
+            - install:
+                filters:
+                    tags:
+                        ignore: /.*/
+            - lint:
+                requires:
+                    - install
+                filters:
+                    tags:
+                        ignore: /.*/
+            - test:
+                requires:
+                    - install
+                filters:
+                    tags:
+                        ignore: /.*/
+            - sonarcloud-scan:
                 context:
                     - sonarcloud
+                requires:
+                    - test
                 filters:
                     tags:
                         ignore: /.*/
