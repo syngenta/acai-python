@@ -4,8 +4,8 @@ This repository contains **acai_aws**, a happy-path-first toolkit for AWS Lambda
 
 ## Philosophy & Environment
 - Validate early, execute later. Every handler or event processor should assume inputs are clean because requirements and middleware already filtered the bad paths.
-- Python 3.8+ is the baseline. Install dependencies via `pipenv install --dev` and use `pipenv run` to invoke tooling so the virtualenv stays consistent.
-- Preferred workflow for any meaningful change: `pipenv run lint`, `pipenv run test`, `pipenv run coverage`, and—when request/response contracts change—`pipenv run generate` to refresh the OpenAPI spec.
+- Python 3.8+ is the baseline. Install dependencies via `uv sync` and use `uv run task ...` to invoke tooling so the virtualenv stays consistent.
+- Preferred workflow for any meaningful change: `uv run task lint`, `uv run task test`, `uv run task coverage`, and when request/response contracts change, `uv run task generate` to refresh the OpenAPI spec.
 
 ## API Gateway Architecture
 ### Router Responsibilities

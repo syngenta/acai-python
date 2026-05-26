@@ -5,20 +5,17 @@ commands:
     setup-artifacts:
         steps:
             - run: mkdir ./coverage && mkdir ./coverage/lint && mkdir ./coverage/reports || exit 0
-    python-install:
-        steps:
-            - run: pip install pipenv
-            - run: pipenv install
-    pipenv-install-dev:
+    uv-install-dev:
         steps:
             - restore_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - run: pip install pipenv
-            - run: pipenv install --dev
+                key: uv-v1-{{ .Branch }}-{{ checksum "uv.lock" }}
+            - run: pip install --upgrade uv
+            - run: uv sync --frozen
             - save_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                key: uv-v1-{{ .Branch }}-{{ checksum "uv.lock" }}
                 paths:
                     - ".venv"
+                    - "~/.cache/uv"
     pypi-setup:
         steps:
             - run: echo -e "[pypi]" >> ~/.pypirc
@@ -26,9 +23,9 @@ commands:
             - run: echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
     pypi-deploy:
         steps:
-            - run: python3 -m pip install --user --upgrade setuptools wheel
-            - run: python3 setup.py sdist bdist_wheel
-            - run: python3 -m pip install --user --upgrade twine
+            - run: pip install --upgrade uv twine
+            - run: uv version "$CIRCLE_TAG"
+            - run: uv build
             - run: python3 -m twine upload dist/*
 jobs:
     install:
@@ -37,7 +34,7 @@ jobs:
         steps:
             - checkout:
                 method: full
-            - pipenv-install-dev
+            - uv-install-dev
             - persist_to_workspace:
                 root: .
                 paths:
@@ -49,9 +46,9 @@ jobs:
             - checkout
             - attach_workspace:
                 at: .
-            - run: pip install pipenv
+            - run: pip install --upgrade uv
             - setup-artifacts
-            - run: python3 -m pipenv run lint | python3 -m pipenv run pylint_report.py > ./coverage/lint/report.html || exit 0
+            - run: uv run task lint | uv run pylint_report.py > ./coverage/lint/report.html || exit 0
             - store_artifacts:
                 path: ./coverage/lint/report.html
     test:
@@ -61,10 +58,10 @@ jobs:
             - checkout
             - attach_workspace:
                 at: .
-            - run: pip install pipenv
+            - run: pip install --upgrade uv
             - setup-artifacts
-            - run: pipenv run test
-            - run: pipenv run coverage
+            - run: uv run task test
+            - run: uv run task coverage
             - persist_to_workspace:
                 root: .
                 paths:
@@ -86,7 +83,6 @@ jobs:
             - image: cimg/python:3.9
         steps:
             - checkout
-            - python-install
             - pypi-setup
             - pypi-deploy
 workflows:

@@ -65,7 +65,7 @@ def post(request, response):
 
 ```bash
 pip install acai_aws
-# pipenv install acai_aws
+# uv add acai_aws
 # poetry add acai_aws
 ```
 
@@ -199,7 +199,7 @@ For records-style ALB processing (treating each invocation as a batch event rath
 ### Auto-Loading OpenAPI Documents
 
 ```bash
-pipenv run generate
+uv run task generate
 # → loads handlers, inspects @requirements metadata, and updates openapi.yml/json
 ```
 
@@ -452,10 +452,10 @@ The old `raise_body_error=True` and `raise_operation_error=True` kwargs still wo
 ## 🧪 Testing
 
 ```bash
-pipenv install --dev
-pipenv run test         # run unittest discovery
-pipenv run coverage     # run pytest suite with coverage reports
-pipenv run lint         # run pylint with bundled rules
+uv sync                 # install runtime + dev dependencies into .venv
+uv run task test        # run unittest discovery
+uv run task coverage    # run pytest suite with coverage reports
+uv run task lint        # run pylint with bundled rules
 ```
 
 ### Example Unit Test
@@ -492,8 +492,8 @@ Contributions welcome! Follow the usual GitHub flow:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-idea`)
-3. Write tests and code (`pipenv run test`)
-4. Run linting (`pipenv run lint`)
+3. Write tests and code (`uv run task test`)
+4. Run linting (`uv run task lint`)
 5. Open a Pull Request
 
 ### Development Setup
@@ -501,9 +501,9 @@ Contributions welcome! Follow the usual GitHub flow:
 ```bash
 git clone https://github.com/syngenta/acai-python.git
 cd acai-python
-pipenv install --dev
-pipenv run test
-pipenv run lint
+uv sync
+uv run task test
+uv run task lint
 ```
 
 ---

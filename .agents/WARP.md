@@ -15,32 +15,32 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ### Development Environment
 ```bash
-# Install dependencies (using pipenv)
-pipenv install
+# Install runtime + dev dependencies into .venv (uses uv.lock)
+uv sync
 
-# Install development dependencies
-pipenv install --dev
+# Install runtime dependencies only
+uv sync --no-dev
 ```
 
 ### Testing
 ```bash
 # Run all tests
-pipenv run test
+uv run task test
 
 # Run with coverage report
-pipenv run coverage
+uv run task coverage
 ```
 
 ### Linting
 ```bash
 # Run pylint with custom rules
-pipenv run lint
+uv run task lint
 ```
 
 ### OpenAPI Generation
 ```bash
 # Generate OpenAPI docs from handlers
-pipenv run generate
+uv run task generate
 # This generates OpenAPI documentation from handler files in tests/mocks/apigateway/openapi/**/*.py
 ```
 

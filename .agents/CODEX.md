@@ -4,10 +4,10 @@ Codex, this repository houses **acai_aws**, a DRY toolkit for building AWS Lambd
 
 ## Quick Start
 
-- Install runtime and dev dependencies: `pipenv install --dev`
-- Run the unittest discovery suite: `pipenv run test`
-- Lint and coverage helpers: `pipenv run lint`, `pipenv run coverage`
-- Generate OpenAPI docs: `pipenv run generate`
+- Install runtime and dev dependencies: `uv sync`
+- Run the unittest discovery suite: `uv run task test`
+- Lint and coverage helpers: `uv run task lint`, `uv run task coverage`
+- Generate OpenAPI docs: `uv run task generate`
 
 ## Architecture Cheat Sheet
 
@@ -21,7 +21,7 @@ Codex, this repository houses **acai_aws**, a DRY toolkit for building AWS Lambd
 
 - Tests mirror the package structure under `tests/acai_aws/`; mocks reside in `tests/mocks/`.
 - Router tests assert full response dicts—double-check expected `path_params` when changing dynamic route handling.
-- Coverage target lives in `pipenv run coverage` (pytest + coverage + HTML/JUnit reports).
+- Coverage target lives in `uv run task coverage` (pytest + coverage + HTML/JUnit reports).
 
 ## Tips While Editing
 
@@ -32,8 +32,8 @@ Codex, this repository houses **acai_aws**, a DRY toolkit for building AWS Lambd
 
 ## CI Expectations
 
-- Lint score must remain ≥10 (`pipenv run lint`).
-- Unit tests run via `pipenv run test` (unittest discovery).
-- Publishing reads version from `CIRCLE_TAG`; avoid hardcoding.
+- Lint score must remain ≥10 (`uv run task lint`).
+- Unit tests run via `uv run task test` (unittest discovery).
+- Publishing reads version from `CIRCLE_TAG` (CI runs `uv version "$CIRCLE_TAG"` before `uv build`); avoid hardcoding.
 
 Use this sheet to align with the repo’s conventions and keep happy-path programming intact.
