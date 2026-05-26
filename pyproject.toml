@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "acai_aws"
-version = "0.0.0"
+dynamic = ["version"]
 description = "DRY, configurable, declarative framework for building AWS Lambda APIs and event processors"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -88,6 +88,12 @@ dev = [
 [tool.setuptools.packages.find]
 include = ["acai_aws*"]
 exclude = ["tests*"]
+
+[tool.setuptools_scm]
+
+[tool.uv]
+required-version = ">=0.11"
+python-preference = "only-managed"
 
 [tool.taskipy.tasks]
 generate = "python -m acai_aws.apigateway generate-openapi --base=acai_aws/example --handlers=tests/mocks/apigateway/openapi/**/*.py --output=tests/outputs --format=json,yml --delete"

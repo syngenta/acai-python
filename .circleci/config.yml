@@ -5,14 +5,21 @@ commands:
     setup-artifacts:
         steps:
             - run: mkdir ./coverage && mkdir ./coverage/lint && mkdir ./coverage/reports || exit 0
+    install-uv:
+        steps:
+            - run:
+                name: Install uv (pinned)
+                command: |
+                    curl -LsSf https://astral.sh/uv/0.11.15/install.sh | sh
+                    echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
     uv-install-dev:
         steps:
             - restore_cache:
-                key: uv-v1-{{ .Branch }}-{{ checksum "uv.lock" }}
-            - run: pip install --upgrade uv
-            - run: uv sync --frozen
+                key: uv-v2-{{ .Branch }}-{{ checksum "uv.lock" }}
+            - install-uv
+            - run: uv sync --locked
             - save_cache:
-                key: uv-v1-{{ .Branch }}-{{ checksum "uv.lock" }}
+                key: uv-v2-{{ .Branch }}-{{ checksum "uv.lock" }}
                 paths:
                     - ".venv"
                     - "~/.cache/uv"
@@ -23,9 +30,9 @@ commands:
             - run: echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
     pypi-deploy:
         steps:
-            - run: pip install --upgrade uv twine
-            - run: uv version "$CIRCLE_TAG"
+            - install-uv
             - run: uv build
+            - run: pip install --upgrade twine
             - run: python3 -m twine upload dist/*
 jobs:
     install:
@@ -46,7 +53,7 @@ jobs:
             - checkout
             - attach_workspace:
                 at: .
-            - run: pip install --upgrade uv
+            - install-uv
             - setup-artifacts
             - run: uv run task lint | uv run pylint_report.py > ./coverage/lint/report.html || exit 0
             - store_artifacts:
@@ -58,7 +65,7 @@ jobs:
             - checkout
             - attach_workspace:
                 at: .
-            - run: pip install --upgrade uv
+            - install-uv
             - setup-artifacts
             - run: uv run task test
             - run: uv run task coverage
@@ -83,7 +90,8 @@ jobs:
         docker:
             - image: cimg/python:3.9
         steps:
-            - checkout
+            - checkout:
+                method: full
             - pypi-setup
             - pypi-deploy
 workflows:

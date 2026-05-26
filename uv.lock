@@ -12,7 +12,6 @@ resolution-markers = [
 
 [[package]]
 name = "acai-aws"
-version = "0.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "boto3", version = "1.37.38", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
