@@ -131,6 +131,36 @@ class LoggerTest(TestCase):
     def test_logger_handles_bad_level(self):
         logger.log(level='BAD', log={'INFO': 'ignore'})
 
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'JSON'})
+    def test_logger_accepts_canonical_warning(self):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='WARNING', log={'canonical': True})
+        log_output = buffer.getvalue().strip()
+        self.assertTrue(log_output, 'expected output for canonical WARNING level')
+        parsed = json.loads(log_output)
+        self.assertEqual('WARNING', parsed['level'])
+
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'JSON', 'LOG_LEVEL': 'DEBUG'})
+    def test_logger_accepts_debug_level(self):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='DEBUG', log={'debug': True})
+        log_output = buffer.getvalue().strip()
+        self.assertTrue(log_output, 'expected output for DEBUG level when LOG_LEVEL=DEBUG')
+        parsed = json.loads(log_output)
+        self.assertEqual('DEBUG', parsed['level'])
+
+    @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_FORMAT': 'JSON'})
+    def test_logger_accepts_critical_level(self):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='CRITICAL', log={'critical': True})
+        log_output = buffer.getvalue().strip()
+        self.assertTrue(log_output, 'expected output for CRITICAL level')
+        parsed = json.loads(log_output)
+        self.assertEqual('CRITICAL', parsed['level'])
+
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'ERROR', 'LOG_FORMAT': 'BAD'})
     def test_logger_handles_bad_format(self):
         logger.log(level='INFO', log={'INFO': 'ignore'})

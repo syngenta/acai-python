@@ -15,9 +15,13 @@ class CommonLogger:
         self.__json.set_encoder_options('simplejson', use_decimal=True)
         self.__json.set_preferred_backend('simplejson')
         self.log_levels = {
+            'DEBUG': 0,
             'INFO': 1,
             'WARN': 2,
-            'ERROR': 3
+            'WARNING': 2,
+            'ERROR': 3,
+            'CRITICAL': 4,
+            'FATAL': 4
         }
         if self.__format not in ['JSON', 'PRETTY', 'INLINE']:
             raise ValueError(f'LOG_FORMAT ENV must be either `JSON`, `PRETTY`, or `INLINE`, recieved: {self.__format}')
