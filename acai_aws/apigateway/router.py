@@ -93,33 +93,33 @@ class Router:
         if not response.has_errors and self.__after_all and callable(self.__after_all):
             self.__after_all(request, response, endpoint.requirements)
 
+    @staticmethod
+    def __contract_errors(error):
+        if isinstance(error, ValidationError):
+            errors = [
+                ('.'.join(str(part) for part in (item.get('loc') or ())) or 'unknown', item.get('msg', 'invalid'))
+                for item in error.errors()
+            ]
+            return errors or [('unknown', 'request failed validation')]
+        return [('body', f'request body is not valid JSON: {error}')]
+
     def __handle_contract_error(self, request, response, error):
-        try:
-            response.code = 400
-            if isinstance(error, ValidationError):
-                details = error.errors()
-                for item in details:
-                    location = '.'.join(str(part) for part in (item.get('loc') or ()))
-                    response.set_error(key_path=location or 'unknown', message=item.get('msg', 'invalid'))
-                if not details:
-                    response.set_error(key_path='unknown', message='request failed validation')
-            else:
-                response.set_error(key_path='body', message=f'request body is not valid JSON: {error}')
-            if self.__on_error and callable(self.__on_error):
-                self.__on_error(request, response, error)
-            else:
-                logger.log(level='ERROR', log={'request': request, 'response': response, 'error': error})
-        except Exception as exception:
-            logging.exception(exception)
+        response.code = 400
+        for key_path, message in self.__contract_errors(error):
+            response.set_error(key_path=key_path, message=message)
+        self.__dispatch_error(request, response, self.__on_error, error)
 
     def __handle_error(self, request, response, error_func=None, **kwargs):
+        response.code = kwargs['code']
+        response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])
+        self.__dispatch_error(request, response, error_func, kwargs.get('error'))
+
+    def __dispatch_error(self, request, response, error_func, error):
         try:
-            response.code = kwargs['code']
-            response.set_error(key_path=kwargs['key_path'], message=kwargs['message'])
             if error_func and callable(error_func):
-                error_func(request, response, kwargs.get('error'))
+                error_func(request, response, error)
             else:
-                logger.log(level='ERROR', log={'request': request, 'response': response, 'error': kwargs})
+                logger.log(level='ERROR', log={'request': request, 'response': response, 'error': error})
         except Exception as exception:
             logging.exception(exception)
 
