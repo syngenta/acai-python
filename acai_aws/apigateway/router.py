@@ -94,10 +94,6 @@ class Router:
             self.__after_all(request, response, endpoint.requirements)
 
     def __handle_contract_error(self, request, response, error):
-        # Request-contract violations (pydantic schema validation, malformed JSON
-        # body) are client errors, not server faults. Respond 400 and surface
-        # each failure via set_error so the response carries the standard
-        # errors[] contract, instead of falling through to a generic 500.
         try:
             response.code = 400
             if isinstance(error, ValidationError):
