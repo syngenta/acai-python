@@ -621,6 +621,60 @@ def get_unhandled_exception_post():
     }
 
 
+def get_validation_error_post():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/raise-validation-error',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }
+
+
+def get_bad_json_post():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/raise-bad-json',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': json.dumps({'body_key': 'body_value'})
+    }
+
+
 def get_basic_for_validation():
     return {
         'headers': {

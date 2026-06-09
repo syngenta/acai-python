@@ -1,4 +1,7 @@
+import json
 import logging
+
+from pydantic import ValidationError
 
 from acai_aws.apigateway.exception import ApiException, ApiTimeOutException
 from acai_aws.apigateway.request import Request
@@ -45,6 +48,8 @@ class Router:
         except ApiException as api_error:
             kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
             self.__handle_error(request, response, self.__on_error, **kwargs)
+        except (ValidationError, json.JSONDecodeError) as contract_error:
+            self.__handle_contract_error(request, response, contract_error)
         except Exception as error:
             output = str(error) if self.__output_error else 'internal service error'
             kwargs = {'code': 500, 'key_path': 'unknown', 'message': output, 'error': error}
@@ -87,6 +92,29 @@ class Router:
     def __run_after_all(self, request, response, endpoint):
         if not response.has_errors and self.__after_all and callable(self.__after_all):
             self.__after_all(request, response, endpoint.requirements)
+
+    def __handle_contract_error(self, request, response, error):
+        # Request-contract violations (pydantic schema validation, malformed JSON
+        # body) are client errors, not server faults. Respond 400 and surface
+        # each failure via set_error so the response carries the standard
+        # errors[] contract, instead of falling through to a generic 500.
+        try:
+            response.code = 400
+            if isinstance(error, ValidationError):
+                details = error.errors()
+                for item in details:
+                    location = '.'.join(str(part) for part in (item.get('loc') or ()))
+                    response.set_error(key_path=location or 'unknown', message=item.get('msg', 'invalid'))
+                if not details:
+                    response.set_error(key_path='unknown', message='request failed validation')
+            else:
+                response.set_error(key_path='body', message=f'request body is not valid JSON: {error}')
+            if self.__on_error and callable(self.__on_error):
+                self.__on_error(request, response, error)
+            else:
+                logger.log(level='ERROR', log={'request': request, 'response': response, 'error': error})
+        except Exception as exception:
+            logging.exception(exception)
 
     def __handle_error(self, request, response, error_func=None, **kwargs):
         try:

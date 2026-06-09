@@ -15,6 +15,8 @@ class RouterMappingTest(unittest.TestCase):
     raise_exception_event = mock_request.get_raised_exception_post()
     mock_request = mock_request
     unhandled_exception_event = mock_request.get_unhandled_exception_post()
+    validation_error_event = mock_request.get_validation_error_post()
+    bad_json_event = mock_request.get_bad_json_post()
     expected_open_headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*'
@@ -25,6 +27,8 @@ class RouterMappingTest(unittest.TestCase):
         'optional-params': 'tests/mocks/apigateway/router/mapping_handlers/optional_params.py',
         'raise-exception': 'tests/mocks/apigateway/router/mapping_handlers/raise_exception.py',
         'unhandled-exception': 'tests/mocks/apigateway/router/mapping_handlers/unhandled_exception.py',
+        'raise-validation-error': 'tests/mocks/apigateway/router/mapping_handlers/raise_validation_error.py',
+        'raise-bad-json': 'tests/mocks/apigateway/router/mapping_handlers/raise_bad_json.py',
         'nested/reqs': 'tests/mocks/apigateway/router/mapping_handlers/nested/reqs.py',
         'nested/{id}': 'tests/mocks/apigateway/router/mapping_handlers/nested/nested_id.py'
     }
@@ -108,6 +112,33 @@ class RouterMappingTest(unittest.TestCase):
         self.assertEqual(500, result['statusCode'])
         self.assertDictEqual(self.expected_open_headers, result['headers'])
         self.assertDictEqual({'errors': [{'key_path': 'unknown', 'message': "name 'UnknownException' is not defined"}]}, json_dict_response)
+
+    def test_pydantic_validation_error_returns_400(self):
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_mapping,
+            schema=self.schema_path,
+            output_error=True
+        )
+        result = router.route(self.validation_error_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertEqual(1, len(json_dict_response['errors']))
+        self.assertEqual('phone', json_dict_response['errors'][0]['key_path'])
+
+    def test_invalid_json_body_returns_400(self):
+        router = Router(
+            base_path=self.base_path,
+            handlers=self.handler_mapping,
+            schema=self.schema_path,
+            output_error=True
+        )
+        result = router.route(self.bad_json_event, None)
+        json_dict_response = json.loads(result['body'])
+        self.assertEqual(400, result['statusCode'])
+        self.assertDictEqual(self.expected_open_headers, result['headers'])
+        self.assertEqual('body', json_dict_response['errors'][0]['key_path'])
 
     def test_basic_mapping_routing_works_and_before_all_function_called(self):
         router = Router(
