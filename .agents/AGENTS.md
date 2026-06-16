@@ -82,6 +82,15 @@ Tips when editing event modules:
 - `acai_aws.common.logger` logs structured JSON by default. Switching `LOG_FORMAT=INLINE` helps during local dev while `LOG_FORMAT=JSON` keeps CloudWatch-friendly output. `LOG_LEVEL` gates log emission (`INFO`, `DEBUG`, `WARN`, `ERROR`).
 - The `@log` decorator wraps any function, optionally gating logs with a boolean `condition`. Maintain argument pass-through so debugging remains straightforward.
 - Error traces should include the stack plus the high-level message; tests assert the JSON keys stay consistent (`level`, `time`, `error_trace`, `log`).
+- Records pass through callbacks registered with `CommonLogger.register_callback(callback)` before they print; each callback receives the `{level, time, trace, log}` record and returns the record to emit (redaction, enrichment, routing). `CommonLogger.reset_callbacks()` clears them.
+- `RedactionFilter(keys=[...], patterns=[...], redact_with='[REDACTED]')` is a callback that scrubs matching field names (case-insensitive, any depth) and regex value matches. A default filter covering common PII (names, email, phone, SSN, EIN) is auto-registered at import; disable with `ACAI_LOG_REDACTION=off`.
+
+```python
+from acai_aws.common.logger.common_logger import CommonLogger
+from acai_aws.common.logger.redaction import RedactionFilter
+
+CommonLogger.register_callback(RedactionFilter(keys=['account_number']))
+```
 
 ## Agent Checklist
 1. **Understand the route or event** you’re touching—confirm how the filesystem maps to the API or which event module processes the payload.
