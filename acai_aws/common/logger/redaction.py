@@ -1,42 +1,66 @@
+import os
 import re
 
-DEFAULT_REDACTION = '[REDACTED]'
 
+class RedactionFilter:
 
-def redaction_filter(keys=None, patterns=None, redact_with=DEFAULT_REDACTION):
-    """Build a logger callback that redacts sensitive data from the log payload.
+    DEFAULT_REDACTION = '[REDACTED]'
+    REDACTION_ENV = 'ACAI_LOG_REDACTION'
+    DISABLED_VALUES = ('off', 'false', '0', 'disabled')
 
-    ``keys`` are field names redacted wherever they appear in the ``log``
-    payload (case-insensitive, at any nesting depth). ``patterns`` are regular
-    expression strings; every match found in a string value is replaced.
-    ``redact_with`` is the replacement text (default ``[REDACTED]``); pass
-    ``redact_with=''`` or any custom string to override it.
+    DEFAULT_KEYS = (
+        'first_name',
+        'last_name',
+        'worker_first_name',
+        'worker_last_name',
+        'email',
+        'worker_email',
+        'phone',
+        'worker_phone',
+        'ssn',
+        'social_security_number',
+        'fein',
+        'ein',
+    )
 
-    Returns a callback compatible with ``CommonLogger.register_callback``; the
-    custom filter therefore rides on the generic callback hook rather than
-    special-casing the logger.
-    """
-    lowered_keys = {str(key).lower() for key in (keys or [])}
-    compiled_patterns = [re.compile(pattern) for pattern in (patterns or [])]
+    DEFAULT_PATTERNS = (
+        r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',
+        r'\b\d{3}-\d{2}-\d{4}\b',
+        r'\b\d{2}-\d{7}\b',
+        r'\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}',
+    )
 
-    def scrub(value):
-        if isinstance(value, dict):
-            return {
-                key: redact_with if str(key).lower() in lowered_keys else scrub(item)
-                for key, item in value.items()
-            }
-        if isinstance(value, (list, tuple)):
-            return [scrub(item) for item in value]
-        if isinstance(value, str):
-            redacted = value
-            for pattern in compiled_patterns:
-                redacted = pattern.sub(redact_with, redacted)
-            return redacted
-        return value
+    def __init__(self, **kwargs):
+        self._keys = {str(key).lower() for key in kwargs.get('keys') or []}
+        self._patterns = [re.compile(pattern) for pattern in kwargs.get('patterns') or []]
+        self._redact_with = kwargs.get('redact_with', self.DEFAULT_REDACTION)
 
-    def callback(record):
+    @classmethod
+    def register_default(cls, logger_class):
+        if os.environ.get(cls.REDACTION_ENV, 'on').strip().lower() in cls.DISABLED_VALUES:
+            return
+        logger_class.register_callback(cls(keys=cls.DEFAULT_KEYS, patterns=cls.DEFAULT_PATTERNS))
+
+    def __call__(self, record):
         if isinstance(record, dict) and 'log' in record:
-            record['log'] = scrub(record['log'])
+            record['log'] = self._scrub(record['log'])
         return record
 
-    return callback
+    def _scrub(self, value):
+        if isinstance(value, dict):
+            return {key: self._scrub_field(key, item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [self._scrub(item) for item in value]
+        if isinstance(value, str):
+            return self._scrub_text(value)
+        return value
+
+    def _scrub_field(self, key, value):
+        if str(key).lower() in self._keys:
+            return self._redact_with
+        return self._scrub(value)
+
+    def _scrub_text(self, value):
+        for pattern in self._patterns:
+            value = pattern.sub(self._redact_with, value)
+        return value

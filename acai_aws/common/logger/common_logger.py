@@ -6,13 +6,6 @@ import jsonpickle
 
 
 class CommonLogger:
-    """Structured logger that emits a JSON, pretty JSON, or inline record to stdout.
-
-    Before a record is printed it is passed through any registered callbacks
-    (see ``register_callback``). Callbacks are an extension point used for
-    redaction, enrichment, or routing; they receive the assembled record dict
-    and return the record to emit.
-    """
 
     _callbacks = []
 
@@ -37,22 +30,13 @@ class CommonLogger:
 
     @classmethod
     def register_callback(cls, callback):
-        """Register a callable run on every log record before it is printed.
-
-        The callback signature is ``callback(record: dict) -> dict`` where
-        ``record`` holds ``level``, ``time``, ``trace``, and ``log``. The
-        returned record is what gets emitted, so a callback may mutate or
-        replace any part of it. Callbacks run in registration order.
-        """
         cls._callbacks.append(callback)
 
     @classmethod
     def reset_callbacks(cls):
-        """Remove all registered callbacks."""
         cls._callbacks = []
 
     def log(self, **kwargs):
-        """Build a log record, run it through registered callbacks, and emit it."""
         level = kwargs.get('level', 'INFO')
         if not self.__should_log(level):
             return

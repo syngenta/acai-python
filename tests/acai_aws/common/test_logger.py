@@ -7,7 +7,7 @@ from unittest import TestCase, mock
 from acai_aws.common import logger
 from acai_aws.common.logger.decorator import log
 from acai_aws.common.logger.common_logger import CommonLogger
-from acai_aws.common.logger.redaction import redaction_filter
+from acai_aws.common.logger.redaction import RedactionFilter
 
 def some_log_condition(*args, **_):
     if args[0] == 1:
@@ -188,7 +188,7 @@ class LoggerCallbackTest(TestCase):
 
     @mock.patch.dict(os.environ, {'LOG_FORMAT': 'JSON', 'LOG_LEVEL': 'INFO'})
     def test_redaction_filter_runs_through_logger(self):
-        CommonLogger.register_callback(redaction_filter(keys=['email']))
+        CommonLogger.register_callback(RedactionFilter(keys=['email']))
         buffer = io.StringIO()
         with redirect_stdout(buffer):
             logger.log(level='INFO', log={'email': 'ada@example.com', 'id': 1})
