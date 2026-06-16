@@ -474,10 +474,14 @@ CommonLogger.register_callback(add_service)
 from acai_aws.common.logger.common_logger import CommonLogger
 from acai_aws.common.logger.redaction import RedactionFilter
 
-CommonLogger.register_callback(RedactionFilter(keys=['account_number'], redact_with='***'))
+CommonLogger.register_callback(RedactionFilter(
+    keys=['account_number'],
+    patterns=[r'\b\d{3}-\d{2}-\d{4}\b'],
+    redact_with='***',
+))
 
-logger.log(level='INFO', log={'account_number': '987654321', 'amount': 100})
-# emitted log -> {'account_number': '***', 'amount': 100}
+logger.log(level='INFO', log={'account_number': '987654321', 'note': 'ssn 123-45-6789'})
+# emitted log -> {'account_number': '***', 'note': 'ssn ***'}
 ```
 
 Filters are opt-in: register the ones you want at startup and they apply to every subsequent log.
