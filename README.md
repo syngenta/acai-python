@@ -480,7 +480,7 @@ logger.log(level='INFO', log={'account_number': '987654321', 'amount': 100})
 # emitted log -> {'account_number': '***', 'amount': 100}
 ```
 
-A default `RedactionFilter` covering common PII (names, email, phone, SSN, EIN) is registered automatically, so PII is scrubbed before it reaches stdout. Disable it with `ACAI_LOG_REDACTION=off`.
+Filters are opt-in: register the ones you want at startup and they apply to every subsequent log.
 
 ---
 
@@ -488,7 +488,7 @@ A default `RedactionFilter` covering common PII (names, email, phone, SSN, EIN) 
 
 - **OpenAPI Generator** – CLI (`python -m acai_aws.apigateway generate-openapi`) scans handlers and updates schema docs
 - **Request/Response Helpers** – Access JSON, GraphQL, form, XML, or raw bodies via `Request.json`, `Request.form`, etc.
-- **Logging** – Structured JSON/inline logging via `acai_aws.common.logger`, with pluggable pre-print callbacks and built-in PII redaction
+- **Logging** – Structured JSON/inline logging via `acai_aws.common.logger`, with pluggable pre-print callbacks and an opt-in PII redaction filter
 - **Validation** – JSON Schema (Draft 7) and Pydantic support with helpful error messages
 
 ---

@@ -5,8 +5,6 @@ from acai_aws.common.logger.redaction import RedactionFilter
 
 __all__ = ['log', 'CommonLogger', 'RedactionFilter']
 
-RedactionFilter.register_default(logger_class=CommonLogger)
-
 
 def log(**kwargs):
     try:

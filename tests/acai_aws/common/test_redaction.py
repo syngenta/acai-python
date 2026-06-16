@@ -45,17 +45,18 @@ class RedactionFilterTest(TestCase):
         record = redact({'level': 'INFO'})
         self.assertEqual({'level': 'INFO'}, record)
 
-    def test_default_keys_and_patterns(self):
-        redact = RedactionFilter(keys=RedactionFilter.DEFAULT_KEYS, patterns=RedactionFilter.DEFAULT_PATTERNS)
+    def test_keys_and_patterns_together(self):
+        redact = RedactionFilter(
+            keys=['first_name', 'email'],
+            patterns=[r'\b\d{3}-\d{2}-\d{4}\b', r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'],
+        )
         record = redact({'log': {
             'first_name': 'Ada',
-            'worker_email': 'ada@example.com',
-            'ein': '12-3456789',
-            'message': 'call 585-555-1234 or email ada@example.com',
+            'email': 'ada@example.com',
+            'message': 'ssn 123-45-6789 mailto ada@example.com',
         }})
         log = record['log']
         self.assertEqual('[REDACTED]', log['first_name'])
-        self.assertEqual('[REDACTED]', log['worker_email'])
-        self.assertEqual('[REDACTED]', log['ein'])
-        self.assertNotIn('585-555-1234', log['message'])
+        self.assertEqual('[REDACTED]', log['email'])
+        self.assertNotIn('123-45-6789', log['message'])
         self.assertNotIn('ada@example.com', log['message'])

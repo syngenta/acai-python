@@ -1,45 +1,14 @@
-import os
 import re
 
 
 class RedactionFilter:
 
     DEFAULT_REDACTION = '[REDACTED]'
-    REDACTION_ENV = 'ACAI_LOG_REDACTION'
-    DISABLED_VALUES = ('off', 'false', '0', 'disabled')
-
-    DEFAULT_KEYS = (
-        'first_name',
-        'last_name',
-        'worker_first_name',
-        'worker_last_name',
-        'email',
-        'worker_email',
-        'phone',
-        'worker_phone',
-        'ssn',
-        'social_security_number',
-        'fein',
-        'ein',
-    )
-
-    DEFAULT_PATTERNS = (
-        r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',
-        r'\b\d{3}-\d{2}-\d{4}\b',
-        r'\b\d{2}-\d{7}\b',
-        r'\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}',
-    )
 
     def __init__(self, **kwargs):
         self._keys = {str(key).lower() for key in kwargs.get('keys') or []}
         self._patterns = [re.compile(pattern) for pattern in kwargs.get('patterns') or []]
         self._redact_with = kwargs.get('redact_with', self.DEFAULT_REDACTION)
-
-    @classmethod
-    def register_default(cls, logger_class):
-        if os.environ.get(cls.REDACTION_ENV, 'on').strip().lower() in cls.DISABLED_VALUES:
-            return
-        logger_class.register_callback(cls(keys=cls.DEFAULT_KEYS, patterns=cls.DEFAULT_PATTERNS))
 
     def __call__(self, record):
         if isinstance(record, dict) and 'log' in record:
