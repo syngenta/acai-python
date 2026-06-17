@@ -6,6 +6,8 @@ from unittest import TestCase, mock
 
 from acai_aws.common import logger
 from acai_aws.common.logger.decorator import log
+from acai_aws.common.logger.common_logger import CommonLogger
+from acai_aws.common.logger.redaction import RedactionFilter
 
 def some_log_condition(*args, **_):
     if args[0] == 1:
@@ -164,3 +166,48 @@ class LoggerTest(TestCase):
     @mock.patch.dict(os.environ, {'RUN_MODE': 'SEE-LOGS', 'LOG_STAGE_VARIABLE': 'STAGE', 'STAGE': 'local', 'LOG_LEVEL': 'ERROR', 'LOG_FORMAT': 'BAD'})
     def test_logger_handles_bad_format(self):
         logger.log(level='INFO', log={'INFO': 'ignore'})
+
+
+class LoggerCallbackTest(TestCase):
+
+    def setUp(self):
+        self._saved_callbacks = list(CommonLogger._callbacks)
+        CommonLogger.reset_callbacks()
+
+    def tearDown(self):
+        CommonLogger._callbacks = self._saved_callbacks
+
+    @mock.patch.dict(os.environ, {'LOG_FORMAT': 'JSON', 'LOG_LEVEL': 'INFO'})
+    def test_callback_runs_before_print(self):
+        CommonLogger.register_callback(lambda record: {**record, 'log': {'replaced': True}})
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='INFO', log={'email': 'ada@example.com'})
+        parsed = json.loads(buffer.getvalue().strip())
+        self.assertEqual({'replaced': True}, parsed['log'])
+
+    @mock.patch.dict(os.environ, {'LOG_FORMAT': 'JSON', 'LOG_LEVEL': 'INFO'})
+    def test_redaction_filter_runs_through_logger(self):
+        CommonLogger.register_callback(RedactionFilter(keys=['email']))
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='INFO', log={'email': 'ada@example.com', 'id': 1})
+        parsed = json.loads(buffer.getvalue().strip())
+        self.assertEqual('[REDACTED]', parsed['log']['email'])
+        self.assertEqual(1, parsed['log']['id'])
+
+    @mock.patch.dict(os.environ, {'LOG_FORMAT': 'JSON', 'LOG_LEVEL': 'INFO'})
+    def test_callbacks_run_in_registration_order(self):
+        CommonLogger.register_callback(lambda record: {**record, 'log': {'step': 'one'}})
+        CommonLogger.register_callback(lambda record: {**record, 'log': {'step': 'two'}})
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            logger.log(level='INFO', log={'step': 'zero'})
+        parsed = json.loads(buffer.getvalue().strip())
+        self.assertEqual({'step': 'two'}, parsed['log'])
+
+    def test_reset_callbacks_clears_registry(self):
+        CommonLogger.register_callback(lambda record: record)
+        self.assertEqual(1, len(CommonLogger._callbacks))
+        CommonLogger.reset_callbacks()
+        self.assertEqual(0, len(CommonLogger._callbacks))
