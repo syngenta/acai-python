@@ -212,5 +212,15 @@ class LoggerCallbackTest(TestCase):
         CommonLogger.reset_callbacks()
         self.assertEqual(0, len(CommonLogger._callbacks))
 
+    def test_register_callback_dedupes_equal_filters(self):
+        CommonLogger.register_callback(RedactionFilter(keys=['email']))
+        CommonLogger.register_callback(RedactionFilter(keys=['email']))
+        self.assertEqual(1, len(CommonLogger._callbacks))
+
+    def test_register_callback_keeps_distinct_filters(self):
+        CommonLogger.register_callback(RedactionFilter(keys=['email']))
+        CommonLogger.register_callback(RedactionFilter(keys=['phone']))
+        self.assertEqual(2, len(CommonLogger._callbacks))
+
     def test_common_logger_is_singleton(self):
         self.assertIs(CommonLogger(), CommonLogger())
