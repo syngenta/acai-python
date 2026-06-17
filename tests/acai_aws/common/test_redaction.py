@@ -60,3 +60,18 @@ class RedactionFilterTest(TestCase):
         self.assertEqual('[REDACTED]', log['email'])
         self.assertNotIn('123-45-6789', log['message'])
         self.assertNotIn('ada@example.com', log['message'])
+
+    def test_equal_filters_compare_equal_and_hash_equal(self):
+        one = RedactionFilter(keys=['email', 'ssn'], patterns=[r'\d{3}'], redact_with='*')
+        two = RedactionFilter(keys=['ssn', 'email'], patterns=[r'\d{3}'], redact_with='*')
+        self.assertEqual(one, two)
+        self.assertEqual(hash(one), hash(two))
+
+    def test_filters_with_different_config_are_not_equal(self):
+        base = RedactionFilter(keys=['email'], patterns=[r'\d{3}'])
+        self.assertNotEqual(base, RedactionFilter(keys=['email'], patterns=[r'\d{4}']))
+        self.assertNotEqual(base, RedactionFilter(keys=['phone'], patterns=[r'\d{3}']))
+        self.assertNotEqual(base, RedactionFilter(keys=['email'], patterns=[r'\d{3}'], redact_with='*'))
+
+    def test_not_equal_to_non_filter(self):
+        self.assertNotEqual(RedactionFilter(keys=['email']), 'not-a-filter')

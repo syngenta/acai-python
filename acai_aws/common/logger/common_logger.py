@@ -34,6 +34,8 @@ class CommonLogger:
 
     @classmethod
     def register_callback(cls, callback):
+        if callback in cls._callbacks:
+            return
         cls._callbacks.append(callback)
 
     @classmethod

@@ -7,8 +7,21 @@ class RedactionFilter:
 
     def __init__(self, **kwargs):
         self._keys = {str(key).lower() for key in kwargs.get('keys') or []}
-        self._patterns = [re.compile(pattern) for pattern in kwargs.get('patterns') or []]
+        self._pattern_sources = tuple(kwargs.get('patterns') or [])
+        self._patterns = [re.compile(pattern) for pattern in self._pattern_sources]
         self._redact_with = kwargs.get('redact_with', self.DEFAULT_REDACTION)
+
+    def __eq__(self, other):
+        if not isinstance(other, RedactionFilter):
+            return NotImplemented
+        return (
+            self._keys == other._keys
+            and self._pattern_sources == other._pattern_sources
+            and self._redact_with == other._redact_with
+        )
+
+    def __hash__(self):
+        return hash((frozenset(self._keys), self._pattern_sources, self._redact_with))
 
     def __call__(self, record):
         if isinstance(record, dict) and 'log' in record:
