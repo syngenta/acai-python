@@ -211,3 +211,6 @@ class LoggerCallbackTest(TestCase):
         self.assertEqual(1, len(CommonLogger._callbacks))
         CommonLogger.reset_callbacks()
         self.assertEqual(0, len(CommonLogger._callbacks))
+
+    def test_common_logger_is_singleton(self):
+        self.assertIs(CommonLogger(), CommonLogger())

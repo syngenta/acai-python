@@ -7,13 +7,18 @@ import jsonpickle
 
 class CommonLogger:
 
+    _instance = None
     _callbacks = []
 
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
+        if getattr(self, '_initialized', False):
+            return
         self.__json = jsonpickle
-        env_format = os.getenv('LOG_FORMAT', 'JSON') or 'JSON'
-        self.__format = env_format.strip().upper()
-        self.__log_level = os.getenv('LOG_LEVEL', 'INFO')
         self.__json.set_encoder_options('simplejson', use_decimal=True)
         self.__json.set_preferred_backend('simplejson')
         self.log_levels = {
@@ -23,10 +28,9 @@ class CommonLogger:
             'WARNING': 2,
             'ERROR': 3,
             'CRITICAL': 4,
-            'FATAL': 4
+            'FATAL': 4,
         }
-        if self.__format not in ['JSON', 'PRETTY', 'INLINE']:
-            raise ValueError(f'LOG_FORMAT ENV must be either `JSON`, `PRETTY`, or `INLINE`, recieved: {self.__format}')
+        self._initialized = True
 
     @classmethod
     def register_callback(cls, callback):
@@ -37,6 +41,9 @@ class CommonLogger:
         cls._callbacks = []
 
     def log(self, **kwargs):
+        log_format = (os.getenv('LOG_FORMAT', 'JSON') or 'JSON').strip().upper()
+        if log_format not in ('JSON', 'PRETTY', 'INLINE'):
+            raise ValueError(f'LOG_FORMAT ENV must be either `JSON`, `PRETTY`, or `INLINE`, recieved: {log_format}')
         level = kwargs.get('level', 'INFO')
         if not self.__should_log(level):
             return
@@ -44,15 +51,15 @@ class CommonLogger:
             'level': level,
             'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'trace': [trace.strip() for trace in self.__get_traceback().split('\n') if trace],
-            'log': kwargs.get('log', {})
+            'log': kwargs.get('log', {}),
         }
         for callback in CommonLogger._callbacks:
             record = callback(record)
-        if self.__format == 'JSON':
+        if log_format == 'JSON':
             self.__log_json(record)
-        elif self.__format == 'PRETTY':
+        elif log_format == 'PRETTY':
             self.__log_json(record, pretty=True)
-        elif self.__format == 'INLINE':
+        elif log_format == 'INLINE':
             self.__log_inline(record)
 
     def __get_traceback(self):
@@ -62,9 +69,8 @@ class CommonLogger:
         return ''
 
     def __should_log(self, level):
-        current_log_level = self.log_levels[level]
-        log_level_setting = self.log_levels[self.__log_level]
-        return current_log_level >= log_level_setting
+        log_level = os.getenv('LOG_LEVEL', 'INFO')
+        return self.log_levels[level] >= self.log_levels[log_level]
 
     def __log_json(self, record, pretty=False):
         print(self.__json.encode(record, indent=4 if pretty else None))
