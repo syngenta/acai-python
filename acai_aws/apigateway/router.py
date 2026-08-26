@@ -1,6 +1,7 @@
 import json
 import logging
 
+import simplejson
 from pydantic import ValidationError
 
 from acai_aws.apigateway.exception import ApiException, ApiTimeOutException
@@ -48,7 +49,7 @@ class Router:
         except ApiException as api_error:
             kwargs = {'code': api_error.code, 'key_path': api_error.key_path, 'message': api_error.message, 'error': api_error}
             self.__handle_error(request, response, self.__on_error, **kwargs)
-        except (ValidationError, json.JSONDecodeError) as contract_error:
+        except (ValidationError, json.JSONDecodeError, simplejson.JSONDecodeError) as contract_error:
             self.__handle_contract_error(request, response, contract_error)
         except Exception as error:
             output = str(error) if self.__output_error else 'internal service error'

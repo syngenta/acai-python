@@ -648,6 +648,51 @@ def get_validation_error_post():
     }
 
 
+def get_strict_json_bad_body_post():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib',
+            'authorizer': {
+                'x-authorizer-key': 'SOME KEY',
+                'principalId': '9de3f415a97e410386dbef146e88744e',
+                'integrationLatency': 572,
+            }
+        },
+        'path': 'unit-test/v1/strict-json',
+        'pathParameters': {
+            'proxy': 'hello'
+        },
+        'resource': '/{proxy+}',
+        'httpMethod': 'POST',
+        'queryStringParameters': {
+            'name': 'me'
+        },
+        'body': '{"body_key": "body_value"'
+    }
+
+
+def get_json_content_type_without_body():
+    return {
+        'headers': {
+            'x-api-key': 'SOME-KEY',
+            'content-type': 'application/json'
+        },
+        'requestContext': {
+            'resourceId': 't89kib'
+        },
+        'path': 'unit-test/v1/basic',
+        'resource': '/{proxy+}',
+        'httpMethod': 'GET',
+        'queryStringParameters': {
+            'name': 'me'
+        }
+    }
+
+
 def get_bad_json_post():
     return {
         'headers': {

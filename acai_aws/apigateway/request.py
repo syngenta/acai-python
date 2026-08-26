@@ -102,9 +102,10 @@ class Request:
 
     @property
     def body(self):
+        if not self.__body:
+            return self.__body
         try:
-            content_type = self.headers.get('content-type', '').split(';')[0]
-            parser = self.__parsers.get(content_type, 'raw')
+            parser = self.__parsers.get(self.content_type, 'raw')
             return getattr(self, parser)
         except Exception as error:
             print(error)
