@@ -1,3 +1,5 @@
+import contextlib
+import io
 import json
 import unittest
 import urllib
@@ -19,6 +21,7 @@ class RequestTest(unittest.TestCase):
     basic_graphql = mock_request.get_basic_graphql()
     basic_graphql_variables = mock_request.basic_graphql_variables()
     missing_inputs = mock_request.get_request_with_missing_fields()
+    json_content_type_without_body = mock_request.get_json_content_type_without_body()
 
     def test_method(self):
         request = Request(self.basic_request)
@@ -93,6 +96,18 @@ class RequestTest(unittest.TestCase):
     def test_json(self):
         request = Request(self.basic_request)
         self.assertDictEqual(request.json, json.loads(self.basic_request['body']))
+
+    def test_body_is_empty_dict_when_json_content_type_has_no_body(self):
+        request = Request(self.json_content_type_without_body)
+        with contextlib.redirect_stdout(io.StringIO()) as printed:
+            body = request.body
+        self.assertDictEqual(body, {})
+        self.assertEqual('', printed.getvalue())
+
+    def test_body_is_untouched_when_body_is_empty_string(self):
+        event = {**self.basic_request, 'body': ''}
+        request = Request(event)
+        self.assertEqual(request.body, '')
 
     def test_body_form(self):
         request = Request(self.basic_form)
