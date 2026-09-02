@@ -124,7 +124,8 @@ class Validator:
                 schema(**request_body)
             except ValidationError as error:
                 for validation_error in error.errors():
-                    response.set_error(key_path='.'.join(validation_error['loc']), message=validation_error['msg'])
+                    error_key = '.'.join(str(loc) for loc in validation_error['loc'])
+                    response.set_error(key_path=error_key, message=validation_error['msg'])
 
     @staticmethod
     def combine_parameters(parameters):
