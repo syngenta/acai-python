@@ -72,7 +72,7 @@ class Validator:
             except ValidationError as error:
                 for validation_error in error.errors():
                     errors.append({
-                        'key_path': '.'.join(str(loc) for loc in validation_error['loc']),
+                        'key_path': Validator.format_pydantic_error_key(validation_error),
                         'message': validation_error['msg'],
                     })
             return errors
@@ -124,7 +124,7 @@ class Validator:
                 schema(**request_body)
             except ValidationError as error:
                 for validation_error in error.errors():
-                    error_key = '.'.join(str(loc) for loc in validation_error['loc'])
+                    error_key = Validator.format_pydantic_error_key(validation_error)
                     response.set_error(key_path=error_key, message=validation_error['msg'])
 
     @staticmethod
@@ -144,6 +144,11 @@ class Validator:
     @staticmethod
     def format_schema_error_key(schema_error):
         error_path = '.'.join(str(path) for path in schema_error.path)
+        return error_path if error_path else 'root'
+
+    @staticmethod
+    def format_pydantic_error_key(validation_error):
+        error_path = '.'.join(str(loc) for loc in validation_error['loc'])
         return error_path if error_path else 'root'
 
     @staticmethod

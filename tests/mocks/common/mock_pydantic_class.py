@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, PositiveInt, model_validator
 
 
 class Request(BaseModel):
@@ -17,3 +17,14 @@ class UserRequest(BaseModel):
     active: bool
     favorites: List[str]
     notification_config: dict[str, bool]
+
+
+class ModelLevelRequest(BaseModel):
+    start: int
+    end: int
+
+    @model_validator(mode='after')
+    def check_range(self):
+        if self.start > self.end:
+            raise ValueError('start cannot be after end')
+        return self
